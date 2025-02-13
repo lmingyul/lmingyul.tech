@@ -4,7 +4,6 @@ import { motion } from 'framer-motion'
 import Balancer from 'react-wrap-balancer'
 
 import { SparkleIcon, UserSecurityIcon } from '~/assets'
-import { PeekabooLink } from '~/components/links/PeekabooLink'
 import { SocialLink } from '~/components/links/SocialLink'
 
 function Developer() {
@@ -80,7 +79,8 @@ export function Headline() {
         }}
       >
         <Balancer>
-          我是 阿梁（lmingyul），一名后端程序员，大模型炼丹师，I 人，现在深圳。座右铭：Keep Learning、Keep Thinking、Keep Trying
+          我是 阿梁（lmingyul），一名后端程序员，大模型炼丹师，I
+          人，现在深圳。座右铭：Keep Learning、Keep Thinking、Keep Trying
         </Balancer>
       </motion.p>
       <motion.div
