@@ -1,10 +1,10 @@
 export const seo = {
-  title: 'Cali Castle | 开发者、设计师、细节控、创始人',
+  title: 'lmingyul | 程序员博客',
   description:
-    '我叫 Cali，一名开发者，设计师，细节控，同时也是佐玩创始人，目前带领着佐玩致力于创造一个充满创造力的工作环境，同时鼓励团队创造影响世界的产品。',
+    '我叫 阿梁（lmingyul），一名后端程序员，大模型炼丹师，I 人，现在深圳。座右铭：Keep Learning、Keep Thinking、Keep Trying',
   url: new URL(
     process.env.NODE_ENV === 'production'
-      ? 'https://cali.so'
+      ? 'https://lmingyul-tech.vercel.app/'
       : 'http://localhost:3000'
   ),
 } as const
