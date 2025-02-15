@@ -8,46 +8,43 @@ import {
 } from 'react-social-media-embed'
 import SpotifyPreview from './SpotifyPreview'
 
-// 定义扩展的 Props 类型
-interface EmbedPreviewProps extends PreviewProps {
-  embedType?: EmbedType;
-  showPreview?: boolean;
-}
-
-const EmbedPreview = (props: EmbedPreviewProps) => {
+const EmbedPreview = (props: PreviewProps) => {
+  /** @ts-ignore */
   const embedType = EmbedMetadata.embedTypeList.find(
-      (type) => type.value === props.embedType
+    (type) => type.value === props.embedType
   )
   const url = props.title as string
-  const showPreview = props.showPreview
+  /** @ts-ignore */
+  const showPreview = props.showPreview as boolean
 
   if (!url) return props.renderDefault(props)
 
   const AnchorTitle = (
-      <a href={url} target="_blank" rel="noreferrer">
-        {url}
-      </a>
+    <a href={url} target="_blank" rel="noreferrer">
+      {url}
+    </a>
   )
 
   const title = embedType?.title || 'Embed Url'
   const icon = embedType?.icon || EmbedMetadata.icon
   let Preview
 
-  switch (props.embedType) {
+  /** @ts-ignore */
+  switch (props.embedType as EmbedType) {
     case 'twitter':
       Preview = <TwitterEmbed url={url} />
       break
     case 'youtube':
       Preview = (
-          <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-          >
-            <YouTubeEmbed url={url} width={'100%'} />
-          </div>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <YouTubeEmbed url={url} width={'100%'} />
+        </div>
       )
       break
     case 'instagram':
@@ -64,21 +61,22 @@ const EmbedPreview = (props: EmbedPreviewProps) => {
   }
 
   return (
-      <>
-        {props.renderDefault({
-          ...props,
-          title: <p className="text-lg">{title}</p>,
-          media: icon({ size: 25 }),
-        })}
+    <>
+      {props.renderDefault({
+        ...props,
+        title: <p className="text-lg">{title}</p>,
+        media: icon({ size: 25 }),
+      })}
 
-        {props.renderDefault({
-          ...props,
-          title: AnchorTitle,
-          media: '',
-          actions: null,
-        })}
-        {showPreview && Preview}
-      </>
+      {props.renderDefault({
+        ...props,
+        title: AnchorTitle,
+        media: '',
+        actions: null,
+      })}
+      {/* @ts-ignore */}
+      {showPreview && Preview}
+    </>
   )
 }
 
