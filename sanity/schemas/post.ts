@@ -1,10 +1,5 @@
 import { defineField, defineType } from 'sanity'
 import { z } from 'zod'
-import { MathInlineMetadata } from './objects/MathInline'
-import ImageMetadata from './objects/Image.metadata'
-import DetailsMetadata from './objects/Details.metadata'
-import EmbedMetadata from './objects/Embed.metadata'
-import MathBlockMetadata from './objects/MathBlock.metadata'
 
 import { PencilSwooshIcon } from '~/assets'
 import { readingTimeType } from '~/sanity/schemas/types/readingTime'
@@ -67,18 +62,12 @@ export default defineType({
       title: '分类',
       type: 'array',
       of: [{ type: 'reference', to: { type: 'category' } }],
-      validation: (Rule) => Rule.max(5),
     }),
     defineField({
       name: 'publishedAt',
       title: '发布时间',
       type: 'datetime',
       validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      type: 'datetime',
-      name: 'updatedAt',
-      title: '更新时间',
     }),
     defineField({
       name: 'mainImage',
@@ -97,36 +86,10 @@ export default defineType({
       rows: 3,
       validation: (Rule) => Rule.required(),
     }),
-    // defineField({
-    //   name: 'body',
-    //   title: '文章内容',
-    //   type: 'blockContent',
-    // }),
     defineField({
-      type: 'array',
       name: 'body',
-      title: 'Body',
-      validation: (Rule) => Rule.required(),
-      of: [
-        {
-          type: 'block',
-          marks: {
-            decorators: [
-              { title: 'Strong', value: 'strong' },
-              { title: 'Emphasis', value: 'em' },
-              { title: 'Code', value: 'code' },
-              { title: 'Underline', value: 'underline' },
-              { title: 'Strike', value: 'strike-through' },
-              { ...MathInlineMetadata },
-            ],
-          },
-        },
-        { type: ImageMetadata.name },
-        { type: 'code' },
-        { type: DetailsMetadata.name },
-        { type: EmbedMetadata.name },
-        { type: MathBlockMetadata.name },
-      ],
+      title: '内容',
+      type: 'blockContent',
     }),
     defineField({
       name: 'readingTime',
