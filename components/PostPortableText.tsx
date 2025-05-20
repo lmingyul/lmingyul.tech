@@ -1,12 +1,11 @@
 'use client'
 
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import rehypePrismPlus from 'rehype-prism-plus'
-
-import { PeekabooLink } from '~/components/links/PeekabooLink'
 import { ClientOnly } from '~/components/ClientOnly'
 import { Commentable } from '~/components/Commentable'
+import { PeekabooLink } from '~/components/links/PeekabooLink'
+import ReactMarkdown from 'react-markdown'
+import rehypePrismPlus from 'rehype-prism-plus'
+import remarkGfm from 'remark-gfm'
 
 /**
  * 用于渲染文章正文（Markdown 字符串）
@@ -106,7 +105,7 @@ function headingWithAnchor(level: 1 | 2 | 3 | 4) {
     node,
     children,
     ...rest
-  }: React.ComponentProps<'h1'> & { node?: any }) {
+  }: React.ComponentProps<'h1'> & { node?: { position?: { start: { offset?: number } } } }): JSX.Element {
     const id = node?.position?.start.offset?.toString() ?? undefined
     const Tag = `h${level}` as const
     return (
