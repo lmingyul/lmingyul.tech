@@ -14,6 +14,7 @@ import { settingsPlugin, settingsStructure } from '~/sanity/plugins/settings'
 import { apiVersion, dataset, projectId } from './sanity/env'
 import { schema } from './sanity/schema'
 import settingsType from './sanity/schemas/settings'
+import { markdownSchema } from 'sanity-plugin-markdown'
 
 export default defineConfig({
   basePath: '/studio',
@@ -33,5 +34,6 @@ export default defineConfig({
     }),
     media(),
     codeInput(),
+    markdownSchema(),
   ],
 })
