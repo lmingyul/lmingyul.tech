@@ -60,16 +60,8 @@ export const getBlogPostQuery = groq`
     publishedAt,
     readingTime,
     mood,
-    body[] {
-      ...,
-      _type == "image" => {
-        "url": asset->url,
-        "lqip": asset->metadata.lqip,
-        "dimensions": asset->metadata.dimensions,
-        ...
-      }
-    },
-    "headings": body[length(style) == 2 && string::startsWith(style, "h")],
+    "body": coalesce(body[0].content, body, ""),
+    "headings": coalesce(body[length(style) == 2 && string::startsWith(style, "h")], []),
     mainImage {
       _ref,
       asset->{
