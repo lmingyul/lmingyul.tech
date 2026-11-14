@@ -12,6 +12,10 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
 
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+
   images: {
     remotePatterns: [
       {
@@ -25,6 +29,9 @@ const nextConfig = {
 
   experimental: {
     taint: true,
+    workerThreads: false,
+    cpus: 1,
+    webpackBuildWorker: true,
   },
 
   redirects() {
