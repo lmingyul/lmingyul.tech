@@ -1,4 +1,3 @@
-import { Ratelimit } from '@upstash/ratelimit'
 import { eq } from 'drizzle-orm'
 import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -9,22 +8,19 @@ import { subscribers } from '~/db/schema'
 import ConfirmSubscriptionEmail from '~/emails/ConfirmSubscription'
 import { env } from '~/env.mjs'
 import { url } from '~/lib'
+import { getIP } from '~/lib/ip'
 import { resend } from '~/lib/mail'
-import { redis } from '~/lib/redis'
+import { createRatelimit } from '~/lib/redis'
 
 const newsletterFormSchema = z.object({
   email: z.string().email().min(1),
 })
 
-const ratelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(1, '10 s'),
-  analytics: true,
-})
+const ratelimit = createRatelimit(1, 10)
 
 export async function POST(req: NextRequest) {
   if (env.NODE_ENV === 'production') {
-    const { success } = await ratelimit.limit('subscribe_' + (req.ip ?? ''))
+    const { success } = await ratelimit.limit('subscribe_' + getIP(req))
     if (!success) {
       return NextResponse.error()
     }
@@ -50,7 +46,7 @@ export async function POST(req: NextRequest) {
       await resend.emails.send({
         from: emailConfig.from,
         to: parsed.email,
-        subject: '来自 Cali 的订阅确认',
+        subject: '来自 阿梁（lmingyul） 的订阅确认',
         react: ConfirmSubscriptionEmail({
           link: url(`confirm/${token}`).href,
         }),

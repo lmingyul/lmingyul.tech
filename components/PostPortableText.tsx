@@ -1,11 +1,12 @@
 'use client'
 
-import { ClientOnly } from '~/components/ClientOnly'
-import { Commentable } from '~/components/Commentable'
-import { PeekabooLink } from '~/components/links/PeekabooLink'
 import ReactMarkdown from 'react-markdown'
 import rehypePrismPlus from 'rehype-prism-plus'
 import remarkGfm from 'remark-gfm'
+
+import { ClientOnly } from '~/components/ClientOnly'
+import { Commentable } from '~/components/Commentable'
+import { PeekabooLink } from '~/components/links/PeekabooLink'
 
 /**
  * 用于渲染文章正文（Markdown 字符串）
@@ -53,11 +54,13 @@ export function PostPortableText(props: { value: string }) {
 
         li({ node, children, ...rest }) {
           const id = node?.position?.start.offset?.toString() ?? undefined
+          const liProps = { ...rest }
+          delete (liProps as { ordered?: unknown }).ordered
           return (
             <li
               data-blockid={id}
               className="group relative pr-3 md:pr-0"
-              {...rest}
+              {...liProps}
             >
               {id && (
                 <ClientOnly>

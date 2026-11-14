@@ -2,9 +2,9 @@ import * as cheerio from 'cheerio'
 import { ImageResponse } from 'next/og'
 import { type NextRequest, NextResponse } from 'next/server'
 
+import { getIP } from '~/lib/ip'
 import { ratelimit, redis } from '~/lib/redis'
 
-export const runtime = 'edge'
 export const revalidate = 259200 // 3 days
 
 function getKey(url: string) {
@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.error()
   }
 
-  const { success } = await ratelimit.limit('favicon' + `_${req.ip ?? ''}`)
+  const { success } = await ratelimit.limit('favicon_' + getIP(req))
   if (!success) {
     return NextResponse.error()
   }

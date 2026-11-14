@@ -1,4 +1,5 @@
 import { count, isNotNull } from 'drizzle-orm'
+import { headers } from 'next/headers'
 import Link from 'next/link'
 import React from 'react'
 
@@ -10,10 +11,13 @@ import { navigationItems } from '~/config/nav'
 import { db } from '~/db'
 import { subscribers } from '~/db/schema'
 import { env } from '~/env.mjs'
+import countries from '~/lib/countries.json'
 import { prettifyNumber } from '~/lib/math'
 import { redis } from '~/lib/redis'
 
 import { Newsletter } from './Newsletter'
+
+const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build'
 
 function NavLink({
   href,
@@ -46,7 +50,7 @@ function Links() {
 
 async function TotalPageViews() {
   let views: number
-  if (env.VERCEL_ENV === 'production') {
+  if (env.VERCEL_ENV === 'production' && !isBuildPhase) {
     views = await redis.incr(kvKeys.totalPageViews)
   } else {
     views = 345678
@@ -70,13 +74,30 @@ type VisitorGeolocation = {
 }
 async function LastVisitorInfo() {
   let lastVisitor: VisitorGeolocation | undefined = undefined
-  if (env.VERCEL_ENV === 'production') {
-    const [lv, cv] = await redis.mget<VisitorGeolocation[]>(
-      kvKeys.lastVisitor,
-      kvKeys.currentVisitor
-    )
-    lastVisitor = lv
-    await redis.set(kvKeys.lastVisitor, cv)
+  if (env.VERCEL_ENV === 'production' && !isBuildPhase) {
+    const reqHeaders = headers()
+    const cfCountry = reqHeaders.get('cf-ipcountry')
+    const cfCity = reqHeaders.get('cf-ipcity') ?? undefined
+
+    const prevVisitor = await redis.get<VisitorGeolocation>(kvKeys.lastVisitor)
+    if (prevVisitor) {
+      lastVisitor = prevVisitor
+    }
+
+    if (cfCountry) {
+      const countryInfo = countries.find((x) => x.cca2 === cfCountry)
+      if (countryInfo) {
+        const currentVisitor: VisitorGeolocation = {
+          country: cfCountry,
+          city: cfCity,
+          flag: countryInfo.flag,
+        }
+        await redis.set(kvKeys.lastVisitor, currentVisitor)
+        if (!lastVisitor) {
+          lastVisitor = currentVisitor
+        }
+      }
+    }
   }
 
   if (!lastVisitor) {
@@ -99,12 +120,16 @@ async function LastVisitorInfo() {
 }
 
 export async function Footer() {
-  const [subs] = await db
-    .select({
-      subCount: count(),
-    })
-    .from(subscribers)
-    .where(isNotNull(subscribers.subscribedAt))
+  let subCount = 0
+  if (!isBuildPhase) {
+    const [subs] = await db
+      .select({
+        subCount: count(),
+      })
+      .from(subscribers)
+      .where(isNotNull(subscribers.subscribedAt))
+    subCount = subs?.subCount ?? 0
+  }
 
   return (
     <footer className="mt-32">
@@ -112,7 +137,7 @@ export async function Footer() {
         <div className="border-t border-zinc-100 pb-16 pt-10 dark:border-zinc-700/40">
           <Container.Inner>
             <div className="mx-auto mb-8 max-w-md">
-              <Newsletter subCount={`${subs?.subCount ?? '0'}`} />
+              <Newsletter subCount={`${subCount}`} />
             </div>
             <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
               <p className="text-sm text-zinc-500/80 dark:text-zinc-400/80">

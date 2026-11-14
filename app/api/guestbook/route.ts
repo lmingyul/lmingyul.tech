@@ -10,6 +10,7 @@ import { guestbook } from '~/db/schema'
 import NewGuestbookEmail from '~/emails/NewGuestbook'
 import { env } from '~/env.mjs'
 import { url } from '~/lib'
+import { getIP } from '~/lib/ip'
 import { resend } from '~/lib/mail'
 import { ratelimit } from '~/lib/redis'
 
@@ -19,7 +20,7 @@ function getKey(id?: string) {
 
 export async function GET(req: NextRequest) {
   try {
-    const { success } = await ratelimit.limit(getKey(req.ip ?? ''))
+    const { success } = await ratelimit.limit(getKey(getIP(req)))
     if (!success) {
       return new Response('Too Many Requests', {
         status: 429,

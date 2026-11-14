@@ -42,3 +42,5 @@ export default async function GuestBookPage() {
     </Container>
   )
 }
+
+export const dynamic = 'force-dynamic'

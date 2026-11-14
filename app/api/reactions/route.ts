@@ -1,20 +1,14 @@
-import { Ratelimit } from '@upstash/ratelimit'
 import { revalidateTag } from 'next/cache'
 import { type NextRequest, NextResponse } from 'next/server'
 
-import { redis } from '~/lib/redis'
-
-export const runtime = 'edge'
+import { getIP } from '~/lib/ip'
+import { createRatelimit, redis } from '~/lib/redis'
 
 function getKey(id: string) {
   return `reactions:${id}`
 }
 
-const ratelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(30, '10 s'),
-  analytics: true,
-})
+const ratelimit = createRatelimit(30, 10)
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -26,7 +20,7 @@ export async function GET(req: NextRequest) {
     await redis.set(getKey(id), [0, 0, 0, 0])
   }
 
-  const { success } = await ratelimit.limit(getKey(id) + `_${req.ip ?? ''}`)
+  const { success } = await ratelimit.limit(getKey(id) + `_${getIP(req)}`)
   if (!success) {
     return new Response('Too Many Requests', {
       status: 429,
@@ -46,7 +40,7 @@ export async function PATCH(req: NextRequest) {
 
   const key = getKey(id)
 
-  const { success } = await ratelimit.limit(key + `_${req.ip ?? ''}`)
+  const { success } = await ratelimit.limit(key + `_${getIP(req)}`)
   if (!success) {
     return new Response('Too Many Requests', {
       status: 429,

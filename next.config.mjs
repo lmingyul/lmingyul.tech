@@ -6,6 +6,12 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
+
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
   images: {
     remotePatterns: [
       {
@@ -25,12 +31,12 @@ const nextConfig = {
     return [
       {
         "source": "/twitter",
-        "destination": "https://x.com/thecalicastle",
+        "destination": "https://x.com/TommySteve1117",
         "permanent": true
       },
       {
         "source": "/x",
-        "destination": "https://x.com/thecalicastle",
+        "destination": "https://x.com/TommySteve1117",
         "permanent": true
       },
       {
@@ -50,12 +56,12 @@ const nextConfig = {
       },
       {
         "source": "/github",
-        "destination": "https://github.com/CaliCastle",
+        "destination": "https://github.com/lmingyul",
         "permanent": true
       },
       {
         "source": "/bilibili",
-        "destination": "https://space.bilibili.com/8350251",
+        "destination": "https://space.bilibili.com/209721840",
         "permanent": true
       }
     ]

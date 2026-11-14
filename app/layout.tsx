@@ -34,17 +34,17 @@ export const metadata: Metadata = {
   openGraph: {
     title: {
       default: seo.title,
-      template: '%s | Cali Castle',
+      template: '%s | 阿梁（lmingyul）',
     },
     description: seo.description,
-    siteName: 'Cali Castle',
+    siteName: '阿梁（lmingyul）',
     locale: 'zh_CN',
     type: 'website',
-    url: 'https://cali.so',
+    url: 'https://lmingyul.top',
   },
   twitter: {
-    site: '@thecalicastle',
-    creator: '@thecalicastle',
+    site: '@TommySteve1117',
+    creator: '@TommySteve1117',
     card: 'summary_large_image',
     title: seo.title,
     description: seo.description,
