@@ -45,21 +45,6 @@ const nextConfig = {
         "permanent": true
       },
       {
-        "source": "/youtube",
-        "destination": "https://youtube.com/@calicastle",
-        "permanent": true
-      },
-      {
-        "source": "/tg",
-        "destination": "https://t.me/cali_so",
-        "permanent": true
-      },
-      {
-        "source": "/linkedin",
-        "destination": "https://www.linkedin.com/in/calicastle/",
-        "permanent": true
-      },
-      {
         "source": "/github",
         "destination": "https://github.com/lmingyul",
         "permanent": true

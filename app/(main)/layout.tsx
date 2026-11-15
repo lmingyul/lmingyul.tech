@@ -1,3 +1,4 @@
+import 'katex/dist/katex.min.css'
 import './blog/[slug]/blog.css'
 
 import { Analytics } from '@vercel/analytics/react'

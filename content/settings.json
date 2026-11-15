@@ -1,26 +1,44 @@
 {
   "heroPhotos": [
-    "/uploads/photos/hero-1.jpg",
-    "/uploads/photos/hero-2.jpg",
-    "/uploads/photos/hero-3.jpg",
-    "/uploads/photos/hero-4.jpg",
-    "/uploads/photos/hero-5.jpg"
+    "/uploads/photos/travel-01-dali.jpg",
+    "/uploads/photos/travel-02-singapore.jpg",
+    "/uploads/photos/travel-03-phuket.jpg",
+    "/uploads/photos/travel-04-shenzhen.jpg",
+    "/uploads/photos/travel-05-qingyuan.jpg",
+    "/uploads/photos/travel-06-shanghai.jpg",
+    "/uploads/photos/travel-07-hangzhou.jpg",
+    "/uploads/photos/travel-08-suzhou.jpg",
+    "/uploads/photos/travel-09-guilin.jpg"
   ],
   "projects": [],
   "resume": [
     {
       "company": "招银网络科技有限公司（深圳）",
       "title": "系统开发工程师",
-      "logo": "/uploads/resume/logo-1.png",
+      "logo": "/uploads/resume/cmbnt.png",
       "start": "2023.11",
       "end": ""
     },
     {
       "company": "中兴通讯有限公司",
       "title": "软件开发工程师",
-      "logo": "/uploads/resume/logo-2.png",
-      "start": "2021.7",
-      "end": "2023.6"
+      "logo": "/uploads/resume/zte.png",
+      "start": "2021.07",
+      "end": "2023.06"
+    },
+    {
+      "company": "合肥工业大学",
+      "title": "硕士",
+      "logo": "/uploads/resume/hfut.png",
+      "start": "2018.09",
+      "end": "2021.06"
+    },
+    {
+      "company": "哈尔滨理工大学",
+      "title": "本科",
+      "logo": "/uploads/resume/hrbust.png",
+      "start": "2014.09",
+      "end": "2018.06"
     }
   ]
 }

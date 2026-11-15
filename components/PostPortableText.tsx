@@ -1,8 +1,10 @@
 'use client'
 
 import ReactMarkdown from 'react-markdown'
+import rehypeKatex from 'rehype-katex'
 import rehypePrismPlus from 'rehype-prism-plus'
 import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
 
 import { ClientOnly } from '~/components/ClientOnly'
 import { Commentable } from '~/components/Commentable'
@@ -17,8 +19,11 @@ export function PostPortableText(props: { value: string }) {
   const markdown = props.value.replace(/\r\n/g, '\n').trim()
   return (
     <ReactMarkdown
-      remarkPlugins={[remarkGfm]}
-      rehypePlugins={[rehypePrismPlus]}
+      remarkPlugins={[remarkGfm, remarkMath]}
+      rehypePlugins={[
+        [rehypePrismPlus, { ignoreMissing: true }],
+        [rehypeKatex, { strict: 'ignore' }],
+      ]}
       components={{
         // 覆写 a 标签 → PeekabooLink
         a({ href = '', children, ...rest }) {

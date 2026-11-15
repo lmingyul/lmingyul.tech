@@ -1,5 +1,6 @@
 'use client'
 
+import { clsxm } from '@zolplay/utils'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import React from 'react'
@@ -8,16 +9,20 @@ export function Photos({ photos }: { photos: string[] }) {
   const [width, setWidth] = React.useState(0)
   const [isCompact, setIsCompact] = React.useState(false)
   const expandedWidth = React.useMemo(() => width * 1.38, [width])
+  const isScrollableDesktop = photos.length > 6
 
   React.useEffect(() => {
     const handleResize = () => {
       // 640px is the breakpoint for md
       if (window.innerWidth < 640) {
         setIsCompact(true)
-        return setWidth(window.innerWidth / 2 - 64)
+        setWidth(window.innerWidth / 2 - 64)
+        return
       }
 
-      setWidth(window.innerWidth / photos.length - 4 * photos.length)
+      setIsCompact(false)
+      const visibleCount = Math.max(1, Math.min(photos.length, 6))
+      setWidth(window.innerWidth / visibleCount - 24)
     }
 
     window.addEventListener('resize', handleResize)
@@ -38,10 +43,17 @@ export function Photos({ photos }: { photos: string[] }) {
         type: 'spring',
       }}
     >
-      <div className="-my-4 flex w-full snap-x snap-proximity scroll-pl-4 justify-start gap-4 overflow-x-auto px-4 py-4 sm:gap-6 md:justify-center md:overflow-x-hidden md:px-0">
+      <div
+        className={clsxm(
+          '-my-4 flex w-full snap-x snap-proximity scroll-pl-4 justify-start gap-4 overflow-x-auto px-4 py-4 sm:gap-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
+          isScrollableDesktop
+            ? 'md:justify-start md:overflow-x-auto md:px-6'
+            : 'md:justify-center md:overflow-x-hidden md:px-0'
+        )}
+      >
         {photos.map((image, idx) => (
           <motion.div
-            key={idx}
+            key={image}
             className="relative h-40 flex-none shrink-0 snap-start overflow-hidden rounded-xl bg-zinc-100 ring-2 ring-lime-800/20 dark:bg-zinc-800 dark:ring-lime-300/10 md:h-72 md:rounded-3xl"
             animate={{
               width,
@@ -62,13 +74,13 @@ export function Photos({ photos }: { photos: string[] }) {
           >
             <Image
               src={image}
-              alt=""
+              alt={`旅途瞬间 ${idx + 1}`}
               width={500}
               height={500}
               sizes="(min-width: 640px) 18rem, 11rem"
               className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover"
               unoptimized
-              priority
+              priority={idx < 6}
             />
           </motion.div>
         ))}

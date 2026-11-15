@@ -25,7 +25,7 @@ function Designer() {
         <span className="absolute -bottom-[3.5px] -left-[3.5px] size-1.5 border border-lime-700 bg-zinc-50 dark:border-lime-400" />
         <span className="absolute -right-[3.5px] -top-[3.5px] size-1.5 border border-lime-700 bg-zinc-50 dark:border-lime-400" />
       </span>
-      模型炼丹师
+      大模型炼丹师
     </span>
   )
 }
@@ -79,8 +79,8 @@ export function Headline() {
         }}
       >
         <Balancer>
-          我是 阿梁（lmingyul），一名后端程序员，大模型炼丹师，I
-          人，现在深圳。座右铭：Keep Learning、Keep Thinking、Keep Trying
+          我是 阿梁，朋友都这样叫（lmingyul，博客的名字取自我和我对象名字的组合），目前是一名后端程序员，兼大模型炼丹师，偏
+          I 人，现在深圳。座右铭：Keep Learning、Keep Thinking、Keep Trying
         </Balancer>
       </motion.p>
       <motion.div
@@ -100,11 +100,6 @@ export function Headline() {
           aria-label="我的推特"
           platform="twitter"
         />
-        {/*<SocialLink*/}
-        {/*  href="https://cali.so/youtube"*/}
-        {/*  aria-label="我的 YouTube"*/}
-        {/*  platform="youtube"*/}
-        {/*/>*/}
         <SocialLink
           href="https://space.bilibili.com/209721840"
           aria-label="我的 Bilibili"
@@ -115,11 +110,6 @@ export function Headline() {
           aria-label="我的 GitHub"
           platform="github"
         />
-        {/*<SocialLink*/}
-        {/*  href="https://cali.so/tg"*/}
-        {/*  aria-label="我的 Telegram"*/}
-        {/*  platform="telegram"*/}
-        {/*/>*/}
         <SocialLink href="/feed.xml" platform="rss" aria-label="RSS 订阅" />
         <SocialLink
           href="mailto:taimingliang1117@gmail.com"
