@@ -86,7 +86,7 @@ content:
     format: json
     fields:
       - name: heroPhotos
-        label: 首页顶部照片墙（可填 /uploads/... 或 uPic 链接）
+        label: 首页顶部照片墙（从上到下对应从左到右：最新照片放最上面，可填 /uploads/... 或 uPic 链接）
         type: string
         list: true
       - name: projects
