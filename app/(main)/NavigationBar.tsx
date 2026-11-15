@@ -22,6 +22,7 @@ function NavItem({
     <li>
       <Link
         href={href}
+        aria-current={isActive ? 'page' : undefined}
         className={clsxm(
           'relative block whitespace-nowrap px-3 py-2 transition',
           isActive
@@ -97,9 +98,16 @@ function MobileNavItem({
   href: string
   children: React.ReactNode
 }) {
+  const isActive = usePathname() === href
+
   return (
     <li>
-      <Popover.Button as={Link} href={href} className="block py-2">
+      <Popover.Button
+        as={Link}
+        href={href}
+        aria-current={isActive ? 'page' : undefined}
+        className="block py-2"
+      >
         {children}
       </Popover.Button>
     </li>
