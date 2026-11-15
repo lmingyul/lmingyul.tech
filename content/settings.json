@@ -1,0 +1,26 @@
+{
+  "heroPhotos": [
+    "/uploads/photos/hero-1.jpg",
+    "/uploads/photos/hero-2.jpg",
+    "/uploads/photos/hero-3.jpg",
+    "/uploads/photos/hero-4.jpg",
+    "/uploads/photos/hero-5.jpg"
+  ],
+  "projects": [],
+  "resume": [
+    {
+      "company": "招银网络科技有限公司（深圳）",
+      "title": "系统开发工程师",
+      "logo": "/uploads/resume/logo-1.png",
+      "start": "2023.11",
+      "end": ""
+    },
+    {
+      "company": "中兴通讯有限公司",
+      "title": "软件开发工程师",
+      "logo": "/uploads/resume/logo-2.png",
+      "start": "2021.7",
+      "end": "2023.6"
+    }
+  ]
+}

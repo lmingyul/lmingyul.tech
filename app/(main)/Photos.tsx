@@ -67,6 +67,7 @@ export function Photos({ photos }: { photos: string[] }) {
               height={500}
               sizes="(min-width: 640px) 18rem, 11rem"
               className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover"
+              unoptimized
               priority
             />
           </motion.div>

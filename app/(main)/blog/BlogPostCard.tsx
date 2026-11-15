@@ -32,9 +32,10 @@ export function BlogPostCard({ post, views }: { post: Post; views: number }) {
           src={mainImage.asset.url}
           alt=""
           className="rounded-t-3xl object-cover"
-          placeholder="blur"
+          placeholder={mainImage.asset.lqip ? 'blur' : 'empty'}
           blurDataURL={mainImage.asset.lqip}
           fill
+          unoptimized
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw"
         />
       </div>

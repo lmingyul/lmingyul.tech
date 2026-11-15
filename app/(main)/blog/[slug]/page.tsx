@@ -18,6 +18,9 @@ export const generateMetadata = async ({
   }
 
   const { title, description, mainImage } = post
+  const ogImageUrl = mainImage.asset.url.startsWith('http')
+    ? mainImage.asset.url
+    : new URL(mainImage.asset.url, env.NEXT_PUBLIC_SITE_URL).href
 
   return {
     title,
@@ -27,7 +30,7 @@ export const generateMetadata = async ({
       description,
       images: [
         {
-          url: mainImage.asset.url,
+          url: ogImageUrl,
         },
       ],
       type: 'article',
@@ -35,7 +38,7 @@ export const generateMetadata = async ({
     twitter: {
       images: [
         {
-          url: mainImage.asset.url,
+          url: ogImageUrl,
         },
       ],
       title,

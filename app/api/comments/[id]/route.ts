@@ -17,7 +17,7 @@ import { url } from '~/lib'
 import { getIP } from '~/lib/ip'
 import { resend } from '~/lib/mail'
 import { createRatelimit } from '~/lib/redis'
-import { client } from '~/sanity/lib/client'
+import { getBlogPostById } from '~/sanity/queries'
 
 const ratelimit = createRatelimit(10, 10)
 
@@ -90,16 +90,16 @@ export async function POST(req: NextRequest, { params }: Params) {
     })
   }
 
-  const post = await client.fetch<
-    { slug: string; title: string; imageUrl: string } | undefined
-  >(
-    '*[_type == "post" && _id == $id][0]{ "slug": slug.current, title, "imageUrl": mainImage.asset->url }',
-    {
-      id: postId,
-    }
-  )
-  if (!post) {
+  const postRecord = await getBlogPostById(postId)
+  if (!postRecord) {
     return NextResponse.json({ error: 'Post not found' }, { status: 412 })
+  }
+  const post = {
+    slug: postRecord.slug,
+    title: postRecord.title,
+    imageUrl: postRecord.imageUrl.startsWith('http')
+      ? postRecord.imageUrl
+      : url(postRecord.imageUrl).href,
   }
 
   try {

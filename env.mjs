@@ -13,12 +13,13 @@ const server = z.object({
   UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
   LINK_PREVIEW_API_BASE_URL: z.string().optional(),
   SITE_NOTIFICATION_EMAIL_TO: z.string().optional(),
+  CONTENT_WEBHOOK_SECRET: z.string().optional(),
 })
 
 const client = z.object({
-  NEXT_PUBLIC_SANITY_PROJECT_ID: z.string().min(1),
-  NEXT_PUBLIC_SANITY_DATASET: z.string().min(1),
-  NEXT_PUBLIC_SANITY_USE_CDN: z.boolean(),
+  NEXT_PUBLIC_SANITY_PROJECT_ID: z.string().optional().default(''),
+  NEXT_PUBLIC_SANITY_DATASET: z.string().optional().default('production'),
+  NEXT_PUBLIC_SANITY_USE_CDN: z.boolean().optional().default(false),
   NEXT_PUBLIC_SITE_URL: z.string().min(1),
   NEXT_PUBLIC_SITE_EMAIL_FROM: z.string().min(1),
   NEXT_PUBLIC_SITE_LINK_PREVIEW_ENABLED: z.boolean().optional().default(false),
@@ -46,6 +47,7 @@ const processEnv = {
   NEXT_PUBLIC_SITE_LINK_PREVIEW_ENABLED: process.env.NEXT_PUBLIC_SITE_LINK_PREVIEW_ENABLED == 'true',
   LINK_PREVIEW_API_BASE_URL: process.env.LINK_PREVIEW_API_BASE_URL,
   SITE_NOTIFICATION_EMAIL_TO: process.env.SITE_NOTIFICATION_EMAIL_TO,
+  CONTENT_WEBHOOK_SECRET: process.env.CONTENT_WEBHOOK_SECRET,
 }
 
 // Don't touch the part below

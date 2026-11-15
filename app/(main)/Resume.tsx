@@ -43,7 +43,7 @@ export function Resume({ resume }: { resume: Resume[] }) {
               <dt className="sr-only">日期</dt>
               <dd className="ml-auto text-xs text-zinc-500/80 dark:text-zinc-400/80">
                 {role.start}
-                <span aria-hidden="true">—</span> {role.end ?? '至今'}
+                <span aria-hidden="true">—</span> {role.end || '至今'}
               </dd>
             </dl>
           </li>

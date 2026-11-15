@@ -1,0 +1,139 @@
+media:
+  name: uploads
+  label: 上传媒体（图片 / 视频）
+  input: public/uploads
+  output: /uploads
+  rename: safe
+
+content:
+  - name: posts
+    label: 博客文章
+    type: collection
+    path: content/posts
+    format: yaml-frontmatter
+    filename: "{fields.slug}.md"
+    view:
+      fields: [title, publishedAt, draft]
+      primary: title
+      sort: [publishedAt]
+      order: desc
+    fields:
+      - name: title
+        label: 标题
+        type: string
+        required: true
+      - name: slug
+        label: URL 别名（英文或短横线，如 my-first-post）
+        type: string
+        required: true
+      - name: publishedAt
+        label: 发布时间
+        type: date
+        required: true
+        options:
+          time: true
+          format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+      - name: categories
+        label: 分类标签
+        type: string
+        list: true
+      - name: description
+        label: 摘要简介
+        type: text
+        required: true
+      - name: cover
+        label: 封面图链接（上传到 /uploads/... 或粘贴 uPic CDN 链接）
+        type: string
+        required: true
+        default: /opengraph-image.png
+      - name: mood
+        label: 文章情绪
+        type: select
+        default: neutral
+        options:
+          values:
+            - neutral
+            - happy
+            - sad
+      - name: draft
+        label: 草稿（勾选后不在前台展示）
+        type: boolean
+        default: false
+      - name: id
+        label: 历史文章 ID（新建留空）
+        type: string
+        hidden: true
+      - name: coverLqip
+        label: 封面模糊占位（可选）
+        type: string
+        hidden: true
+      - name: coverBg
+        label: 卡片背景色（可选）
+        type: string
+        hidden: true
+      - name: coverFg
+        label: 卡片文字色（可选）
+        type: string
+        hidden: true
+      - name: body
+        label: 正文（Markdown）
+        type: rich-text
+
+  - name: settings
+    label: 网站设置（照片墙 / 项目 / 履历）
+    type: file
+    path: content/settings.json
+    format: json
+    fields:
+      - name: heroPhotos
+        label: 首页顶部照片墙（可填 /uploads/... 或 uPic 链接）
+        type: string
+        list: true
+      - name: projects
+        label: 项目展示列表
+        type: object
+        list: true
+        fields:
+          - name: id
+            label: 项目 ID（可选）
+            type: string
+          - name: name
+            label: 项目名称
+            type: string
+            required: true
+          - name: url
+            label: 项目链接
+            type: string
+            required: true
+          - name: description
+            label: 项目简介
+            type: text
+            required: true
+          - name: icon
+            label: 项目图标链接（/uploads/... 或 https://...）
+            type: string
+            required: true
+      - name: resume
+        label: 工作经历
+        type: object
+        list: true
+        fields:
+          - name: company
+            label: 公司名称
+            type: string
+            required: true
+          - name: title
+            label: 职位名称
+            type: string
+            required: true
+          - name: logo
+            label: 公司 Logo 链接（/uploads/... 或 https://...）
+            type: string
+            required: true
+          - name: start
+            label: 开始时间
+            type: string
+            required: true
+          - name: end
+            label: 结束时间（留空则显示“至今”）
+            type: string

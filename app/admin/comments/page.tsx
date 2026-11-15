@@ -19,7 +19,7 @@ import { db } from '~/db'
 import { comments } from '~/db/schema'
 import { url } from '~/lib'
 import { truncate } from '~/lib/string'
-import { client } from '~/sanity/lib/client'
+import { getBlogPostsByIds } from '~/sanity/queries'
 
 export default async function AdminCommentsPage() {
   const {
@@ -42,13 +42,7 @@ export default async function AdminCommentsPage() {
     .limit(15)
   // get unique post IDs from comments
   const postIds = [...new Set(latestComments.map((comment) => comment.postId))]
-  const posts = await client.fetch<
-    { _id: string; title: string; slug: string }[]
-  >(
-    `*[_type == "post" && (_id in [${postIds
-      .map((v) => `"${v}"`)
-      .join(',')}])]{ _id, title, "slug":slug.current }`
-  )
+  const posts = await getBlogPostsByIds(postIds)
   // define a map with key of post IDs to posts
   const postMap = new Map(posts.map((post) => [post._id, post]))
 

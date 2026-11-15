@@ -14,6 +14,7 @@ import { PeekabooLink } from '~/components/links/PeekabooLink'
  * props.value 现在是 string
  */
 export function PostPortableText(props: { value: string }) {
+  const markdown = props.value.replace(/\r\n/g, '\n').trim()
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
@@ -90,14 +91,35 @@ export function PostPortableText(props: { value: string }) {
           )
         },
 
-        // 覆写 img：如果你有 PortableTextImage 里的一些逻辑，可在这里实现
+        // 覆写 img：支持图片懒加载与视频扩展名自动渲染播放器
         img({ src = '', alt = '', ...rest }) {
-          // eslint-disable-next-line @next/next/no-img-element
-          return <img src={src} alt={alt} className="rounded-xl" {...rest} />
+          if (/\.(mp4|webm|mov|m4v)([?#].*)?$/i.test(src)) {
+            return (
+              <video
+                src={src}
+                controls
+                playsInline
+                preload="metadata"
+                className="my-4 w-full rounded-xl"
+              >
+                {alt}
+              </video>
+            )
+          }
+          return (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={src}
+              alt={alt}
+              loading="lazy"
+              className="rounded-xl"
+              {...rest}
+            />
+          )
         },
       }}
     >
-      {props.value}
+      {markdown}
     </ReactMarkdown>
   )
 }
