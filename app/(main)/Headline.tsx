@@ -18,7 +18,7 @@ function Developer() {
 
 function Designer() {
   return (
-    <span className="group relative bg-black/5 p-1 dark:bg-white/5">
+    <span className="group relative inline-block whitespace-nowrap bg-black/5 p-1 dark:bg-white/5">
       <span className="pointer-events-none absolute inset-0 border border-lime-700/90 opacity-70 group-hover:border-dashed group-hover:opacity-100 dark:border-lime-400/90">
         <span className="absolute -left-[3.5px] -top-[3.5px] size-1.5 border border-lime-700 bg-zinc-50 dark:border-lime-400" />
         <span className="absolute -bottom-[3.5px] -right-[3.5px] size-1.5 border border-lime-700 bg-zinc-50 dark:border-lime-400" />
@@ -41,7 +41,7 @@ function OCD() {
 
 function Founder() {
   return (
-    <span className="group inline-flex items-center">
+    <span className="group inline-flex items-center whitespace-nowrap">
       <UserSecurityIcon className="mr-1 inline-flex group-hover:fill-zinc-600/20 dark:group-hover:fill-zinc-200/20" />
       <span>I 人</span>
     </span>
@@ -50,9 +50,9 @@ function Founder() {
 
 export function Headline() {
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-3xl">
       <motion.h1
-        className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl"
+        className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 lg:text-5xl"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{
@@ -62,12 +62,18 @@ export function Headline() {
           duration: 0.3,
         }}
       >
-        <Developer />，<Designer />，
+        <Developer />，
+        <span className="whitespace-nowrap">
+          <Designer />，
+        </span>
         <span className="block h-2" />
-        <OCD />，<Founder />
+        <span className="whitespace-nowrap">
+          <OCD />，
+        </span>
+        <Founder />
       </motion.h1>
       <motion.p
-        className="mt-6 text-base text-zinc-600 dark:text-zinc-400"
+        className="mt-6 max-w-2xl text-base text-zinc-600 dark:text-zinc-400"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{
