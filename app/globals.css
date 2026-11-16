@@ -435,3 +435,21 @@ html.dark .dock-prefs-option:focus-visible {
     transition: none;
   }
 }
+
+/* AI Daily Scrollspy TOC */
+.ai-toc-nav {
+  scroll-target-group: auto;
+}
+
+.ai-toc-link:is(:target-current, .target-current) {
+  color: #3f6212;
+  border-inline-start-color: #65a30d;
+  background-color: rgba(132, 204, 22, 0.12);
+  font-weight: 600;
+}
+
+html.dark .ai-toc-link:is(:target-current, .target-current) {
+  color: #d9f99d;
+  border-inline-start-color: #a3e635;
+  background-color: rgba(163, 230, 53, 0.14);
+}

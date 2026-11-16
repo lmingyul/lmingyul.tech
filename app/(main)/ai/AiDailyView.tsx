@@ -11,6 +11,8 @@ import {
   type AiDailyIssueSummary,
 } from '~/sanity/queries'
 
+import { AiDailyTableOfContents } from './AiDailyTableOfContents'
+
 export function AiDailyView({
   issues,
   activeIssue,
@@ -88,10 +90,10 @@ export function AiDailyView({
         </section>
       ) : (
         <div className="mt-8">
-          {/* Mobile / Tablet horizontal issue switcher */}
+          {/* Mobile / Tablet horizontal issue switcher + collapsible TOC */}
           <nav
             aria-label="移动端日报期数切换"
-            className="mb-6 flex gap-2 overflow-x-auto pb-2 lg:hidden"
+            className="mb-3 flex gap-2 overflow-x-auto pb-1.5 lg:hidden"
           >
             {issues.map((issue, idx) => {
               const isCurrent = issue.slug === activeIssue.slug
@@ -125,48 +127,46 @@ export function AiDailyView({
             })}
           </nav>
 
-          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
-            {/* Desktop Left 4/12 Archive Rail */}
-            <aside className="hidden lg:col-span-4 lg:sticky lg:top-8 lg:block">
-              <div className="mb-3 flex items-center justify-between px-1">
-                <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-                  期数时间轴
-                </h2>
-                <span className="text-xs text-zinc-400 dark:text-zinc-500">
-                  最新在上
-                </span>
-              </div>
+          <AiDailyTableOfContents
+            headings={activeIssue.headings}
+            variant="mobile"
+          />
 
-              <nav
-                aria-label="日报期数归档"
-                className="max-h-[calc(100vh-8rem)] space-y-2.5 overflow-y-auto pr-1"
-              >
-                {issues.map((issue, idx) => {
-                  const isCurrent = issue.slug === activeIssue.slug
-                  const href =
-                    idx === 0 && isIndexPage ? '/ai' : `/ai/${issue.slug}`
+          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[260px_minmax(0,1fr)]">
+            {/* Desktop Left Sticky Rail: Compact Issue Switcher + Scrollspy TOC */}
+            <aside className="hidden lg:sticky lg:top-6 lg:flex lg:max-h-[calc(100vh-3rem)] lg:flex-col lg:gap-4">
+              <div className="shrink-0 rounded-2xl border border-zinc-100 bg-white/80 p-4 shadow-sm dark:border-zinc-700/40 dark:bg-zinc-900/60">
+                <div className="mb-2.5 flex items-center justify-between">
+                  <h2 className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
+                    📅 期数归档
+                  </h2>
+                  <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                    共 {issues.length} 期
+                  </span>
+                </div>
 
-                  return (
-                    <Link
-                      key={issue.slug}
-                      href={href}
-                      aria-current={isCurrent ? 'page' : undefined}
-                      className={clsxm(
-                        'block rounded-2xl border p-4 transition',
-                        isCurrent
-                          ? 'border-lime-500/50 bg-lime-50/70 shadow-sm dark:border-lime-400/40 dark:bg-lime-950/25'
-                          : 'border-zinc-100 bg-white/70 hover:border-lime-500/30 dark:border-zinc-700/40 dark:bg-zinc-900/60 dark:hover:border-lime-400/25'
-                      )}
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span
-                          className={clsxm(
-                            'inline-flex items-center gap-1.5 text-xs',
-                            isCurrent
-                              ? 'font-semibold text-lime-700 dark:text-lime-300'
-                              : 'font-medium text-zinc-700 dark:text-zinc-200'
-                          )}
-                        >
+                <nav
+                  aria-label="日报期数归档"
+                  className="max-h-36 space-y-1.5 overflow-y-auto pr-1"
+                >
+                  {issues.map((issue, idx) => {
+                    const isCurrent = issue.slug === activeIssue.slug
+                    const href =
+                      idx === 0 && isIndexPage ? '/ai' : `/ai/${issue.slug}`
+
+                    return (
+                      <Link
+                        key={issue.slug}
+                        href={href}
+                        aria-current={isCurrent ? 'page' : undefined}
+                        className={clsxm(
+                          'flex items-center justify-between gap-2 rounded-xl border px-3 py-2 text-xs transition',
+                          isCurrent
+                            ? 'border-lime-500/50 bg-lime-50/70 font-semibold text-lime-700 dark:border-lime-400/40 dark:bg-lime-950/25 dark:text-lime-300'
+                            : 'border-zinc-100 bg-zinc-50/60 font-medium text-zinc-700 hover:border-lime-500/30 dark:border-zinc-800 dark:bg-zinc-800/40 dark:text-zinc-300'
+                        )}
+                      >
+                        <span className="inline-flex items-center gap-1.5">
                           {isCurrent && (
                             <span
                               aria-hidden="true"
@@ -174,37 +174,32 @@ export function AiDailyView({
                             />
                           )}
                           <time dateTime={issue.date}>{issue.date}</time>
-                          {idx === 0 && (
-                            <span className="rounded-md bg-lime-500/15 px-1.5 py-0.5 text-xs font-semibold text-lime-700 dark:bg-lime-400/15 dark:text-lime-300">
-                              最新
-                            </span>
-                          )}
                         </span>
-
-                        {issue.tags[0] && (
-                          <span className="truncate rounded-md bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
-                            {issue.tags[0]}
+                        {idx === 0 ? (
+                          <span className="rounded bg-lime-500/15 px-1.5 py-0.5 text-xs font-semibold text-lime-700 dark:bg-lime-400/15 dark:text-lime-300">
+                            最新
                           </span>
+                        ) : (
+                          issue.tags[0] && (
+                            <span className="truncate text-zinc-400 dark:text-zinc-500">
+                              {issue.tags[0]}
+                            </span>
+                          )
                         )}
-                      </div>
+                      </Link>
+                    )
+                  })}
+                </nav>
+              </div>
 
-                      <p className="mt-1.5 line-clamp-1 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                        {issue.title}
-                      </p>
-
-                      {issue.summary && (
-                        <p className="mt-1 line-clamp-2 text-xs leading-5 text-zinc-500 dark:text-zinc-400">
-                          {issue.summary}
-                        </p>
-                      )}
-                    </Link>
-                  )
-                })}
-              </nav>
+              <AiDailyTableOfContents
+                headings={activeIssue.headings}
+                variant="desktop"
+              />
             </aside>
 
-            {/* Right 8/12 Issue Content Reader */}
-            <article className="rounded-2xl border border-zinc-100 bg-white/80 p-6 shadow-sm dark:border-zinc-700/40 dark:bg-zinc-900/60 sm:p-8 lg:col-span-8">
+            {/* Right Reading Canvas */}
+            <article className="min-w-0 rounded-2xl border border-zinc-100 bg-white/80 p-6 shadow-sm dark:border-zinc-700/40 dark:bg-zinc-900/60 sm:p-8">
               <header className="border-b border-zinc-100 pb-6 dark:border-zinc-800">
                 <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
                   <span className="inline-flex items-center gap-1.5 font-medium text-lime-700 dark:text-lime-400">
@@ -270,7 +265,10 @@ export function AiDailyView({
               )}
 
               <Prose className="mt-6 max-w-none">
-                <AiMarkdown value={activeIssue.body} />
+                <AiMarkdown
+                  value={activeIssue.body}
+                  headings={activeIssue.headings}
+                />
               </Prose>
 
               {(newerIssue || olderIssue) && (

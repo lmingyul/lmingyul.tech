@@ -23,6 +23,7 @@ type PostChunk = {
 type CachedIndex = {
   builtAt: number
   personaMarkdown: string
+  postCount: number
   postCatalog: string
   chunks: PostChunk[]
   df: Map<string, number>
@@ -202,6 +203,7 @@ async function getOrBuildIndex(): Promise<CachedIndex> {
   const index: CachedIndex = {
     builtAt: now,
     personaMarkdown,
+    postCount: posts.length,
     postCatalog,
     chunks,
     df,
@@ -278,7 +280,7 @@ export async function buildPersonaPromptContext(
 ## 【博主个人档案】
 ${index.personaMarkdown}
 
-## 【站内全部文章目录（共 50 篇）】
+## 【站内全部文章目录（共 ${index.postCount} 篇）】
 ${index.postCatalog}`
 
   const retrievedBlock =
@@ -308,12 +310,14 @@ ${index.postCatalog}`
   return {
     messages,
     topChunks,
+    postCount: index.postCount,
   }
 }
 
 export function getStaticFallbackAnswer(
   question: string,
-  topChunks: { title: string; slug: string; snippet: string }[] = []
+  topChunks: { title: string; slug: string; snippet: string }[] = [],
+  postCount = 50
 ): string {
   const q = question.toLowerCase()
 
@@ -336,8 +340,8 @@ export function getStaticFallbackAnswer(
       .slice(0, 3)
       .map((c) => `- [${c.title}](/blog/${c.slug})`)
       .join('\n')
-    return `关于这个问题，推荐直接阅读阿梁在站内写过的相关文章：\n${links}\n\n也可以前往 [博客列表](/blog) 浏览全部 50 篇技术与生活记录。`
+    return `关于这个问题，推荐直接阅读阿梁在站内写过的相关文章：\n${links}\n\n也可以前往 [博客列表](/blog) 浏览全部 ${postCount} 篇技术与生活记录。`
   }
 
-  return '我是阿梁（lmingyul）的博客数字分身 👋。阿梁目前在深圳从事后端开发、搜索算法与大模型应用落地，你可以看看 [关于页面](/about) 了解完整履历，或去 [博客列表](/blog) 翻阅他的 50 篇文章！'
+  return `我是阿梁（lmingyul）的博客数字分身 👋。阿梁目前在深圳从事后端开发、搜索算法与大模型应用落地，你可以看看 [关于页面](/about) 了解完整履历，或去 [博客列表](/blog) 翻阅他的 ${postCount} 篇文章！`
 }

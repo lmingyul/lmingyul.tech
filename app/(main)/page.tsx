@@ -7,10 +7,13 @@ import { Photos } from '~/app/(main)/Photos'
 import { Resume } from '~/app/(main)/Resume'
 import { PencilSwooshIcon } from '~/assets'
 import { Container } from '~/components/ui/Container'
-import { getSettings } from '~/sanity/queries'
+import { getAllLatestBlogPostSlugs, getSettings } from '~/sanity/queries'
 
 export default async function BlogHomePage() {
-  const settings = await getSettings()
+  const [settings, postSlugs] = await Promise.all([
+    getSettings(),
+    getAllLatestBlogPostSlugs(),
+  ])
 
   return (
     <>
@@ -30,7 +33,7 @@ export default async function BlogHomePage() {
             <BlogPosts />
           </div>
           <aside className="space-y-10 lg:sticky lg:top-8 lg:h-fit lg:pl-16 xl:pl-20">
-            <AskMe />
+            <AskMe postCount={postSlugs.length} />
             {settings?.resume && <Resume resume={settings.resume} />}
           </aside>
         </div>

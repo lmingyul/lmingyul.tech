@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
         ? [{ role: item.role, content: item.content }]
         : []
   )
-  const { messages, topChunks } = await buildPersonaPromptContext(
+  const { messages, topChunks, postCount } = await buildPersonaPromptContext(
     question,
     history
   )
@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
 
   if (!apiKey || !withinBudget) {
     return makePlainStreamResponse(
-      getStaticFallbackAnswer(question, topChunks)
+      getStaticFallbackAnswer(question, topChunks, postCount)
     )
   }
 
@@ -127,14 +127,14 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error('[ai/chat] Upstream connection failed:', err)
     return makePlainStreamResponse(
-      getStaticFallbackAnswer(question, topChunks)
+      getStaticFallbackAnswer(question, topChunks, postCount)
     )
   }
 
   if (!upstream.ok || !upstream.body) {
     console.error('[ai/chat] Upstream HTTP error:', upstream.status)
     return makePlainStreamResponse(
-      getStaticFallbackAnswer(question, topChunks)
+      getStaticFallbackAnswer(question, topChunks, postCount)
     )
   }
 
@@ -181,14 +181,18 @@ export async function POST(req: NextRequest) {
 
         if (!emittedAny) {
           controller.enqueue(
-            encoder.encode(getStaticFallbackAnswer(question, topChunks))
+            encoder.encode(
+              getStaticFallbackAnswer(question, topChunks, postCount)
+            )
           )
         }
       } catch (err) {
         console.error('[ai/chat] Stream interrupted:', err)
         if (!emittedAny) {
           controller.enqueue(
-            encoder.encode(getStaticFallbackAnswer(question, topChunks))
+            encoder.encode(
+              getStaticFallbackAnswer(question, topChunks, postCount)
+            )
           )
         }
       } finally {

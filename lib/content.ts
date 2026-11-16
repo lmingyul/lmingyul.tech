@@ -7,6 +7,10 @@ import readingTime from 'reading-time'
 
 import { getDate } from '~/lib/date'
 import {
+  type AiTocHeading,
+  extractAiTocHeadings,
+} from '~/lib/heading-slug'
+import {
   type Post,
   type PostDetail,
   type PostHeadingBlock,
@@ -422,6 +426,7 @@ export type AiDailyIssueSummary = {
 
 export type AiDailyIssueDetail = AiDailyIssueSummary & {
   body: string
+  headings: AiTocHeading[]
 }
 
 function normalizeDailyDate(value: unknown, fileSlug: string): string {
@@ -552,6 +557,7 @@ async function readAllAiDailyIssues(): Promise<StoredAiDailyIssue[]> {
         highlights,
         readingTime: computedReadingTime,
         body,
+        headings: extractAiTocHeadings(body),
         draft: Boolean(data.draft),
       })
     } catch (err) {
@@ -592,6 +598,7 @@ function toAiDailyDetail(issue: StoredAiDailyIssue): AiDailyIssueDetail {
     highlights: issue.highlights,
     readingTime: issue.readingTime,
     body: issue.body,
+    headings: issue.headings,
   }
 }
 

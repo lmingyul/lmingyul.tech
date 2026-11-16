@@ -78,7 +78,7 @@ function BubbleMarkdown({ content }: { content: string }) {
   )
 }
 
-export function AskMe() {
+export function AskMe({ postCount }: { postCount: number }) {
   const baseId = React.useId()
   const headingId = `${baseId}-heading`
   const inputId = `${baseId}-input`
@@ -263,7 +263,7 @@ export function AskMe() {
         id={hintId}
         className="mt-2 text-xs leading-5 text-zinc-600 dark:text-zinc-400"
       >
-        基于我的工程履历、工具清单与 50 篇博文实时解答，点下方快捷问题或直接提问。
+        基于我的工程履历、工具清单与 {postCount} 篇博文实时解答，点下方快捷问题或直接提问。
       </p>
 
       <div
