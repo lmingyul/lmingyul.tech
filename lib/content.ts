@@ -409,3 +409,211 @@ export async function getSettings(): Promise<{
     }
   }
 }
+
+export type AiDailyIssueSummary = {
+  slug: string
+  date: string
+  title: string
+  summary: string
+  tags: string[]
+  highlights: string[]
+  readingTime: number
+}
+
+export type AiDailyIssueDetail = AiDailyIssueSummary & {
+  body: string
+}
+
+function normalizeDailyDate(value: unknown, fileSlug: string): string {
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value.toISOString().slice(0, 10)
+  }
+  if (typeof value === 'string' && value.trim()) {
+    const trimmed = value.trim()
+    const directMatch = trimmed.match(/^(\d{4}-\d{2}-\d{2})/)
+    if (directMatch?.[1]) {
+      return directMatch[1]
+    }
+    const parsed = new Date(trimmed)
+    if (!Number.isNaN(parsed.getTime())) {
+      return parsed.toISOString().slice(0, 10)
+    }
+  }
+  const slugMatch = fileSlug.match(/(\d{4}-\d{2}-\d{2})/)
+  if (slugMatch?.[1]) {
+    return slugMatch[1]
+  }
+  return new Date().toISOString().slice(0, 10)
+}
+
+function normalizeHighlights(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => cleanMarkdownInline(String(item)))
+      .filter(Boolean)
+  }
+  if (typeof value === 'string' && value.trim()) {
+    return value
+      .split('\n')
+      .map((line) => cleanMarkdownInline(line.replace(/^[-*•\d.)\s]+/, '')))
+      .filter(Boolean)
+  }
+  return []
+}
+
+function extractSummaryFromBody(markdown: string): string {
+  const lines = markdown.split('\n')
+  let inFence = false
+  for (const rawLine of lines) {
+    const trimmed = rawLine.trim()
+    if (/^(`{3,}|~{3,})/.test(trimmed)) {
+      inFence = !inFence
+      continue
+    }
+    if (inFence || !trimmed) continue
+    if (/^#{1,6}\s+/.test(trimmed)) continue
+    if (/^[-*_]{3,}$/.test(trimmed)) continue
+    if (/^\|.*\|$/.test(trimmed)) continue
+
+    const cleaned = cleanMarkdownInline(
+      trimmed.replace(/^>\s*/, '').replace(/^[-*+]\s+/, '').replace(/^\d+\.\s+/, '')
+    )
+    if (cleaned.length >= 8) {
+      return cleaned.length > 140 ? `${cleaned.slice(0, 140)}…` : cleaned
+    }
+  }
+  return ''
+}
+
+type StoredAiDailyIssue = AiDailyIssueDetail & {
+  draft: boolean
+}
+
+async function readAllAiDailyIssues(): Promise<StoredAiDailyIssue[]> {
+  const dailyDir = path.join(getContentRoot(), 'ai-daily')
+  let entries: Dirent[] = []
+  try {
+    entries = await fs.readdir(dailyDir, { withFileTypes: true })
+  } catch {
+    return []
+  }
+
+  const issues: StoredAiDailyIssue[] = []
+
+  for (const entry of entries) {
+    if (
+      !entry.isFile() ||
+      !entry.name.endsWith('.md') ||
+      entry.name.startsWith('.') ||
+      entry.name.toLowerCase() === 'readme.md'
+    ) {
+      continue
+    }
+
+    try {
+      const filePath = path.join(dailyDir, entry.name)
+      const raw = await fs.readFile(filePath, 'utf8')
+      const parsed = matter(raw)
+      const data = parsed.data as Record<string, unknown>
+      const fileSlug = entry.name.replace(/\.md$/i, '')
+      const slug =
+        typeof data.slug === 'string' && data.slug.trim()
+          ? data.slug.trim()
+          : fileSlug
+      const date = normalizeDailyDate(data.date ?? data.publishedAt, slug)
+      const body = parsed.content.replace(/\r\n/g, '\n').trim()
+      if (!body && !data.title) {
+        continue
+      }
+
+      const title =
+        typeof data.title === 'string' && data.title.trim()
+          ? data.title.trim()
+          : `AI 每日简讯 · ${date}`
+      const rawSummary =
+        typeof data.summary === 'string' && data.summary.trim()
+          ? data.summary.trim()
+          : typeof data.description === 'string' && data.description.trim()
+            ? data.description.trim()
+            : extractSummaryFromBody(body)
+      const tags = normalizeCategories(data.tags ?? data.categories)
+      const highlights = normalizeHighlights(data.highlights ?? data.tldr)
+      const computedReadingTime =
+        typeof data.readingTime === 'number' && data.readingTime > 0
+          ? data.readingTime
+          : Math.max(1, Math.round(readingTime(body).minutes))
+
+      issues.push({
+        slug,
+        date,
+        title,
+        summary: rawSummary,
+        tags,
+        highlights,
+        readingTime: computedReadingTime,
+        body,
+        draft: Boolean(data.draft),
+      })
+    } catch (err) {
+      console.error(`[ai-daily] Failed to parse ${entry.name}:`, err)
+    }
+  }
+
+  return issues.sort((a, b) => {
+    if (a.date !== b.date) {
+      return b.date.localeCompare(a.date)
+    }
+    return b.slug.localeCompare(a.slug)
+  })
+}
+
+export async function getAiDailyIssues(): Promise<AiDailyIssueSummary[]> {
+  const issues = await readAllAiDailyIssues()
+  return issues
+    .filter((issue) => !issue.draft)
+    .map(({ slug, date, title, summary, tags, highlights, readingTime }) => ({
+      slug,
+      date,
+      title,
+      summary,
+      tags,
+      highlights,
+      readingTime,
+    }))
+}
+
+function toAiDailyDetail(issue: StoredAiDailyIssue): AiDailyIssueDetail {
+  return {
+    slug: issue.slug,
+    date: issue.date,
+    title: issue.title,
+    summary: issue.summary,
+    tags: issue.tags,
+    highlights: issue.highlights,
+    readingTime: issue.readingTime,
+    body: issue.body,
+  }
+}
+
+export async function getAiDailyIssue(
+  slugOrDate?: string
+): Promise<AiDailyIssueDetail | undefined> {
+  const issues = (await readAllAiDailyIssues()).filter((issue) => !issue.draft)
+  if (issues.length === 0) {
+    return undefined
+  }
+  if (!slugOrDate) {
+    const latest = issues[0]
+    return latest ? toAiDailyDetail(latest) : undefined
+  }
+
+  const decoded = safeDecode(slugOrDate)
+  const target = issues.find(
+    (issue) =>
+      issue.slug === slugOrDate ||
+      issue.slug === decoded ||
+      issue.date === slugOrDate ||
+      issue.date === decoded
+  )
+  return target ? toAiDailyDetail(target) : undefined
+}

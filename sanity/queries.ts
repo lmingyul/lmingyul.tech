@@ -1,4 +1,8 @@
 export {
+  type AiDailyIssueDetail,
+  type AiDailyIssueSummary,
+  getAiDailyIssue,
+  getAiDailyIssues,
   getAllLatestBlogPostSlugs,
   getBlogPost,
   getBlogPostById,

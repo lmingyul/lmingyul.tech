@@ -61,6 +61,23 @@ export function WritingIcon() {
   )
 }
 
+/** Duotone sparkle icon for AI section (18x18). */
+export function AiSparkIcon() {
+  return (
+    <DockIconBase>
+      <path
+        d="M8.5 2.25L10.15 6.35L14.25 8L10.15 9.65L8.5 13.75L6.85 9.65L2.75 8L6.85 6.35L8.5 2.25Z"
+        fill="currentColor"
+        opacity=".3"
+        strokeWidth="0"
+        stroke="none"
+      />
+      <path d="M8.5 2.25L10.15 6.35L14.25 8L10.15 9.65L8.5 13.75L6.85 9.65L2.75 8L6.85 6.35L8.5 2.25Z" />
+      <path d="M14 12.25v3M12.5 13.75h3" />
+    </DockIconBase>
+  )
+}
+
 /** Duotone guestbook speech-bubble icon (18x18). */
 export function GuestbookIcon() {
   return (

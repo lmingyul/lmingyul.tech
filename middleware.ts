@@ -9,6 +9,7 @@ export default authMiddleware({
     '/',
     '/studio(.*)',
     '/api(.*)',
+    '/ai(.*)',
     '/blog(.*)',
     '/confirm(.*)',
     '/projects',

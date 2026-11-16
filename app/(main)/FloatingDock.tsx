@@ -13,6 +13,7 @@ import { navigationItems } from '~/config/nav'
 
 import {
   AboutIcon,
+  AiSparkIcon,
   AmaIcon,
   GuestbookIcon,
   MonitorMiniIcon,
@@ -27,6 +28,7 @@ import { dockGoKeyFor, useDockGoShortcuts } from './useDockGoShortcuts'
 
 const ROUTE_ICONS: Record<string, React.ComponentType> = {
   '/blog': WritingIcon,
+  '/ai': AiSparkIcon,
   '/guestbook': GuestbookIcon,
   '/about': AboutIcon,
   '/projects': ProjectsIcon,

@@ -11,6 +11,7 @@ export const GO_TIMEOUT_MS = 1000
 export const DOCK_GO_SHORTCUTS: Record<string, string> = {
   h: '/',
   b: '/blog',
+  i: '/ai',
   g: '/guestbook',
   a: '/about',
   p: '/projects',

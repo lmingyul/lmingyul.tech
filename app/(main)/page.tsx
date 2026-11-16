@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { AskMe } from '~/app/(main)/AskMe'
 import { BlogPosts } from '~/app/(main)/blog/BlogPosts'
 import { Headline } from '~/app/(main)/Headline'
 import { Photos } from '~/app/(main)/Photos'
@@ -29,6 +30,7 @@ export default async function BlogHomePage() {
             <BlogPosts />
           </div>
           <aside className="space-y-10 lg:sticky lg:top-8 lg:h-fit lg:pl-16 xl:pl-20">
+            <AskMe />
             {settings?.resume && <Resume resume={settings.resume} />}
           </aside>
         </div>

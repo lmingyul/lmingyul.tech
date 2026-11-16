@@ -13,6 +13,7 @@ function handleRevalidate(req: NextRequest) {
   }
 
   revalidatePath('/', 'layout')
+  revalidatePath('/ai', 'layout')
   revalidatePath('/blog', 'layout')
   revalidatePath('/projects')
   revalidatePath('/feed.xml')

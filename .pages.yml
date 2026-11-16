@@ -79,6 +79,50 @@ content:
         label: 正文（Markdown）
         type: rich-text
 
+  - name: ai-daily
+    label: AI 每日简讯（日报）
+    type: collection
+    path: content/ai-daily
+    format: yaml-frontmatter
+    filename: "{fields.date}.md"
+    view:
+      fields: [title, date, draft]
+      primary: title
+      sort: [date]
+      order: desc
+    fields:
+      - name: date
+        label: 日报日期（YYYY-MM-DD）
+        type: string
+        required: true
+      - name: title
+        label: 标题（可选，留空默认 AI 每日简讯 · 日期）
+        type: string
+      - name: summary
+        label: 一句话摘要（可选，留空自动提取首段）
+        type: text
+      - name: tags
+        label: 分类标签（可选）
+        type: string
+        list: true
+      - name: highlights
+        label: 今日速览要点（可选，正文已有速览章节可留空）
+        type: string
+        list: true
+      - name: draft
+        label: 草稿（勾选后不在前台展示）
+        type: boolean
+        default: false
+      - name: body
+        label: 正文（Markdown）
+        type: rich-text
+
+  - name: ai-persona
+    label: AI 个人分身知识库（首页「通过 AI 了解我」）
+    type: file
+    path: content/ai-persona.md
+    format: raw
+
   - name: settings
     label: 网站设置（照片墙 / 项目 / 履历）
     type: file

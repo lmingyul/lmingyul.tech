@@ -14,6 +14,9 @@ const server = z.object({
   LINK_PREVIEW_API_BASE_URL: z.string().optional(),
   SITE_NOTIFICATION_EMAIL_TO: z.string().optional(),
   CONTENT_WEBHOOK_SECRET: z.string().optional(),
+  DEEPSEEK_API_KEY: z.string().optional(),
+  DEEPSEEK_BASE_URL: z.string().optional(),
+  DEEPSEEK_MODEL: z.string().optional(),
 })
 
 const client = z.object({
@@ -48,6 +51,9 @@ const processEnv = {
   LINK_PREVIEW_API_BASE_URL: process.env.LINK_PREVIEW_API_BASE_URL,
   SITE_NOTIFICATION_EMAIL_TO: process.env.SITE_NOTIFICATION_EMAIL_TO,
   CONTENT_WEBHOOK_SECRET: process.env.CONTENT_WEBHOOK_SECRET,
+  DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY,
+  DEEPSEEK_BASE_URL: process.env.DEEPSEEK_BASE_URL,
+  DEEPSEEK_MODEL: process.env.DEEPSEEK_MODEL,
 }
 
 // Don't touch the part below
