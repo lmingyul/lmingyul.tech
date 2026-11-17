@@ -6,6 +6,7 @@ import { CalendarIcon, HourglassIcon, SparkleIcon } from '~/assets'
 import { AiMarkdown } from '~/components/AiMarkdown'
 import { Prose } from '~/components/Prose'
 import { Container } from '~/components/ui/Container'
+import { getMessages, type Locale, localizePath } from '~/lib/i18n'
 import {
   type AiDailyIssueDetail,
   type AiDailyIssueSummary,
@@ -17,11 +18,14 @@ export function AiDailyView({
   issues,
   activeIssue,
   isIndexPage = false,
+  locale = 'zh',
 }: {
   issues: AiDailyIssueSummary[]
   activeIssue?: AiDailyIssueDetail
   isIndexPage?: boolean
+  locale?: Locale
 }) {
+  const t = getMessages(locale).aiDaily
   const activeIndex = activeIssue
     ? issues.findIndex((item) => item.slug === activeIssue.slug)
     : -1
@@ -30,6 +34,7 @@ export function AiDailyView({
     activeIndex >= 0 && activeIndex < issues.length - 1
       ? issues[activeIndex + 1]
       : undefined
+  const isFallbackContent = locale === 'en' && Boolean(activeIssue?.isFallback)
 
   return (
     <Container className="mt-16 sm:mt-24">
@@ -37,11 +42,11 @@ export function AiDailyView({
         <div className="mb-4 flex flex-wrap items-center gap-2">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-lime-500/30 bg-lime-500/10 px-3 py-1 text-xs font-semibold text-lime-700 dark:border-lime-400/30 dark:bg-lime-400/10 dark:text-lime-300">
             <SparkleIcon className="h-3.5 w-3.5 flex-none" aria-hidden="true" />
-            <span>AI 每日简讯</span>
+            <span>{t.badge}</span>
           </span>
           {issues.length > 0 && (
             <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:bg-zinc-800/90 dark:text-zinc-400">
-              共 {issues.length} 期归档
+              {t.archiveCount(issues.length)}
             </span>
           )}
         </div>
@@ -49,23 +54,21 @@ export function AiDailyView({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
             <h1 className="text-3xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-4xl">
-              AI 每日简讯 · 日报
+              {t.heading}
             </h1>
             <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400 sm:text-base">
-              <Balancer>
-                持续追踪大模型训练推理、Agent 工程实践与高价值开源动态，从日常阅读与研究笔记中沉淀高信噪比信号。
-              </Balancer>
+              <Balancer>{t.description}</Balancer>
             </p>
           </div>
 
           {activeIssue && (
             <div className="shrink-0 text-xs text-zinc-500 dark:text-zinc-400">
-              <span>本期永久链接：</span>
+              <span>{t.permalinkLabel}</span>
               <Link
-                href={`/ai/${activeIssue.slug}`}
-                className="rounded-md bg-zinc-100 px-2 py-1 font-mono text-zinc-700 transition hover:text-lime-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:text-lime-400"
+                href={localizePath(`/ai/${activeIssue.slug}`, locale)}
+                className="ml-1 rounded-md bg-zinc-100 px-2 py-1 font-mono text-zinc-700 transition hover:text-lime-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:text-lime-400"
               >
-                /ai/{activeIssue.slug}
+                {localizePath(`/ai/${activeIssue.slug}`, locale)}
               </Link>
             </div>
           )}
@@ -78,26 +81,29 @@ export function AiDailyView({
             <SparkleIcon className="h-6 w-6" aria-hidden="true" />
           </div>
           <h2 className="mt-4 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-            首期 AI 每日简讯即将同步上线
+            {t.emptyTitle}
           </h2>
           <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-zinc-500 dark:text-zinc-400">
-            当 Notion 日报工作流向 GitHub 仓库推送{' '}
+            {t.emptyDescPrefix}
             <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs dark:bg-zinc-800">
               content/ai-daily/YYYY-MM-DD.md
-            </code>{' '}
-            后，这里会自动展示最新一期内容与历史时间轴归档。
+            </code>
+            {t.emptyDescSuffix}
           </p>
         </section>
       ) : (
         <div className="mt-8">
           {/* Mobile / Tablet horizontal issue switcher + collapsible TOC */}
           <nav
-            aria-label="移动端日报期数切换"
+            aria-label={t.mobileArchiveNavAria}
             className="mb-3 flex gap-2 overflow-x-auto pb-1.5 lg:hidden"
           >
             {issues.map((issue, idx) => {
               const isCurrent = issue.slug === activeIssue.slug
-              const href = idx === 0 && isIndexPage ? '/ai' : `/ai/${issue.slug}`
+              const href =
+                idx === 0 && isIndexPage
+                  ? localizePath('/ai', locale)
+                  : localizePath(`/ai/${issue.slug}`, locale)
               return (
                 <Link
                   key={issue.slug}
@@ -119,7 +125,7 @@ export function AiDailyView({
                   <span>{issue.date}</span>
                   {idx === 0 && (
                     <span className="rounded bg-lime-500/15 px-1.5 py-0.5 text-lime-700 dark:text-lime-300">
-                      最新
+                      {t.latestBadge}
                     </span>
                   )}
                 </Link>
@@ -130,6 +136,7 @@ export function AiDailyView({
           <AiDailyTableOfContents
             headings={activeIssue.headings}
             variant="mobile"
+            locale={locale}
           />
 
           <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[260px_minmax(0,1fr)]">
@@ -138,21 +145,23 @@ export function AiDailyView({
               <div className="shrink-0 rounded-2xl border border-zinc-100 bg-white/80 p-4 shadow-sm dark:border-zinc-700/40 dark:bg-zinc-900/60">
                 <div className="mb-2.5 flex items-center justify-between">
                   <h2 className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
-                    📅 期数归档
+                    {t.archiveHeading}
                   </h2>
                   <span className="text-xs text-zinc-400 dark:text-zinc-500">
-                    共 {issues.length} 期
+                    {t.archiveTotal(issues.length)}
                   </span>
                 </div>
 
                 <nav
-                  aria-label="日报期数归档"
+                  aria-label={t.desktopArchiveNavAria}
                   className="max-h-36 space-y-1.5 overflow-y-auto pr-1"
                 >
                   {issues.map((issue, idx) => {
                     const isCurrent = issue.slug === activeIssue.slug
                     const href =
-                      idx === 0 && isIndexPage ? '/ai' : `/ai/${issue.slug}`
+                      idx === 0 && isIndexPage
+                        ? localizePath('/ai', locale)
+                        : localizePath(`/ai/${issue.slug}`, locale)
 
                     return (
                       <Link
@@ -177,7 +186,7 @@ export function AiDailyView({
                         </span>
                         {idx === 0 ? (
                           <span className="rounded bg-lime-500/15 px-1.5 py-0.5 text-xs font-semibold text-lime-700 dark:bg-lime-400/15 dark:text-lime-300">
-                            最新
+                            {t.latestBadge}
                           </span>
                         ) : (
                           issue.tags[0] && (
@@ -195,6 +204,7 @@ export function AiDailyView({
               <AiDailyTableOfContents
                 headings={activeIssue.headings}
                 variant="desktop"
+                locale={locale}
               />
             </aside>
 
@@ -214,7 +224,7 @@ export function AiDailyView({
                       className="h-3.5 w-3.5 flex-none"
                       aria-hidden="true"
                     />
-                    <span>约 {activeIssue.readingTime} 分钟阅读</span>
+                    <span>{t.readingTimeText(activeIssue.readingTime)}</span>
                   </span>
                   {activeIssue.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1.5">
@@ -230,13 +240,25 @@ export function AiDailyView({
                   )}
                 </div>
 
-                <h2 className="mt-3 text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-3xl">
+                <h2
+                  lang={isFallbackContent ? 'zh-CN' : undefined}
+                  className="mt-3 text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-3xl"
+                >
                   {activeIssue.title}
                 </h2>
 
                 {activeIssue.summary && (
-                  <p className="mt-2.5 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                  <p
+                    lang={isFallbackContent ? 'zh-CN' : undefined}
+                    className="mt-2.5 text-sm leading-6 text-zinc-600 dark:text-zinc-400"
+                  >
                     {activeIssue.summary}
+                  </p>
+                )}
+
+                {isFallbackContent && t.fallbackNotice && (
+                  <p className="mt-3 rounded-xl border border-amber-500/25 bg-amber-50/70 px-3.5 py-2 text-xs leading-5 text-amber-900 dark:border-amber-400/20 dark:bg-amber-950/25 dark:text-amber-200">
+                    {t.fallbackNotice}
                   </p>
                 )}
               </header>
@@ -244,6 +266,7 @@ export function AiDailyView({
               {activeIssue.highlights.length > 0 && (
                 <section
                   aria-labelledby="daily-tldr-heading"
+                  lang={isFallbackContent ? 'zh-CN' : undefined}
                   className="mt-6 rounded-2xl border border-lime-500/25 bg-lime-50/70 p-5 dark:border-lime-400/20 dark:bg-lime-950/20"
                 >
                   <h3
@@ -254,7 +277,7 @@ export function AiDailyView({
                       className="h-4 w-4 flex-none"
                       aria-hidden="true"
                     />
-                    <span>今日速览</span>
+                    <span>{t.tldrHeading}</span>
                   </h3>
                   <ul className="mt-2.5 list-disc space-y-1.5 pl-4 text-sm leading-6 text-zinc-700 dark:text-zinc-300">
                     {activeIssue.highlights.map((item) => (
@@ -264,27 +287,32 @@ export function AiDailyView({
                 </section>
               )}
 
-              <Prose className="mt-6 max-w-none">
-                <AiMarkdown
-                  value={activeIssue.body}
-                  headings={activeIssue.headings}
-                />
-              </Prose>
+              <div lang={isFallbackContent ? 'zh-CN' : undefined}>
+                <Prose className="mt-6 max-w-none">
+                  <AiMarkdown
+                    value={activeIssue.body}
+                    headings={activeIssue.headings}
+                  />
+                </Prose>
+              </div>
 
               {(newerIssue || olderIssue) && (
                 <nav
-                  aria-label="前后期日报切换"
+                  aria-label={t.issuePrevNextAria}
                   className="mt-10 flex flex-col justify-between gap-3 border-t border-zinc-100 pt-6 dark:border-zinc-800 sm:flex-row"
                 >
                   {newerIssue ? (
                     <Link
-                      href={`/ai/${newerIssue.slug}`}
+                      href={localizePath(`/ai/${newerIssue.slug}`, locale)}
                       className="group rounded-xl border border-zinc-200/80 px-4 py-3 text-left transition hover:border-lime-500/40 dark:border-zinc-700/60 dark:hover:border-lime-400/40"
                     >
                       <span className="block text-xs text-zinc-400 dark:text-zinc-500">
-                        ← 更新一期 ({newerIssue.date})
+                        {t.newerIssue(newerIssue.date)}
                       </span>
-                      <span className="mt-0.5 block text-sm font-medium text-zinc-800 group-hover:text-lime-600 dark:text-zinc-200 dark:group-hover:text-lime-400">
+                      <span
+                        lang={newerIssue.isFallback ? 'zh-CN' : undefined}
+                        className="mt-0.5 block text-sm font-medium text-zinc-800 group-hover:text-lime-600 dark:text-zinc-200 dark:group-hover:text-lime-400"
+                      >
                         {newerIssue.title}
                       </span>
                     </Link>
@@ -294,13 +322,16 @@ export function AiDailyView({
 
                   {olderIssue && (
                     <Link
-                      href={`/ai/${olderIssue.slug}`}
+                      href={localizePath(`/ai/${olderIssue.slug}`, locale)}
                       className="group rounded-xl border border-zinc-200/80 px-4 py-3 text-right transition hover:border-lime-500/40 dark:border-zinc-700/60 dark:hover:border-lime-400/40"
                     >
                       <span className="block text-xs text-zinc-400 dark:text-zinc-500">
-                        更早一期 ({olderIssue.date}) →
+                        {t.olderIssue(olderIssue.date)}
                       </span>
-                      <span className="mt-0.5 block text-sm font-medium text-zinc-800 group-hover:text-lime-600 dark:text-zinc-200 dark:group-hover:text-lime-400">
+                      <span
+                        lang={olderIssue.isFallback ? 'zh-CN' : undefined}
+                        className="mt-0.5 block text-sm font-medium text-zinc-800 group-hover:text-lime-600 dark:text-zinc-200 dark:group-hover:text-lime-400"
+                      >
                         {olderIssue.title}
                       </span>
                     </Link>

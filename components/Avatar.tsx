@@ -23,17 +23,19 @@ type AvatarImageProps = ComponentProps &
     large?: boolean
     href?: string
     alt?: boolean
+    label?: string
   }
 function AvatarImage({
   large = false,
   className,
   href,
   alt,
+  label = '主页',
   ...props
 }: AvatarImageProps) {
   return (
     <Link
-      aria-label="主页"
+      aria-label={label}
       className={clsxm(className, 'pointer-events-auto')}
       href={href ?? '/'}
       {...props}

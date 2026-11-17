@@ -11,16 +11,32 @@ import { z } from 'zod'
 
 import { TiltedSendIcon } from '~/assets'
 import { Button } from '~/components/ui/Button'
+import { getMessages, type Locale } from '~/lib/i18n'
 
 const formId = '5108903'
 
 export const newsletterFormSchema = z.object({
-  email: z.string().email({ message: '邮箱地址不正确' }).nonempty(),
+  email: z.string().email({ message: 'Invalid email address' }).nonempty(),
   formId: z.string().nonempty(),
 })
 export type NewsletterForm = z.infer<typeof newsletterFormSchema>
 
-export function Newsletter({ subCount }: { subCount?: string }) {
+export function Newsletter({
+  subCount,
+  locale = 'zh',
+}: {
+  subCount?: string
+  locale?: Locale
+}) {
+  const t = getMessages(locale).newsletter
+  const localizedSchema = React.useMemo(
+    () =>
+      z.object({
+        email: z.string().email({ message: t.invalidEmail }).nonempty(),
+        formId: z.string().nonempty(),
+      }),
+    [t.invalidEmail]
+  )
   const {
     register,
     handleSubmit,
@@ -28,7 +44,7 @@ export function Newsletter({ subCount }: { subCount?: string }) {
     reset,
   } = useForm<NewsletterForm>({
     defaultValues: { formId },
-    resolver: zodResolver(newsletterFormSchema),
+    resolver: zodResolver(localizedSchema),
   })
   const [isSubscribed, setIsSubscribed] = React.useState(false)
   const { reward } = useReward('newsletter-rewards', 'emoji', {
@@ -79,17 +95,19 @@ export function Newsletter({ subCount }: { subCount?: string }) {
       <input type="hidden" className="hidden" {...register('formId')} />
       <h2 className="flex items-center text-sm font-semibold text-zinc-900 dark:text-zinc-100">
         <TiltedSendIcon className="h-5 w-5 flex-none" />
-        <span className="ml-2">动态更新</span>
+        <span className="ml-2">{t.heading}</span>
       </h2>
       <p className="mt-2 text-xs text-zinc-600 dark:text-zinc-400 md:text-sm">
-        <span>喜欢我的内容的话不妨订阅支持一下 🫶</span>
+        <span>{t.line1}</span>
         <br />
         {subCount && (
           <span>
-            加入其他 <span className="font-medium">{subCount}</span> 位订阅者，
+            {t.subPrefix}
+            <span className="font-medium">{subCount}</span>
+            {t.subSuffix}
           </span>
         )}
-        <span>每月一封，随时可以取消订阅。</span>
+        <span>{t.line2}</span>
       </p>
       <AnimatePresence mode="wait">
         {!isSubscribed ? (
@@ -101,8 +119,9 @@ export function Newsletter({ subCount }: { subCount?: string }) {
           >
             <input
               type="email"
-              placeholder="你的邮箱"
-              aria-label="电子邮箱"
+              autoComplete="email"
+              placeholder={t.placeholder}
+              aria-label={t.emailAria}
               required
               className="min-w-0 flex-auto appearance-none rounded-lg border border-zinc-900/10 bg-white px-3 py-[calc(theme(spacing.2)-1px)] placeholder:text-zinc-400 focus:border-lime-500 focus:outline-none focus:ring-4 focus:ring-lime-500/10 dark:border-zinc-700 dark:bg-zinc-700/[0.15] dark:text-zinc-200 dark:placeholder:text-zinc-500 dark:focus:border-lime-400/50 dark:focus:ring-lime-400/5 sm:text-sm"
               {...register('email')}
@@ -112,7 +131,7 @@ export function Newsletter({ subCount }: { subCount?: string }) {
               className="ml-2 flex-none"
               disabled={isSubmitting}
             >
-              订阅
+              {t.submit}
             </Button>
           </motion.div>
         ) : (
@@ -122,7 +141,7 @@ export function Newsletter({ subCount }: { subCount?: string }) {
             animate={{ opacity: 1, y: 0 }}
             exit="initial"
           >
-            请查收订阅确认邮件 🥳
+            {t.success}
           </motion.p>
         )}
       </AnimatePresence>

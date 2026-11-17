@@ -1,9 +1,13 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'
 
-import { navigationItems } from '~/config/nav'
+import {
+  getNavigationItems,
+  localeFromPathname,
+  localizePath,
+} from '~/lib/i18n'
 
 export const GO_TIMEOUT_MS = 1000
 
@@ -46,14 +50,19 @@ export function useDockGoShortcuts({
   onNavigate?: (href: string, keyboardInitiated: boolean) => void
 }) {
   const router = useRouter()
+  const pathname = usePathname()
+  const locale = localeFromPathname(pathname)
   const pendingGoRef = useRef(false)
   const timeoutRef = useRef<number | null>(null)
   const onNavigateRef = useRef(onNavigate)
   onNavigateRef.current = onNavigate
 
-  const enabledRoutes = useMemo(
-    () => new Set<string>(navigationItems.map((item) => item.href)),
-    []
+  const enabledBaseRoutes = useMemo(
+    () =>
+      new Set<string>(
+        getNavigationItems(locale).map((item) => item.baseHref)
+      ),
+    [locale]
   )
 
   useEffect(() => {
@@ -99,13 +108,14 @@ export function useDockGoShortcuts({
       }
 
       // Resolve before checking re-arm so `G` then `G` navigates to /guestbook.
-      const href = DOCK_GO_SHORTCUTS[key]
+      const baseHref = DOCK_GO_SHORTCUTS[key]
       clearPending()
-      if (!href || !enabledRoutes.has(href)) return
+      if (!baseHref || !enabledBaseRoutes.has(baseHref)) return
 
+      const targetHref = localizePath(baseHref, locale)
       event.preventDefault()
-      onNavigateRef.current?.(href, true)
-      router.push(href)
+      onNavigateRef.current?.(baseHref, true)
+      router.push(targetHref)
     }
 
     document.addEventListener('keydown', onKeyDown)
@@ -113,5 +123,5 @@ export function useDockGoShortcuts({
       document.removeEventListener('keydown', onKeyDown)
       clearPending()
     }
-  }, [enabledRoutes, router])
+  }, [enabledBaseRoutes, locale, router])
 }

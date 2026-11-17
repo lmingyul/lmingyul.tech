@@ -2,7 +2,10 @@
 
 import { clsxm } from '@zolplay/utils'
 import { motion, useScroll, type Variants } from 'framer-motion'
+import { usePathname } from 'next/navigation'
 import React from 'react'
+
+import { localeFromPathname } from '~/lib/i18n'
 
 interface HeadingNode {
   _type: 'span'
@@ -60,6 +63,8 @@ const itemVariants = {
 } satisfies Variants
 
 export function BlogPostTableOfContents({ headings }: { headings: Node[] }) {
+  const pathname = usePathname()
+  const isEn = localeFromPathname(pathname) === 'en'
   const outline = parseOutline(headings)
   const { scrollY } = useScroll()
   const [highlightedHeadingId, setHighlightedHeadingId] = React.useState<
@@ -120,7 +125,13 @@ export function BlogPostTableOfContents({ headings }: { headings: Node[] }) {
               ? 'text-zinc-900 dark:text-zinc-200'
               : 'hover:text-zinc-700 dark:hover:text-zinc-400 group-hover:[&:not(:hover)]:text-zinc-400 dark:group-hover:[&:not(:hover)]:text-zinc-600'
           )}
-          aria-label={node.id === highlightedHeadingId ? '当前位置' : undefined}
+          aria-label={
+            node.id === highlightedHeadingId
+              ? isEn
+                ? 'Current section'
+                : '当前位置'
+              : undefined
+          }
         >
           <a href={`#${node.id}`} className="block w-full">
             {node.text}

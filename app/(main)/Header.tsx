@@ -12,6 +12,7 @@ import { usePathname } from 'next/navigation'
 import React from 'react'
 
 import { FloatingDock } from '~/app/(main)/FloatingDock'
+import { LanguageSwitcher } from '~/app/(main)/LanguageSwitcher'
 import { NavigationBar } from '~/app/(main)/NavigationBar'
 import { ThemeSwitcher } from '~/app/(main)/ThemeSwitcher'
 import {
@@ -24,10 +25,14 @@ import { Avatar } from '~/components/Avatar'
 import { Container } from '~/components/ui/Container'
 import { Tooltip } from '~/components/ui/Tooltip'
 import { url } from '~/lib'
+import { getMessages, localeFromPathname } from '~/lib/i18n'
 
 export function Header() {
   const pathname = usePathname()
-  const isHomePage = pathname === '/'
+  const locale = localeFromPathname(pathname)
+  const t = getMessages(locale).nav
+  const homeHref = locale === 'en' ? '/en' : '/'
+  const isHomePage = pathname === '/' || pathname === '/en'
 
   const headerBarRef = React.useRef<HTMLDivElement>(null)
   const [isDockVisible, setIsDockVisible] = React.useState(false)
@@ -84,7 +89,11 @@ export function Header() {
                       onContextMenu={onAvatarContextMenu}
                     >
                       <Avatar>
-                        <Avatar.Image alt={isShowingAltAvatar} />
+                        <Avatar.Image
+                          href={homeHref}
+                          label={t.homeLabel}
+                          alt={isShowingAltAvatar}
+                        />
                       </Avatar>
                     </motion.div>
                   )}
@@ -95,11 +104,14 @@ export function Header() {
                 <NavigationBar.Desktop className="pointer-events-auto relative z-50 hidden md:block" />
               </div>
               <motion.div
-                className="flex justify-end gap-3 md:flex-1"
+                className="flex justify-end gap-2 sm:gap-3 md:flex-1"
                 initial={{ opacity: 0, y: -20, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
               >
-                <UserInfo />
+                <UserInfo signInLabel={t.signIn} />
+                <div className="pointer-events-auto">
+                  <LanguageSwitcher />
+                </div>
                 <div className="pointer-events-auto">
                   <ThemeSwitcher />
                 </div>
@@ -130,6 +142,8 @@ export function Header() {
                   <div className="block h-16 w-16">
                     <Avatar.Image
                       large
+                      href={homeHref}
+                      label={t.homeLabel}
                       alt={isShowingAltAvatar}
                       className="block h-full w-full"
                     />
@@ -150,7 +164,7 @@ export function Header() {
   )
 }
 
-function UserInfo() {
+function UserInfo({ signInLabel }: { signInLabel: string }) {
   const [tooltipOpen, setTooltipOpen] = React.useState(false)
   const pathname = usePathname()
   const { user } = useUser()
@@ -209,6 +223,7 @@ function UserInfo() {
                 <Tooltip.Trigger asChild>
                   <button
                     type="button"
+                    aria-label={signInLabel}
                     className="group h-10 rounded-full bg-gradient-to-b from-zinc-50/50 to-white/90 px-3 text-sm shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition dark:from-zinc-900/50 dark:to-zinc-800/90 dark:ring-white/10 dark:hover:ring-white/20"
                   >
                     <UserArrowLeftIcon className="h-5 w-5" />
@@ -225,7 +240,7 @@ function UserInfo() {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                       >
-                        登录
+                        {signInLabel}
                       </motion.div>
                     </Tooltip.Content>
                   </Tooltip.Portal>

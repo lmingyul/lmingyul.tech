@@ -5,12 +5,14 @@ import 'dayjs/locale/zh-cn'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import React from 'react'
 import { useQuery } from 'react-query'
 import { useSnapshot } from 'valtio'
 
 import { CommentMarkdown } from '~/components/CommentMarkdown'
 import { type GuestbookDto } from '~/db/dto/guestbook.dto'
+import { localeFromPathname } from '~/lib/i18n'
 import { parseDisplayName } from '~/lib/string'
 
 import { guestbookState, setMessages } from './guestbook.state'
@@ -21,10 +23,12 @@ function Message({
   message,
   idx,
   length,
+  dayjsLocale,
 }: {
   message: GuestbookDto
   idx: number
   length: number
+  dayjsLocale: string
 }) {
   return (
     <li className="relative pb-8">
@@ -53,7 +57,7 @@ function Message({
             dateTime={message.createdAt.toString()}
             className="inline-flex select-none text-[12px] font-medium opacity-40"
           >
-            {dayjs(message.createdAt).locale('zh-cn').fromNow()}
+            {dayjs(message.createdAt).locale(dayjsLocale).fromNow()}
           </time>
         </div>
       </div>
@@ -66,6 +70,8 @@ function Message({
 const MessageBlock = React.memo(Message)
 
 export function GuestbookFeeds(props: { messages?: GuestbookDto[] }) {
+  const pathname = usePathname()
+  const dayjsLocale = localeFromPathname(pathname) === 'en' ? 'en' : 'zh-cn'
   const { data: feed } = useQuery(
     ['guestbook'],
     async () => {
@@ -94,6 +100,7 @@ export function GuestbookFeeds(props: { messages?: GuestbookDto[] }) {
             message={message}
             idx={idx}
             length={messages.length}
+            dayjsLocale={dayjsLocale}
           />
         ))}
       </ul>

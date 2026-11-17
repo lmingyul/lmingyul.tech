@@ -71,6 +71,18 @@ const nextConfig = {
         source: '/rss.xml',
         destination: '/feed.xml',
       },
+      {
+        source: '/en/feed',
+        destination: '/en/feed.xml',
+      },
+      {
+        source: '/en/rss',
+        destination: '/en/feed.xml',
+      },
+      {
+        source: '/en/rss.xml',
+        destination: '/en/feed.xml',
+      },
     ]
   },
 }

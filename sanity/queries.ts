@@ -9,4 +9,6 @@ export {
   getBlogPostsByIds,
   getLatestBlogPosts,
   getSettings,
+  getTranslatedEnglishAiDailySlugs,
+  getTranslatedEnglishPostSlugs,
 } from '~/lib/content'

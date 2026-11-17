@@ -3,10 +3,16 @@
 import Spline from '@splinetool/react-spline'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 import { url } from '~/lib'
+import { getMessages, localeFromPathname, localizePath } from '~/lib/i18n'
 
 export default function NotFoundPage() {
+  const pathname = usePathname()
+  const locale = localeFromPathname(pathname)
+  const t = getMessages(locale).notFound
+
   return (
     <main className="h-screen">
       <div className="absolute inset-0 h-full w-full">
@@ -23,10 +29,10 @@ export default function NotFoundPage() {
           404
         </motion.h1>
         <Link
-          href="/"
+          href={localizePath('/', locale)}
           className="pointer-events-auto select-none text-xl font-bold text-white mix-blend-difference hover:underline"
         >
-          返回主页
+          {t.backHome}
         </Link>
       </div>
     </main>

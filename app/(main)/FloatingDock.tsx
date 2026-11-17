@@ -9,7 +9,12 @@ import React, { useEffect, useState } from 'react'
 
 import portraitImage from '~/assets/Portrait.png'
 import portraitAltImage from '~/assets/PortraitAlt.jpg'
-import { navigationItems } from '~/config/nav'
+import {
+  getMessages,
+  getNavigationItems,
+  localeFromPathname,
+  switchLocalePath,
+} from '~/lib/i18n'
 
 import {
   AboutIcon,
@@ -35,19 +40,13 @@ const ROUTE_ICONS: Record<string, React.ComponentType> = {
   '/ama': AmaIcon,
 }
 
-const THEME_OPTIONS = [
-  { value: 'light', label: '浅色', icon: SunMiniIcon },
-  { value: 'system', label: '系统', icon: MonitorMiniIcon },
-  { value: 'dark', label: '深色', icon: MoonMiniIcon },
-] as const
-
 const DOCK_GLASS_STYLE: React.CSSProperties = {
   backdropFilter: 'blur(12px) saturate(1.25)',
   WebkitBackdropFilter: 'blur(12px) saturate(1.25)',
 }
 
-function isItemActive(pathname: string, href: string) {
-  if (href === '/') return pathname === '/'
+function isItemActive(pathname: string, href: string, baseHref: string) {
+  if (baseHref === '/') return pathname === href
   return pathname === href || pathname.startsWith(`${href}/`)
 }
 
@@ -67,7 +66,9 @@ function DockTip({ label, goKey }: { label: string; goKey?: string }) {
 
 function DockItem({
   href,
+  baseHref,
   label,
+  ariaLabel,
   goKey,
   active,
   pathname,
@@ -77,17 +78,17 @@ function DockItem({
   children,
 }: {
   href: string
+  baseHref: string
   label: string
+  ariaLabel: string
   goKey?: string
   active: boolean
   pathname: string
   itemRef: (element: HTMLAnchorElement | null) => void
-  onNavigate: (href: string, keyboardInitiated: boolean) => void
+  onNavigate: (baseHref: string, keyboardInitiated: boolean) => void
   onContextMenu?: (event: React.MouseEvent<HTMLAnchorElement>) => void
   children: React.ReactNode
 }) {
-  const ariaLabel = goKey ? `${label}，快捷键 G 然后 ${goKey}` : label
-
   return (
     <Link
       ref={itemRef}
@@ -101,7 +102,7 @@ function DockItem({
         if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
           return
         }
-        onNavigate(href, event.detail === 0)
+        onNavigate(baseHref, event.detail === 0)
         if (pathname === href) {
           event.preventDefault()
           const reducedMotion = window.matchMedia(
@@ -138,13 +139,31 @@ function DockPopoverAutoClose({
   return null
 }
 
-function DockPreferences({ visible }: { visible: boolean }) {
+function DockPreferences({
+  visible,
+  pathname,
+}: {
+  visible: boolean
+  pathname: string
+}) {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const locale = localeFromPathname(pathname)
+  const t = getMessages(locale).nav
 
   useEffect(() => setMounted(true), [])
 
   const activeTheme = mounted && theme ? theme : 'system'
+  const themeOptions = [
+    { value: 'light', label: t.dockLight, icon: SunMiniIcon },
+    { value: 'system', label: t.dockSystem, icon: MonitorMiniIcon },
+    { value: 'dark', label: t.dockDark, icon: MoonMiniIcon },
+  ] as const
+
+  const langOptions = [
+    { code: 'zh', label: '中文', htmlLang: 'zh-CN' },
+    { code: 'en', label: 'EN', htmlLang: 'en' },
+  ] as const
 
   return (
     <Popover className="relative">
@@ -154,20 +173,23 @@ function DockPreferences({ visible }: { visible: boolean }) {
           <Popover.Button
             type="button"
             className="dock-item"
-            aria-label="外观设置"
+            aria-label={t.dockAppearanceSettings}
           >
             <PreferencesIcon />
-            {!open && <DockTip label="外观" />}
+            {!open && <DockTip label={t.dockAppearance} />}
           </Popover.Button>
-          <Popover.Panel className="dock-prefs-panel" aria-label="外观设置">
+          <Popover.Panel
+            className="dock-prefs-panel"
+            aria-label={t.dockAppearanceSettings}
+          >
             <div className="dock-prefs-row">
-              <span className="dock-prefs-label">外观</span>
+              <span className="dock-prefs-label">{t.dockAppearance}</span>
               <div
                 className="dock-prefs-group"
                 role="radiogroup"
-                aria-label="外观主题"
+                aria-label={t.themeSwitchAria}
               >
-                {THEME_OPTIONS.map(({ value, label, icon: Icon }) => {
+                {themeOptions.map(({ value, label, icon: Icon }) => {
                   const selected = activeTheme === value
                   return (
                     <button
@@ -183,6 +205,28 @@ function DockPreferences({ visible }: { visible: boolean }) {
                     >
                       <Icon />
                     </button>
+                  )
+                })}
+              </div>
+            </div>
+            <div className="dock-prefs-row">
+              <span className="dock-prefs-label">{t.dockLanguage}</span>
+              <div className="dock-prefs-group">
+                {langOptions.map(({ code, label, htmlLang }) => {
+                  const selected = locale === code
+                  return (
+                    <Link
+                      key={code}
+                      href={switchLocalePath(pathname || '/', code)}
+                      lang={htmlLang}
+                      hrefLang={htmlLang}
+                      aria-current={selected ? 'true' : undefined}
+                      data-selected={selected || undefined}
+                      className="dock-prefs-option dock-prefs-lang"
+                      onClick={() => close()}
+                    >
+                      {label}
+                    </Link>
                   )
                 })}
               </div>
@@ -204,11 +248,14 @@ export function FloatingDock({
   onAvatarContextMenu?: (event: React.MouseEvent<HTMLElement>) => void
 }) {
   const pathname = usePathname()
-  const activeHref = navigationItems.find(({ href }) =>
-    isItemActive(pathname, href)
-  )?.href
+  const locale = localeFromPathname(pathname)
+  const navigationItems = getNavigationItems(locale)
+  const t = getMessages(locale).nav
+  const activeBaseHref = navigationItems.find(({ href, baseHref }) =>
+    isItemActive(pathname, href, baseHref)
+  )?.baseHref
   const { dockRef, indicatorRef, registerItem, handleNavigate } =
-    useDockActiveIndicator(activeHref)
+    useDockActiveIndicator(activeBaseHref)
   const [tipDismissed, setTipDismissed] = useState(false)
 
   useDockGoShortcuts({ onNavigate: handleNavigate })
@@ -229,8 +276,8 @@ export function FloatingDock({
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [visible])
 
-  const homeItem = navigationItems.find((item) => item.href === '/')
-  const navIconItems = navigationItems.filter((item) => item.href !== '/')
+  const homeItem = navigationItems.find((item) => item.baseHref === '/')
+  const navIconItems = navigationItems.filter((item) => item.baseHref !== '/')
 
   return (
     <nav
@@ -238,7 +285,7 @@ export function FloatingDock({
       className="dock"
       data-visible={visible || undefined}
       data-tip-dismissed={tipDismissed || undefined}
-      aria-label="悬浮导航"
+      aria-label={t.dockAriaLabel}
       onPointerMove={() => {
         if (tipDismissed) setTipDismissed(false)
       }}
@@ -257,11 +304,16 @@ export function FloatingDock({
         <>
           <DockItem
             href={homeItem.href}
+            baseHref={homeItem.baseHref}
             label={homeItem.text}
-            goKey={dockGoKeyFor(homeItem.href)}
-            active={isItemActive(pathname, homeItem.href)}
+            ariaLabel={(() => {
+              const key = dockGoKeyFor(homeItem.baseHref)
+              return key ? t.shortcutHint(homeItem.text, key) : homeItem.text
+            })()}
+            goKey={dockGoKeyFor(homeItem.baseHref)}
+            active={isItemActive(pathname, homeItem.href, homeItem.baseHref)}
             pathname={pathname}
-            itemRef={(el) => registerItem(homeItem.href, el)}
+            itemRef={(el) => registerItem(homeItem.baseHref, el)}
             onNavigate={handleNavigate}
             onContextMenu={onAvatarContextMenu}
           >
@@ -279,17 +331,20 @@ export function FloatingDock({
         </>
       )}
 
-      {navIconItems.map(({ href, text }) => {
-        const Icon = ROUTE_ICONS[href] ?? WritingIcon
+      {navIconItems.map(({ href, baseHref, text }) => {
+        const Icon = ROUTE_ICONS[baseHref] ?? WritingIcon
+        const goKey = dockGoKeyFor(baseHref)
         return (
           <DockItem
-            key={href}
+            key={baseHref}
             href={href}
+            baseHref={baseHref}
             label={text}
-            goKey={dockGoKeyFor(href)}
-            active={isItemActive(pathname, href)}
+            ariaLabel={goKey ? t.shortcutHint(text, goKey) : text}
+            goKey={goKey}
+            active={isItemActive(pathname, href, baseHref)}
             pathname={pathname}
-            itemRef={(el) => registerItem(href, el)}
+            itemRef={(el) => registerItem(baseHref, el)}
             onNavigate={handleNavigate}
           >
             <Icon />
@@ -298,7 +353,7 @@ export function FloatingDock({
       })}
 
       <span className="dock-rule" aria-hidden="true" />
-      <DockPreferences visible={visible} />
+      <DockPreferences visible={visible} pathname={pathname || '/'} />
     </nav>
   )
 }

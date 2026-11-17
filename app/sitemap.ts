@@ -1,7 +1,12 @@
 import { type MetadataRoute } from 'next'
 
 import { url } from '~/lib'
-import { getAiDailyIssues, getAllLatestBlogPostSlugs } from '~/sanity/queries'
+import {
+  getAiDailyIssues,
+  getAllLatestBlogPostSlugs,
+  getTranslatedEnglishAiDailySlugs,
+  getTranslatedEnglishPostSlugs,
+} from '~/sanity/queries'
 
 export default async function sitemap() {
   const staticMap = [
@@ -29,15 +34,42 @@ export default async function sitemap() {
       url: url('/about').href,
       lastModified: new Date(),
     },
+    {
+      url: url('/en').href,
+      lastModified: new Date(),
+    },
+    {
+      url: url('/en/blog').href,
+      lastModified: new Date(),
+    },
+    {
+      url: url('/en/ai').href,
+      lastModified: new Date(),
+    },
+    {
+      url: url('/en/guestbook').href,
+      lastModified: new Date(),
+    },
+    {
+      url: url('/en/about').href,
+      lastModified: new Date(),
+    },
   ] satisfies MetadataRoute.Sitemap
 
-  const [slugs, aiIssues] = await Promise.all([
-    getAllLatestBlogPostSlugs(),
-    getAiDailyIssues(),
+  const [slugs, enSlugs, aiIssues, enAiSlugs] = await Promise.all([
+    getAllLatestBlogPostSlugs('zh'),
+    getTranslatedEnglishPostSlugs(),
+    getAiDailyIssues('zh'),
+    getTranslatedEnglishAiDailySlugs(),
   ])
 
   const dynamicMap = slugs.map((slug) => ({
     url: url(`/blog/${slug}`).href,
+    lastModified: new Date(),
+  })) satisfies MetadataRoute.Sitemap
+
+  const enDynamicMap = enSlugs.map((slug) => ({
+    url: url(`/en/blog/${slug}`).href,
     lastModified: new Date(),
   })) satisfies MetadataRoute.Sitemap
 
@@ -46,7 +78,21 @@ export default async function sitemap() {
     lastModified: new Date(issue.date),
   })) satisfies MetadataRoute.Sitemap
 
-  return [...staticMap, ...dynamicMap, ...aiDailyMap]
+  const enAiSet = new Set(enAiSlugs)
+  const enAiDailyMap = aiIssues
+    .filter((issue) => enAiSet.has(issue.slug))
+    .map((issue) => ({
+      url: url(`/en/ai/${issue.slug}`).href,
+      lastModified: new Date(issue.date),
+    })) satisfies MetadataRoute.Sitemap
+
+  return [
+    ...staticMap,
+    ...dynamicMap,
+    ...enDynamicMap,
+    ...aiDailyMap,
+    ...enAiDailyMap,
+  ]
 }
 
 export const dynamic = 'force-dynamic'

@@ -7,11 +7,14 @@ import { Suspense } from 'react'
 import { Footer } from '~/app/(main)/Footer'
 import { Header } from '~/app/(main)/Header'
 import { QueryProvider } from '~/app/QueryProvider'
+import { type Locale } from '~/lib/i18n'
 
 export default function BlogLayout({
   children,
+  locale = 'zh',
 }: {
   children: React.ReactNode
+  locale?: Locale
 }) {
   return (
     <>
@@ -29,7 +32,7 @@ export default function BlogLayout({
           <Header />
           <main>{children}</main>
           <Suspense>
-            <Footer />
+            <Footer locale={locale} />
           </Suspense>
         </div>
       </QueryProvider>

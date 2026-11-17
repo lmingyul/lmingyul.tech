@@ -2,25 +2,20 @@
 
 import { clsxm } from '@zolplay/utils'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
 import { SparkleIcon } from '~/assets'
 import { Button } from '~/components/ui/Button'
+import { getMessages, type Locale, localeFromPathname } from '~/lib/i18n'
 
 type Message = {
   id: string
   role: 'user' | 'assistant'
   content: string
 }
-
-const STARTER_PROMPTS = [
-  { label: '目前做什么方向？', query: '阿梁目前主要做什么工作与技术方向？' },
-  { label: '推荐几篇代表作', query: '推荐几篇阿梁写的 AI 或大模型相关代表文章' },
-  { label: '平时用什么硬件？', query: '阿梁平时主力使用哪些电脑和开发硬件？' },
-  { label: '怎么联系阿梁？', query: '怎么联系阿梁或者交流互动？' },
-] as const
 
 function BubbleMarkdown({ content }: { content: string }) {
   return (
@@ -78,7 +73,17 @@ function BubbleMarkdown({ content }: { content: string }) {
   )
 }
 
-export function AskMe({ postCount }: { postCount: number }) {
+export function AskMe({
+  postCount,
+  locale: localeProp,
+}: {
+  postCount: number
+  locale?: Locale
+}) {
+  const pathname = usePathname()
+  const locale = localeProp ?? localeFromPathname(pathname)
+  const t = getMessages(locale).askMe
+
   const baseId = React.useId()
   const headingId = `${baseId}-heading`
   const inputId = `${baseId}-input`
@@ -114,12 +119,12 @@ export function AskMe({ postCount }: { postCount: number }) {
     async (rawQuestion: string) => {
       const question = rawQuestion.trim()
       if (!question) {
-        setError('请先输入你想了解的问题')
+        setError(t.errEmpty)
         inputRef.current?.focus()
         return
       }
       if (question.length > 500) {
-        setError('单次提问请控制在 500 字以内')
+        setError(t.errTooLong)
         inputRef.current?.focus()
         return
       }
@@ -151,12 +156,12 @@ export function AskMe({ postCount }: { postCount: number }) {
         const res = await fetch('/api/ai/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question, history: historyPayload }),
+          body: JSON.stringify({ question, history: historyPayload, locale }),
           signal: controller.signal,
         })
 
         if (!res.ok) {
-          let errMsg = 'AI 分身暂时有点忙，请稍后再试'
+          let errMsg = t.errBusy
           try {
             const data = (await res.json()) as { error?: string }
             if (data.error) errMsg = data.error
@@ -198,13 +203,13 @@ export function AskMe({ postCount }: { postCount: number }) {
         if ((err as Error)?.name === 'AbortError') {
           return
         }
-        setError('网络连接中断，可以直接前往「关于」页面了解阿梁')
+        setError(t.errNetwork)
         setMessages((prev) => prev.filter((m) => m.id !== assistantMsgId))
       } finally {
         setIsStreaming(false)
       }
     },
-    [isStreaming, messages]
+    [isStreaming, locale, messages, t.errBusy, t.errEmpty, t.errNetwork, t.errTooLong]
   )
 
   const handleSubmit = React.useCallback(
@@ -234,7 +239,7 @@ export function AskMe({ postCount }: { postCount: number }) {
             className="h-5 w-5 flex-none text-lime-600 dark:text-lime-400"
             aria-hidden="true"
           />
-          <span className="ml-2">通过 AI 了解我</span>
+          <span className="ml-2">{t.heading}</span>
         </h2>
 
         {messages.length > 0 && (
@@ -246,14 +251,14 @@ export function AskMe({ postCount }: { postCount: number }) {
               onClick={() => setIsExpanded((prev) => !prev)}
               className="rounded-md px-2 py-0.5 text-xs text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
             >
-              {isExpanded ? '收起' : '展开'}
+              {isExpanded ? t.collapse : t.expand}
             </button>
             <button
               type="button"
               onClick={handleClear}
               className="rounded-md px-2 py-0.5 text-xs text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
             >
-              清空
+              {t.clear}
             </button>
           </div>
         )}
@@ -263,7 +268,7 @@ export function AskMe({ postCount }: { postCount: number }) {
         id={hintId}
         className="mt-2 text-xs leading-5 text-zinc-600 dark:text-zinc-400"
       >
-        基于我的工程履历、工具清单与 {postCount} 篇博文实时解答，点下方快捷问题或直接提问。
+        {t.hint(postCount)}
       </p>
 
       <div
@@ -295,7 +300,7 @@ export function AskMe({ postCount }: { postCount: number }) {
                     aria-hidden="true"
                     className="h-1.5 w-1.5 animate-pulse rounded-full bg-lime-500"
                   />
-                  <span aria-hidden="true">思考整理中…</span>
+                  <span aria-hidden="true">{t.thinking}</span>
                 </span>
               )}
             </div>
@@ -304,11 +309,11 @@ export function AskMe({ postCount }: { postCount: number }) {
       </div>
 
       {isStreaming && (
-        <progress className="sr-only" aria-label="AI 阿梁正在生成回答" />
+        <progress className="sr-only" aria-label={t.thinkingSr} />
       )}
 
       <div className="mt-4 flex flex-wrap gap-1.5">
-        {STARTER_PROMPTS.map((item) => (
+        {t.starters.map((item) => (
           <button
             key={item.label}
             type="button"
@@ -330,7 +335,7 @@ export function AskMe({ postCount }: { postCount: number }) {
         noValidate
       >
         <label htmlFor={inputId} className="sr-only">
-          向 AI 阿梁提问
+          {t.inputLabel}
         </label>
         <input
           ref={inputRef}
@@ -340,7 +345,7 @@ export function AskMe({ postCount }: { postCount: number }) {
           value={input}
           maxLength={500}
           enterKeyHint="send"
-          placeholder="问问我的工作、装备或博客文章…"
+          placeholder={t.placeholder}
           aria-invalid={error ? 'true' : undefined}
           aria-describedby={error ? errorId : hintId}
           onChange={(e) => {
@@ -349,7 +354,7 @@ export function AskMe({ postCount }: { postCount: number }) {
           }}
           onBlur={() => {
             if (hasInteracted && input.trim().length > 500) {
-              setError('单次提问请控制在 500 字以内')
+              setError(t.errTooLong)
             }
           }}
           onFocus={() => setHasInteracted(true)}
@@ -375,7 +380,7 @@ export function AskMe({ postCount }: { postCount: number }) {
           className="min-w-0 flex-auto appearance-none rounded-lg border border-zinc-900/10 bg-white px-3 py-[calc(theme(spacing.2)-1px)] text-base placeholder:text-zinc-400 focus:border-lime-500 focus:outline-none focus:ring-4 focus:ring-lime-500/10 dark:border-zinc-700 dark:bg-zinc-700/[0.15] dark:text-zinc-200 dark:placeholder:text-zinc-500 dark:focus:border-lime-400/50 dark:focus:ring-lime-400/5 sm:text-sm"
         />
         <Button type="submit" className="ml-2 flex-none" disabled={isStreaming}>
-          提问
+          {t.submit}
         </Button>
       </form>
 

@@ -10,6 +10,7 @@ import { db } from '~/db'
 import { subscribers } from '~/db/schema'
 import { env } from '~/env.mjs'
 import countries from '~/lib/countries.json'
+import { getMessages, type Locale } from '~/lib/i18n'
 import { prettifyNumber } from '~/lib/math'
 import { redis } from '~/lib/redis'
 
@@ -17,7 +18,8 @@ import { Newsletter } from './Newsletter'
 
 const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build'
 
-async function TotalPageViews() {
+async function TotalPageViews({ locale }: { locale: Locale }) {
+  const t = getMessages(locale).footer
   let views: number
   if (env.VERCEL_ENV === 'production' && !isBuildPhase) {
     views = await redis.incr(kvKeys.totalPageViews)
@@ -28,9 +30,11 @@ async function TotalPageViews() {
   return (
     <span className="flex items-center justify-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 md:justify-start">
       <UsersIcon className="h-4 w-4" />
-      <span title={`${Intl.NumberFormat('en-US').format(views)}次浏览`}>
-        总浏览量&nbsp;
-        <span className="font-medium">{prettifyNumber(views, true)}</span>
+      <span title={t.viewsTitle(Intl.NumberFormat('en-US').format(views))}>
+        {t.totalViews}&nbsp;
+        <span className="font-medium">
+          {prettifyNumber(views, locale !== 'en')}
+        </span>
       </span>
     </span>
   )
@@ -41,7 +45,8 @@ type VisitorGeolocation = {
   city?: string
   flag: string
 }
-async function LastVisitorInfo() {
+async function LastVisitorInfo({ locale }: { locale: Locale }) {
+  const t = getMessages(locale).footer
   let lastVisitor: VisitorGeolocation | undefined = undefined
   if (env.VERCEL_ENV === 'production' && !isBuildPhase) {
     const reqHeaders = headers()
@@ -80,7 +85,7 @@ async function LastVisitorInfo() {
     <span className="flex items-center justify-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 md:justify-start">
       <CursorClickIcon className="h-4 w-4" />
       <span>
-        最近访客来自&nbsp;
+        {t.lastVisitorFrom}&nbsp;
         {[lastVisitor.city, lastVisitor.country].filter(Boolean).join(', ')}
       </span>
       <span className="font-medium">{lastVisitor.flag}</span>
@@ -88,7 +93,8 @@ async function LastVisitorInfo() {
   )
 }
 
-export async function Footer() {
+export async function Footer({ locale = 'zh' }: { locale?: Locale }) {
+  const t = getMessages(locale).footer
   let subCount = 0
   if (!isBuildPhase) {
     const [subs] = await db
@@ -106,11 +112,13 @@ export async function Footer() {
         <div className="border-t border-zinc-100 pb-24 pt-10 dark:border-zinc-700/40 sm:pb-28">
           <Container.Inner>
             <div className="mx-auto mb-8 max-w-md">
-              <Newsletter subCount={`${subCount}`} />
+              <Newsletter subCount={`${subCount}`} locale={locale} />
             </div>
             <div className="flex flex-col items-center justify-start gap-6 sm:flex-row">
               <p className="text-sm text-zinc-500/80 dark:text-zinc-400/80">
-                &copy; {new Date().getFullYear()} 阿梁（lmingyul）. 网站是 Fork 另一个项目：
+                &copy; {new Date().getFullYear()}{' '}
+                {locale === 'en' ? 'Liang (lmingyul)' : '阿梁（lmingyul）'}.{' '}
+                {t.forkPrefix}
                 <PeekabooLink href="https://github.com/lmingyul/lmingyul.tech">
                   GitHub
                 </PeekabooLink>
@@ -120,10 +128,10 @@ export async function Footer() {
           <Container.Inner className="mt-6">
             <div className="flex flex-col items-center justify-start gap-2 sm:flex-row">
               <React.Suspense>
-                <TotalPageViews />
+                <TotalPageViews locale={locale} />
               </React.Suspense>
               <React.Suspense>
-                <LastVisitorInfo />
+                <LastVisitorInfo locale={locale} />
               </React.Suspense>
             </div>
           </Container.Inner>

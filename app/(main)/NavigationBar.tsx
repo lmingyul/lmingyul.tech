@@ -7,16 +7,30 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
 
-import { navigationItems } from '~/config/nav'
+import {
+  getMessages,
+  getNavigationItems,
+  localeFromPathname,
+} from '~/lib/i18n'
+
+function isNavItemActive(pathname: string, href: string, baseHref: string) {
+  if (baseHref === '/') {
+    return pathname === href
+  }
+  return pathname === href || pathname.startsWith(`${href}/`)
+}
 
 function NavItem({
   href,
+  baseHref,
   children,
 }: {
   href: string
+  baseHref: string
   children: React.ReactNode
 }) {
-  const isActive = usePathname() === href
+  const pathname = usePathname()
+  const isActive = isNavItemActive(pathname, href, baseHref)
 
   return (
     <li>
@@ -46,6 +60,11 @@ function Desktop({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
+  const pathname = usePathname()
+  const locale = localeFromPathname(pathname)
+  const navigationItems = getNavigationItems(locale)
+  const t = getMessages(locale).nav
+
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
   const radius = useMotionValue(0)
@@ -62,6 +81,7 @@ function Desktop({
 
   return (
     <nav
+      aria-label={t.primaryNavAriaLabel}
       onMouseMove={handleMouseMove}
       className={clsxm(
         'group relative',
@@ -81,8 +101,8 @@ function Desktop({
       />
 
       <ul className="flex bg-transparent px-3 text-sm font-medium text-zinc-800 dark:text-zinc-200 ">
-        {navigationItems.map(({ href, text }) => (
-          <NavItem key={href} href={href}>
+        {navigationItems.map(({ href, baseHref, text }) => (
+          <NavItem key={href} href={href} baseHref={baseHref}>
             {text}
           </NavItem>
         ))}
@@ -93,12 +113,15 @@ function Desktop({
 
 function MobileNavItem({
   href,
+  baseHref,
   children,
 }: {
   href: string
+  baseHref: string
   children: React.ReactNode
 }) {
-  const isActive = usePathname() === href
+  const pathname = usePathname()
+  const isActive = isNavItemActive(pathname, href, baseHref)
 
   return (
     <li>
@@ -115,10 +138,15 @@ function MobileNavItem({
 }
 
 function Mobile(props: PopoverProps<'div'>) {
+  const pathname = usePathname()
+  const locale = localeFromPathname(pathname)
+  const navigationItems = getNavigationItems(locale)
+  const t = getMessages(locale).nav
+
   return (
     <Popover {...props}>
-      <Popover.Button className="group flex items-center rounded-full bg-gradient-to-b from-zinc-50/20 to-white/80 px-4 py-2 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur-md focus:outline-none focus-visible:ring-2 dark:from-zinc-900/30 dark:to-zinc-800/80 dark:text-zinc-200 dark:ring-white/10 dark:hover:ring-white/20 dark:focus-visible:ring-yellow-500/80">
-        前往
+      <Popover.Button className="group flex items-center whitespace-nowrap rounded-full bg-gradient-to-b from-zinc-50/20 to-white/80 px-4 py-2 text-sm font-medium text-zinc-800 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur-md focus:outline-none focus-visible:ring-2 dark:from-zinc-900/30 dark:to-zinc-800/80 dark:text-zinc-200 dark:ring-white/10 dark:hover:ring-white/20 dark:focus-visible:ring-yellow-500/80">
+        {t.mobileMenu}
         {/* Chevron */}
         <svg
           viewBox="0 0 8 6"
@@ -160,7 +188,7 @@ function Mobile(props: PopoverProps<'div'>) {
             className="fixed inset-x-4 top-8 z-50 origin-top rounded-3xl bg-gradient-to-b from-zinc-100/75 to-white p-8 ring-1 ring-zinc-900/5 dark:from-zinc-900/50 dark:to-zinc-900 dark:ring-zinc-800"
           >
             <div className="flex flex-row-reverse items-center justify-between">
-              <Popover.Button aria-label="关闭菜单" className="-m-1 p-1">
+              <Popover.Button aria-label={t.closeMenu} className="-m-1 p-1">
                 <svg
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -177,13 +205,13 @@ function Mobile(props: PopoverProps<'div'>) {
                 </svg>
               </Popover.Button>
               <h2 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                站内导航
+                {t.siteNavHeading}
               </h2>
             </div>
-            <nav className="mt-6">
+            <nav aria-label={t.siteNavHeading} className="mt-6">
               <ul className="-my-2 divide-y divide-zinc-500/20 text-base text-zinc-800 dark:divide-zinc-100/5 dark:text-zinc-300">
-                {navigationItems.map(({ href, text }) => (
-                  <MobileNavItem key={href} href={href}>
+                {navigationItems.map(({ href, baseHref, text }) => (
+                  <MobileNavItem key={href} href={href} baseHref={baseHref}>
                     {text}
                   </MobileNavItem>
                 ))}

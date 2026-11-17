@@ -42,6 +42,7 @@ import {
   type PostIDLessCommentDto,
 } from '~/db/dto/comment.dto'
 import { url } from '~/lib'
+import { getMessages, localeFromPathname } from '~/lib/i18n'
 import { parseDisplayName } from '~/lib/string'
 
 dayjs.extend(relativeTime)
@@ -55,6 +56,7 @@ type CommentableProps = {
 
 function Root({ className, blockId }: CommentableProps) {
   const pathname = usePathname()
+  const t = getMessages(localeFromPathname(pathname)).comments
   const { postId, comments, currentBlockId } = useSnapshot(blogPostState)
   const { user: me } = useUser()
   const [isCommenting, setIsCommenting] = React.useState(false)
@@ -296,7 +298,7 @@ function Root({ className, blockId }: CommentableProps) {
                         >
                           <Button type="button">
                             <UserArrowLeftIcon className="mr-1 h-5 w-5" />
-                            登录后参与讨论
+                            {t.signInToComment}
                           </Button>
                         </SignInButton>
                       </div>
@@ -322,6 +324,10 @@ function Comment({
 }: PostIDLessCommentDto & {
   isMe: (comment: PostIDLessCommentDto) => boolean
 }) {
+  const pathname = usePathname()
+  const locale = localeFromPathname(pathname)
+  const t = getMessages(locale).comments
+  const dayjsLocale = locale === 'en' ? 'en' : 'zh-cn'
   const isMyself = React.useMemo(() => isMe(c), [c, isMe])
   const onClickReply = React.useCallback(() => {
     replyTo(c)
@@ -366,7 +372,7 @@ function Comment({
           >
             {!isMyself && <span>{parseDisplayName(c.userInfo)}</span>}
             <span className="inline-flex select-none text-[10px] font-medium opacity-40">
-              {dayjs(c.createdAt).locale('zh-cn').fromNow()}
+              {dayjs(c.createdAt).locale(dayjsLocale).fromNow()}
             </span>
           </span>
 
@@ -380,7 +386,7 @@ function Comment({
           >
             {!isMyself && (
               <div className="absolute inset-y-0 -right-4 flex h-full translate-x-0.5 transform-gpu items-center opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100">
-                <ElegantTooltip content="回复">
+                <ElegantTooltip content={t.reply}>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.96 }}
@@ -435,6 +441,9 @@ type CommentTextareaProps = {
   onSubmit?: (comment: string) => void
 }
 function CommentTextarea({ isLoading, onSubmit }: CommentTextareaProps) {
+  const pathname = usePathname()
+  const msgs = getMessages(localeFromPathname(pathname))
+  const t = msgs.comments
   const { user: me } = useUser()
   const textareaRef = React.useRef<HTMLTextAreaElement>(null)
   const [comment, setComment] = React.useState('')
@@ -518,8 +527,8 @@ function CommentTextarea({ isLoading, onSubmit }: CommentTextareaProps) {
             className="block flex-1 shrink-0 resize-none border-0 bg-transparent p-0 text-sm leading-6 text-zinc-800 placeholder-zinc-400 outline-none focus:outline-none focus:ring-0 dark:text-zinc-200 dark:placeholder-zinc-500"
             placeholder={
               replyingTo
-                ? `回复 ${parseDisplayName(replyingTo.userInfo)} 的评论...`
-                : '留下你的评论吧...'
+                ? t.replyingPlaceholder(parseDisplayName(replyingTo.userInfo))
+                : t.commentPlaceholder
             }
             value={comment}
             onChange={(e) => setComment(e.target.value)}
@@ -545,10 +554,12 @@ function CommentTextarea({ isLoading, onSubmit }: CommentTextareaProps) {
             comment.length > 0 ? 'opacity-100' : 'opacity-0'
           )}
         >
-          支持 <b>Markdown</b> 与{' '}
+          {t.markdownSupportPrefix}
+          <b>Markdown</b>
+          {t.markdownSupportMiddle}
           <RichLink
             favicon={false}
-            href="https://docs.github.com/zh/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax"
+            href={msgs.guestbook.markdownDocsUrl}
             className="font-bold hover:underline"
           >
             GFM
@@ -574,7 +585,9 @@ function CommentTextarea({ isLoading, onSubmit }: CommentTextareaProps) {
                 {comment.length}/{MAX_COMMENT_LENGTH}
               </span>
 
-              <ElegantTooltip content={isPreviewing ? '关闭预览' : '预览一下'}>
+              <ElegantTooltip
+                content={isPreviewing ? t.previewClose : t.previewOpen}
+              >
                 <motion.button
                   className="appearance-none"
                   whileHover={{ scale: 1.05 }}
@@ -591,7 +604,7 @@ function CommentTextarea({ isLoading, onSubmit }: CommentTextareaProps) {
                 </motion.button>
               </ElegantTooltip>
 
-              <ElegantTooltip content="发送">
+              <ElegantTooltip content={t.send}>
                 <motion.button
                   className="appearance-none"
                   whileHover={{ scale: 1.05 }}

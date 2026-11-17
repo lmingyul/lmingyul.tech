@@ -4,9 +4,9 @@ import './prism.css'
 
 import { ClerkProvider } from '@clerk/nextjs'
 import type { Metadata, Viewport } from 'next'
+import { headers } from 'next/headers'
 
 import { ThemeProvider } from '~/app/(main)/ThemeProvider'
-import { url } from '~/lib'
 import { zhCN } from '~/lib/clerkLocalizations'
 import { sansFont } from '~/lib/font'
 import { seo } from '~/lib/seo'
@@ -50,9 +50,8 @@ export const metadata: Metadata = {
     description: seo.description,
   },
   alternates: {
-    canonical: url('/'),
     types: {
-      'application/rss+xml': [{ url: 'rss', title: 'RSS 订阅' }],
+      'application/rss+xml': [{ url: '/feed.xml', title: 'RSS 订阅' }],
     },
   },
 }
@@ -69,10 +68,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const isEn = headers().get('x-locale') === 'en'
+
   return (
-    <ClerkProvider localization={zhCN}>
+    <ClerkProvider localization={isEn ? undefined : zhCN}>
       <html
-        lang="zh-CN"
+        lang={isEn ? 'en' : 'zh-CN'}
         className={`${sansFont.variable} m-0 h-full p-0 font-sans antialiased`}
         suppressHydrationWarning
       >

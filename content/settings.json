@@ -14,28 +14,36 @@
   "resume": [
     {
       "company": "招银网络科技有限公司（深圳）",
+      "companyEn": "CMB Network Technology (Shenzhen)",
       "title": "系统开发工程师",
+      "titleEn": "Systems Development Engineer",
       "logo": "/uploads/resume/cmbnt.png",
       "start": "2023.11",
       "end": ""
     },
     {
       "company": "中兴通讯有限公司",
+      "companyEn": "ZTE Corporation",
       "title": "软件开发工程师",
+      "titleEn": "Software Engineer",
       "logo": "/uploads/resume/zte.png",
       "start": "2021.07",
       "end": "2023.06"
     },
     {
       "company": "合肥工业大学",
+      "companyEn": "Hefei University of Technology",
       "title": "硕士",
+      "titleEn": "M.Eng.",
       "logo": "/uploads/resume/hfut.png",
       "start": "2018.09",
       "end": "2021.06"
     },
     {
       "company": "哈尔滨理工大学",
+      "companyEn": "Harbin University of Science and Technology",
       "title": "本科",
+      "titleEn": "B.Eng.",
       "logo": "/uploads/resume/hrbust.png",
       "start": "2014.09",
       "end": "2018.06"

@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion'
 import Link, { type LinkProps } from 'next/link'
+import { usePathname } from 'next/navigation'
 import React from 'react'
 
 import {
@@ -15,6 +16,7 @@ import {
   YouTubeIcon,
 } from '~/assets'
 import { Tooltip } from '~/components/ui/Tooltip'
+import { getMessages, localeFromPathname } from '~/lib/i18n'
 
 type IconType = (props: IconProps) => JSX.Element
 type Platform =
@@ -92,6 +94,8 @@ export function SocialLink({
 }: { platform?: Platform } & LinkProps &
   React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   const [open, setOpen] = React.useState(false)
+  const pathname = usePathname()
+  const t = getMessages(localeFromPathname(pathname)).social
   const info = getIconForPlatform(platform) ?? getIconForUrl(href.toString())
 
   if (!info) {
@@ -99,6 +103,15 @@ export function SocialLink({
 
     return <Link href={href} {...props} />
   }
+
+  const resolvedLabel =
+    info.platform === 'bilibili'
+      ? t.bilibili
+      : info.platform === 'mail'
+        ? t.mail
+        : info.platform === 'rss'
+          ? t.rss
+          : info.label
 
   return (
     <Tooltip.Provider disableHoverableContent>
@@ -109,7 +122,7 @@ export function SocialLink({
             href={href}
             target="_blank"
             prefetch={false}
-            aria-label={info.label}
+            aria-label={props['aria-label'] ?? resolvedLabel}
             {...props}
           >
             <info.icon className="h-5 w-5 text-zinc-400 transition group-hover:text-zinc-700 dark:text-zinc-400 dark:group-hover:text-zinc-200" />
@@ -124,7 +137,7 @@ export function SocialLink({
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                 >
-                  {info.label}
+                  {resolvedLabel}
                 </motion.div>
               </Tooltip.Content>
             </Tooltip.Portal>

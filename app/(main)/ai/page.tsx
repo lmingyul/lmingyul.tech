@@ -1,5 +1,6 @@
 import { type Metadata } from 'next'
 
+import { url } from '~/lib'
 import { getAiDailyIssue, getAiDailyIssues } from '~/sanity/queries'
 
 import { AiDailyView } from './AiDailyView'
@@ -19,6 +20,14 @@ export const metadata = {
     title,
     description,
     card: 'summary_large_image',
+  },
+  alternates: {
+    canonical: url('/ai').href,
+    languages: {
+      'zh-CN': url('/ai').href,
+      en: url('/en/ai').href,
+      'x-default': url('/ai').href,
+    },
   },
 } satisfies Metadata
 

@@ -1,7 +1,9 @@
+import { type Metadata } from 'next'
 import Balancer from 'react-wrap-balancer'
 
 import { SocialLink } from '~/components/links/SocialLink'
 import { Container } from '~/components/ui/Container'
+import { url } from '~/lib'
 
 import { BlogPosts } from './BlogPosts'
 
@@ -19,7 +21,15 @@ export const metadata = {
     description,
     card: 'summary_large_image',
   },
-}
+  alternates: {
+    canonical: url('/blog').href,
+    languages: {
+      'zh-CN': url('/blog').href,
+      en: url('/en/blog').href,
+      'x-default': url('/blog').href,
+    },
+  },
+} satisfies Metadata
 
 // TODO: add pagination or infinite scroll
 export default function BlogPage() {

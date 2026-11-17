@@ -13,10 +13,14 @@ function handleRevalidate(req: NextRequest) {
   }
 
   revalidatePath('/', 'layout')
+  revalidatePath('/en', 'layout')
   revalidatePath('/ai', 'layout')
+  revalidatePath('/en/ai', 'layout')
   revalidatePath('/blog', 'layout')
+  revalidatePath('/en/blog', 'layout')
   revalidatePath('/projects')
   revalidatePath('/feed.xml')
+  revalidatePath('/en/feed.xml')
   revalidatePath('/sitemap.xml')
 
   return NextResponse.json({

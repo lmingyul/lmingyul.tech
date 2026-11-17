@@ -1,6 +1,7 @@
 import { type Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
+import { url } from '~/lib'
 import { getAiDailyIssue, getAiDailyIssues } from '~/sanity/queries'
 
 import { AiDailyView } from '../AiDailyView'
@@ -10,13 +11,14 @@ export async function generateMetadata({
 }: {
   params: { date: string }
 }): Promise<Metadata> {
-  const issue = await getAiDailyIssue(params.date)
+  const issue = await getAiDailyIssue(params.date, 'zh')
   if (!issue) {
     return { title: '未找到该期简讯' }
   }
 
   const description =
     issue.summary || `阿梁 AI 每日简讯（${issue.date}）归档内容。`
+  const canonicalUrl = url(`/ai/${issue.slug}`).href
 
   return {
     title: issue.title,
@@ -29,6 +31,18 @@ export async function generateMetadata({
       title: issue.title,
       description,
       card: 'summary_large_image',
+    },
+    alternates: {
+      canonical: canonicalUrl,
+      ...(issue.hasTranslation
+        ? {
+            languages: {
+              'zh-CN': canonicalUrl,
+              en: url(`/en/ai/${issue.slug}`).href,
+              'x-default': canonicalUrl,
+            },
+          }
+        : {}),
     },
   }
 }

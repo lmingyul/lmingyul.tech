@@ -9,6 +9,7 @@ import {
   useMotionValue,
 } from 'framer-motion'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import React from 'react'
 import { useMutation } from 'react-query'
 import { useReward } from 'react-rewards'
@@ -20,11 +21,14 @@ import { CommentMarkdown } from '~/components/CommentMarkdown'
 import { RichLink } from '~/components/links/RichLink'
 import { ElegantTooltip } from '~/components/ui/Tooltip'
 import { type GuestbookDto } from '~/db/dto/guestbook.dto'
+import { getMessages, localeFromPathname } from '~/lib/i18n'
 
 const MAX_MESSAGE_LENGTH = 600
 const REWARDS_ID = 'guestbook-rewards'
 
 export function GuestbookInput() {
+  const pathname = usePathname()
+  const t = getMessages(localeFromPathname(pathname)).guestbook
   const { user } = useUser()
   const textareaRef = React.useRef<HTMLTextAreaElement>(null)
   const [message, setMessage] = React.useState('')
@@ -187,7 +191,7 @@ export function GuestbookInput() {
             className="block w-full shrink-0 resize-none border-0 bg-transparent p-0 text-sm leading-6 text-zinc-800 placeholder-zinc-400 outline-none transition-[height] will-change-[height] focus:outline-none focus:ring-0 dark:text-zinc-200 dark:placeholder-zinc-500"
             value={message}
             onChange={(event) => setMessage(event.target.value)}
-            placeholder="说点什么吧，万一火不了呢..."
+            placeholder={t.placeholder}
             onKeyDown={handleKeyDown}
             maxRows={8}
             autoFocus
@@ -201,10 +205,12 @@ export function GuestbookInput() {
               message.length > 0 ? 'opacity-100' : 'opacity-0'
             )}
           >
-            支持 <b>Markdown</b> 与{' '}
+            {t.markdownSupportPrefix}
+            <b>Markdown</b>
+            {t.markdownSupportMiddle}
             <RichLink
               favicon={false}
-              href="https://docs.github.com/zh/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax"
+              href={t.markdownDocsUrl}
               className="font-bold hover:underline"
             >
               GFM
@@ -231,7 +237,7 @@ export function GuestbookInput() {
                 </span>
 
                 <ElegantTooltip
-                  content={isPreviewing ? '关闭预览' : '预览一下'}
+                  content={isPreviewing ? t.previewClose : t.previewOpen}
                 >
                   <motion.button
                     className="appearance-none"
@@ -249,7 +255,7 @@ export function GuestbookInput() {
                   </motion.button>
                 </ElegantTooltip>
 
-                <ElegantTooltip content="发送">
+                <ElegantTooltip content={t.send}>
                   <motion.button
                     className="appearance-none"
                     whileHover={{ scale: 1.05 }}

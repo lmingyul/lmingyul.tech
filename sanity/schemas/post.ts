@@ -34,6 +34,9 @@ export const Post = z.object({
   body: z.string(),
   readingTime: z.number(),
   mood: z.enum(['happy', 'sad', 'neutral']),
+  locale: z.enum(['zh', 'en']).optional(),
+  isFallback: z.boolean().optional(),
+  hasTranslation: z.boolean().optional(),
 })
 export type Post = z.infer<typeof Post>
 export type PostDetail = Post & {

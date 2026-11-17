@@ -10,6 +10,7 @@ import {
   type AiTocHeading,
   extractAiTocHeadings,
 } from '~/lib/heading-slug'
+import { type Locale } from '~/lib/i18n'
 import {
   type Post,
   type PostDetail,
@@ -151,8 +152,7 @@ type StoredPost = Post & {
   headings: PostHeadingBlock[]
 }
 
-async function readAllPosts(): Promise<StoredPost[]> {
-  const postsDir = path.join(getContentRoot(), 'posts')
+async function readPostsFromDirectory(postsDir: string): Promise<StoredPost[]> {
   let entries: Dirent[] = []
   try {
     entries = await fs.readdir(postsDir, { withFileTypes: true })
@@ -230,6 +230,76 @@ async function readAllPosts(): Promise<StoredPost[]> {
   )
 }
 
+async function readLocalizedPosts(locale: Locale = 'zh'): Promise<StoredPost[]> {
+  const root = getContentRoot()
+  const [zhPosts, enPosts] = await Promise.all([
+    readPostsFromDirectory(path.join(root, 'posts')),
+    readPostsFromDirectory(path.join(root, 'posts', 'en')),
+  ])
+
+  const enMap = new Map<string, StoredPost>()
+  for (const enPost of enPosts) {
+    if (!enPost.draft) {
+      enMap.set(enPost.slug, enPost)
+    }
+  }
+
+  if (locale === 'zh') {
+    return zhPosts.map((post) => ({
+      ...post,
+      locale: 'zh',
+      isFallback: false,
+      hasTranslation: enMap.has(post.slug),
+    }))
+  }
+
+  const zhSlugs = new Set<string>()
+  const merged: StoredPost[] = []
+
+  for (const zhPost of zhPosts) {
+    zhSlugs.add(zhPost.slug)
+    const enPost = enMap.get(zhPost.slug)
+    if (enPost) {
+      const useZhCover =
+        enPost.mainImage.asset.url === DEFAULT_COVER &&
+        zhPost.mainImage.asset.url !== DEFAULT_COVER
+      merged.push({
+        ...enPost,
+        _id: zhPost._id || enPost._id,
+        publishedAt: zhPost.publishedAt || enPost.publishedAt,
+        mainImage: useZhCover ? zhPost.mainImage : enPost.mainImage,
+        draft: zhPost.draft || enPost.draft,
+        locale: 'en',
+        isFallback: false,
+        hasTranslation: true,
+      })
+    } else {
+      merged.push({
+        ...zhPost,
+        locale: 'zh',
+        isFallback: true,
+        hasTranslation: false,
+      })
+    }
+  }
+
+  for (const enPost of enPosts) {
+    if (!zhSlugs.has(enPost.slug) && !enPost.draft) {
+      merged.push({
+        ...enPost,
+        locale: 'en',
+        isFallback: false,
+        hasTranslation: false,
+      })
+    }
+  }
+
+  return merged.sort(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  )
+}
+
 function isPublished(post: StoredPost, now = getDate()): boolean {
   return !post.draft && new Date(post.publishedAt).getTime() <= now.valueOf()
 }
@@ -246,6 +316,9 @@ function toPostSummary(post: StoredPost): Post {
     body: post.body,
     readingTime: post.readingTime,
     mood: post.mood,
+    locale: post.locale,
+    isFallback: post.isFallback,
+    hasTranslation: post.hasTranslation,
   }
 }
 
@@ -257,28 +330,54 @@ function toPostDetail(post: StoredPost, related?: Post[]): PostDetail {
   }
 }
 
-export async function getAllLatestBlogPostSlugs(): Promise<string[]> {
-  const posts = await readAllPosts()
+export async function getAllLatestBlogPostSlugs(
+  locale: Locale = 'zh'
+): Promise<string[]> {
+  const posts = await readLocalizedPosts(locale)
   const now = getDate()
   return posts.filter((post) => isPublished(post, now)).map((post) => post.slug)
+}
+
+export async function getTranslatedEnglishPostSlugs(): Promise<string[]> {
+  const posts = await readLocalizedPosts('en')
+  const now = getDate()
+  return posts
+    .filter((post) => isPublished(post, now) && !post.isFallback)
+    .map((post) => post.slug)
 }
 
 type GetBlogPostsOptions = {
   limit?: number
   offset?: number
   forDisplay?: boolean
+  locale?: Locale
+  preferTranslated?: boolean
 }
 
 export async function getLatestBlogPosts({
   limit = 5,
   offset = 0,
+  locale = 'zh',
+  preferTranslated = false,
 }: GetBlogPostsOptions = {}): Promise<Post[] | null> {
-  const posts = await readAllPosts()
+  const posts = await readLocalizedPosts(locale)
   const now = getDate()
-  return posts
-    .filter((post) => isPublished(post, now))
-    .slice(offset, offset + limit)
-    .map(toPostSummary)
+  const published = posts.filter((post) => isPublished(post, now))
+
+  if (locale === 'en' && preferTranslated) {
+    published.sort((a, b) => {
+      const aTranslated = a.isFallback ? 1 : 0
+      const bTranslated = b.isFallback ? 1 : 0
+      if (aTranslated !== bTranslated) {
+        return aTranslated - bTranslated
+      }
+      return (
+        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+      )
+    })
+  }
+
+  return published.slice(offset, offset + limit).map(toPostSummary)
 }
 
 function safeDecode(value: string): string {
@@ -290,9 +389,10 @@ function safeDecode(value: string): string {
 }
 
 export async function getBlogPost(
-  slug: string
+  slug: string,
+  locale: Locale = 'zh'
 ): Promise<PostDetail | undefined> {
-  const posts = await readAllPosts()
+  const posts = await readLocalizedPosts(locale)
   const decoded = safeDecode(slug)
   const target = posts.find(
     (post) => !post.draft && (post.slug === slug || post.slug === decoded)
@@ -303,18 +403,30 @@ export async function getBlogPost(
 
   const now = getDate()
   const categories = target.categories ?? []
-  const related =
+  const relatedCandidates =
     categories.length > 0
-      ? posts
-          .filter(
-            (candidate) =>
-              candidate._id !== target._id &&
-              isPublished(candidate, now) &&
-              candidate.categories?.some((cat) => categories.includes(cat))
-          )
-          .slice(0, 3)
-          .map(toPostSummary)
+      ? posts.filter(
+          (candidate) =>
+            candidate._id !== target._id &&
+            isPublished(candidate, now) &&
+            candidate.categories?.some((cat) => categories.includes(cat))
+        )
       : []
+
+  if (locale === 'en') {
+    relatedCandidates.sort((a, b) => {
+      const aFallback = a.isFallback ? 1 : 0
+      const bFallback = b.isFallback ? 1 : 0
+      if (aFallback !== bFallback) {
+        return aFallback - bFallback
+      }
+      return (
+        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+      )
+    })
+  }
+
+  const related = relatedCandidates.slice(0, 3).map(toPostSummary)
 
   return toPostDetail(target, related)
 }
@@ -322,7 +434,7 @@ export async function getBlogPost(
 export async function getBlogPostById(
   id: string
 ): Promise<{ _id: string; slug: string; title: string; imageUrl: string } | undefined> {
-  const posts = await readAllPosts()
+  const posts = await readLocalizedPosts('zh')
   const target = posts.find((post) => post._id === id || post.slug === id)
   if (!target) {
     return undefined
@@ -341,7 +453,7 @@ export async function getBlogPostsByIds(
   if (ids.length === 0) {
     return []
   }
-  const posts = await readAllPosts()
+  const posts = await readLocalizedPosts('zh')
   const result: { _id: string; title: string; slug: string }[] = []
   for (const id of ids) {
     const match = posts.find((post) => post._id === id || post.slug === id)
@@ -367,7 +479,9 @@ type RawSettings = {
   heroPhotos?: string[]
   resume?: {
     company: string
+    companyEn?: string
     title: string
+    titleEn?: string
     logo: string
     start: string
     end?: string
@@ -380,7 +494,9 @@ export async function getSettings(): Promise<{
   resume?:
     | {
         company: string
+        companyEn?: string
         title: string
+        titleEn?: string
         logo: string
         start: string
         end?: string
@@ -422,6 +538,8 @@ export type AiDailyIssueSummary = {
   tags: string[]
   highlights: string[]
   readingTime: number
+  isFallback?: boolean
+  hasTranslation?: boolean
 }
 
 export type AiDailyIssueDetail = AiDailyIssueSummary & {
@@ -494,8 +612,10 @@ type StoredAiDailyIssue = AiDailyIssueDetail & {
   draft: boolean
 }
 
-async function readAllAiDailyIssues(): Promise<StoredAiDailyIssue[]> {
-  const dailyDir = path.join(getContentRoot(), 'ai-daily')
+async function readAiDailyIssuesFromDir(
+  dailyDir: string,
+  defaultLocale: Locale
+): Promise<StoredAiDailyIssue[]> {
   let entries: Dirent[] = []
   try {
     entries = await fs.readdir(dailyDir, { withFileTypes: true })
@@ -534,7 +654,9 @@ async function readAllAiDailyIssues(): Promise<StoredAiDailyIssue[]> {
       const title =
         typeof data.title === 'string' && data.title.trim()
           ? data.title.trim()
-          : `AI 每日简讯 · ${date}`
+          : defaultLocale === 'en'
+            ? `AI Daily Digest · ${date}`
+            : `AI 每日简讯 · ${date}`
       const rawSummary =
         typeof data.summary === 'string' && data.summary.trim()
           ? data.summary.trim()
@@ -573,11 +695,81 @@ async function readAllAiDailyIssues(): Promise<StoredAiDailyIssue[]> {
   })
 }
 
-export async function getAiDailyIssues(): Promise<AiDailyIssueSummary[]> {
-  const issues = await readAllAiDailyIssues()
-  return issues
-    .filter((issue) => !issue.draft)
-    .map(({ slug, date, title, summary, tags, highlights, readingTime }) => ({
+async function readLocalizedAiDailyIssues(
+  locale: Locale = 'zh'
+): Promise<StoredAiDailyIssue[]> {
+  const root = getContentRoot()
+  const [zhIssues, enIssues] = await Promise.all([
+    readAiDailyIssuesFromDir(path.join(root, 'ai-daily'), 'zh'),
+    readAiDailyIssuesFromDir(path.join(root, 'ai-daily', 'en'), 'en'),
+  ])
+
+  const enMap = new Map<string, StoredAiDailyIssue>()
+  for (const enIssue of enIssues) {
+    if (!enIssue.draft) {
+      enMap.set(enIssue.slug, enIssue)
+      if (!enMap.has(enIssue.date)) {
+        enMap.set(enIssue.date, enIssue)
+      }
+    }
+  }
+
+  if (locale === 'zh') {
+    return zhIssues
+      .filter((issue) => !issue.draft)
+      .map((issue) => ({
+        ...issue,
+        isFallback: false,
+        hasTranslation: enMap.has(issue.slug) || enMap.has(issue.date),
+      }))
+  }
+
+  const seenSlugs = new Set<string>()
+  const merged: StoredAiDailyIssue[] = []
+
+  for (const zhIssue of zhIssues) {
+    if (zhIssue.draft) continue
+    seenSlugs.add(zhIssue.slug)
+    const enMatch = enMap.get(zhIssue.slug) ?? enMap.get(zhIssue.date)
+    if (enMatch) {
+      merged.push({
+        ...enMatch,
+        isFallback: false,
+        hasTranslation: true,
+      })
+    } else {
+      merged.push({
+        ...zhIssue,
+        isFallback: true,
+        hasTranslation: false,
+      })
+    }
+  }
+
+  for (const enIssue of enIssues) {
+    if (!enIssue.draft && !seenSlugs.has(enIssue.slug)) {
+      merged.push({
+        ...enIssue,
+        isFallback: false,
+        hasTranslation: false,
+      })
+    }
+  }
+
+  return merged.sort((a, b) => {
+    if (a.date !== b.date) {
+      return b.date.localeCompare(a.date)
+    }
+    return b.slug.localeCompare(a.slug)
+  })
+}
+
+export async function getAiDailyIssues(
+  locale: Locale = 'zh'
+): Promise<AiDailyIssueSummary[]> {
+  const issues = await readLocalizedAiDailyIssues(locale)
+  return issues.map(
+    ({
       slug,
       date,
       title,
@@ -585,7 +777,25 @@ export async function getAiDailyIssues(): Promise<AiDailyIssueSummary[]> {
       tags,
       highlights,
       readingTime,
-    }))
+      isFallback,
+      hasTranslation,
+    }) => ({
+      slug,
+      date,
+      title,
+      summary,
+      tags,
+      highlights,
+      readingTime,
+      isFallback,
+      hasTranslation,
+    })
+  )
+}
+
+export async function getTranslatedEnglishAiDailySlugs(): Promise<string[]> {
+  const issues = await readLocalizedAiDailyIssues('en')
+  return issues.filter((issue) => !issue.isFallback).map((issue) => issue.slug)
 }
 
 function toAiDailyDetail(issue: StoredAiDailyIssue): AiDailyIssueDetail {
@@ -599,13 +809,16 @@ function toAiDailyDetail(issue: StoredAiDailyIssue): AiDailyIssueDetail {
     readingTime: issue.readingTime,
     body: issue.body,
     headings: issue.headings,
+    isFallback: issue.isFallback,
+    hasTranslation: issue.hasTranslation,
   }
 }
 
 export async function getAiDailyIssue(
-  slugOrDate?: string
+  slugOrDate?: string,
+  locale: Locale = 'zh'
 ): Promise<AiDailyIssueDetail | undefined> {
-  const issues = (await readAllAiDailyIssues()).filter((issue) => !issue.draft)
+  const issues = await readLocalizedAiDailyIssues(locale)
   if (issues.length === 0) {
     return undefined
   }

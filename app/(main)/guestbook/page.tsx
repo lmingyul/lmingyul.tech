@@ -3,6 +3,7 @@ import Balancer from 'react-wrap-balancer'
 
 import { Container } from '~/components/ui/Container'
 import { fetchGuestbookMessages } from '~/db/queries/guestbook'
+import { url } from '~/lib'
 
 import { Guestbook } from './Guestbook'
 
@@ -20,6 +21,14 @@ export const metadata = {
     title,
     description,
     card: 'summary_large_image',
+  },
+  alternates: {
+    canonical: url('/guestbook').href,
+    languages: {
+      'zh-CN': url('/guestbook').href,
+      en: url('/en/guestbook').href,
+      'x-default': url('/guestbook').href,
+    },
   },
 } satisfies Metadata
 

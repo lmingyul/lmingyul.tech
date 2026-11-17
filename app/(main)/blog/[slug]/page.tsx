@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { BlogPostPage } from '~/app/(main)/blog/BlogPostPage'
 import { kvKeys } from '~/config/kv'
 import { env } from '~/env.mjs'
+import { url } from '~/lib'
 import { redis } from '~/lib/redis'
 import { getBlogPost } from '~/sanity/queries'
 
@@ -12,15 +13,17 @@ export const generateMetadata = async ({
 }: {
   params: { slug: string }
 }) => {
-  const post = await getBlogPost(params.slug)
+  const post = await getBlogPost(params.slug, 'zh')
   if (!post) {
     notFound()
   }
 
-  const { title, description, mainImage } = post
+  const { title, description, mainImage, hasTranslation, slug } = post
   const ogImageUrl = mainImage.asset.url.startsWith('http')
     ? mainImage.asset.url
     : new URL(mainImage.asset.url, env.NEXT_PUBLIC_SITE_URL).href
+
+  const canonicalUrl = url(`/blog/${slug}`).href
 
   return {
     title,
@@ -47,6 +50,18 @@ export const generateMetadata = async ({
       site: '@TommySteve1117',
       creator: '@TommySteve1117',
     },
+    alternates: {
+      canonical: canonicalUrl,
+      ...(hasTranslation
+        ? {
+            languages: {
+              'zh-CN': canonicalUrl,
+              en: url(`/en/blog/${slug}`).href,
+              'x-default': canonicalUrl,
+            },
+          }
+        : {}),
+    },
   } satisfies Metadata
 }
 
@@ -55,7 +70,7 @@ export default async function BlogPage({
 }: {
   params: { slug: string }
 }) {
-  const post = await getBlogPost(params.slug)
+  const post = await getBlogPost(params.slug, 'zh')
   if (!post) {
     notFound()
   }

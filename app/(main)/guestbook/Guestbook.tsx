@@ -8,12 +8,14 @@ import { UserArrowLeftIcon } from '~/assets'
 import { Button } from '~/components/ui/Button'
 import { type GuestbookDto } from '~/db/dto/guestbook.dto'
 import { url } from '~/lib'
+import { getMessages, localeFromPathname } from '~/lib/i18n'
 
 import { GuestbookFeeds } from './GuestbookFeeds'
 import { GuestbookInput } from './GuestbookInput'
 
 export function Guestbook(props: { messages?: GuestbookDto[] }) {
   const pathname = usePathname()
+  const t = getMessages(localeFromPathname(pathname)).guestbook
 
   return (
     <section className="max-w-2xl">
@@ -21,7 +23,7 @@ export function Guestbook(props: { messages?: GuestbookDto[] }) {
         <SignInButton mode="modal" redirectUrl={url(pathname).href}>
           <Button type="button">
             <UserArrowLeftIcon className="mr-1 h-5 w-5" />
-            登录后才可以留言噢
+            {t.signInToPost}
           </Button>
         </SignInButton>
       </SignedOut>

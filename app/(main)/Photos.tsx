@@ -2,48 +2,16 @@
 
 import { motion, useReducedMotion } from 'framer-motion'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import React from 'react'
 
 import { Container } from '~/components/ui/Container'
-
-const PHOTO_CAPTIONS: Record<string, { location: string; date: string }> = {
-  '/uploads/photos/travel-09-guilin.jpg': {
-    location: '桂林象鼻山',
-    date: '2025.06.02',
-  },
-  '/uploads/photos/travel-08-suzhou.jpg': {
-    location: '苏州金鸡湖',
-    date: '2025.05.04',
-  },
-  '/uploads/photos/travel-07-hangzhou.jpg': {
-    location: '杭州湘湖',
-    date: '2025.05.02',
-  },
-  '/uploads/photos/travel-06-shanghai.jpg': {
-    location: '上海黄浦江',
-    date: '2025.04.29',
-  },
-  '/uploads/photos/travel-05-qingyuan.jpg': {
-    location: '清远笔架山',
-    date: '2025.04.05',
-  },
-  '/uploads/photos/travel-04-shenzhen.jpg': {
-    location: '深圳湾人才公园附近',
-    date: '2025.01.04',
-  },
-  '/uploads/photos/travel-03-phuket.jpg': {
-    location: '泰国普吉岛卡伦海滩边',
-    date: '2024.10.02',
-  },
-  '/uploads/photos/travel-02-singapore.jpg': {
-    location: '新加坡鱼尾狮附近',
-    date: '2024.09.29',
-  },
-  '/uploads/photos/travel-01-dali.jpg': {
-    location: '云南大理洱海边',
-    date: '2023.10.03',
-  },
-}
+import {
+  getMessages,
+  type Locale,
+  localeFromPathname,
+  PHOTO_CAPTIONS_BY_LOCALE,
+} from '~/lib/i18n'
 
 const RESTING_ROTATIONS = [-0.8, 1.1, -1.5, 1.9, -2.4, 2.8, -3.2, 2.5, -3.6]
 const RESTING_Y_OFFSETS = [0, 2, -2, 3, -3, 4, -4, 3, -2]
@@ -107,7 +75,17 @@ function clamp(val: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, val))
 }
 
-export function Photos({ photos }: { photos: string[] }) {
+export function Photos({
+  photos,
+  locale: localeProp,
+}: {
+  photos: string[]
+  locale?: Locale
+}) {
+  const pathname = usePathname()
+  const locale = localeProp ?? localeFromPathname(pathname)
+  const t = getMessages(locale).photos
+
   const stageRef = React.useRef<HTMLDivElement | null>(null)
   const [containerWidth, setContainerWidth] = React.useState(0)
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null)
@@ -209,7 +187,7 @@ export function Photos({ photos }: { photos: string[] }) {
         onPointerLeave={handlePointerLeave}
       >
         {photos.map((image, idx) => {
-          const meta = PHOTO_CAPTIONS[image]
+          const meta = PHOTO_CAPTIONS_BY_LOCALE[image]?.[locale]
           const isActive = activeIndex === idx
           const baseX = layout.xs[idx] ?? layout.padX
           const effectiveWidth = containerWidth > 0 ? containerWidth : 960
@@ -242,7 +220,9 @@ export function Photos({ photos }: { photos: string[] }) {
               key={image}
               type="button"
               aria-label={
-                meta ? `${meta.location}（${meta.date}）` : `旅途瞬间 ${idx + 1}`
+                meta
+                  ? `${meta.location} (${meta.date})`
+                  : t.fallbackCaption(idx)
               }
               onFocus={() => setActiveIndex(idx)}
               onBlur={(e) => {
@@ -286,7 +266,7 @@ export function Photos({ photos }: { photos: string[] }) {
                 alt={
                   meta
                     ? `${meta.date} ${meta.location}`
-                    : `旅途瞬间 ${idx + 1}`
+                    : t.fallbackCaption(idx)
                 }
                 width={640}
                 height={480}

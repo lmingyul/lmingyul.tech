@@ -117,10 +117,77 @@ content:
         label: 正文（Markdown）
         type: rich-text
 
+  - name: posts-en
+    label: 英文博文（content/posts/en）
+    type: collection
+    path: content/posts/en
+    format: yaml-frontmatter
+    filename: "{fields.slug}.md"
+    view:
+      fields: [title, publishedAt, draft]
+      primary: title
+      sort: [publishedAt]
+      order: desc
+    fields:
+      - name: title
+        label: English Title
+        type: string
+        required: true
+      - name: slug
+        label: Slug (must match Chinese post slug)
+        type: string
+        required: true
+      - name: publishedAt
+        label: Published At
+        type: date
+        required: true
+        options:
+          time: true
+          format: "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+      - name: categories
+        label: Categories
+        type: string
+        list: true
+      - name: description
+        label: Summary
+        type: text
+        required: true
+      - name: cover
+        label: Cover URL
+        type: string
+        required: true
+        default: /opengraph-image.png
+      - name: mood
+        label: Mood
+        type: select
+        default: neutral
+        options:
+          values:
+            - neutral
+            - happy
+            - sad
+      - name: draft
+        label: Draft
+        type: boolean
+        default: false
+      - name: id
+        label: Shared Post ID
+        type: string
+        hidden: true
+      - name: body
+        label: Body (Markdown)
+        type: rich-text
+
   - name: ai-persona
     label: AI 个人分身知识库（首页「通过 AI 了解我」）
     type: file
     path: content/ai-persona.md
+    format: raw
+
+  - name: ai-persona-en
+    label: AI 个人分身知识库（英文版 /en）
+    type: file
+    path: content/ai-persona.en.md
     format: raw
 
   - name: settings
@@ -166,10 +233,16 @@ content:
             label: 公司名称
             type: string
             required: true
+          - name: companyEn
+            label: 公司英文名称（可选）
+            type: string
           - name: title
             label: 职位名称
             type: string
             required: true
+          - name: titleEn
+            label: 职位英文名称（可选）
+            type: string
           - name: logo
             label: 公司 Logo 链接（/uploads/... 或 https://...）
             type: string

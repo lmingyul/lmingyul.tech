@@ -4,6 +4,7 @@ import { clsxm } from '@zolplay/utils'
 import React from 'react'
 
 import { type AiTocHeading } from '~/lib/heading-slug'
+import { getMessages, type Locale } from '~/lib/i18n'
 
 function formatTocDisplayText(text: string, isDetailTier: boolean): string {
   if (!isDetailTier) {
@@ -19,10 +20,13 @@ function formatTocDisplayText(text: string, isDetailTier: boolean): string {
 export function AiDailyTableOfContents({
   headings,
   variant = 'desktop',
+  locale = 'zh',
 }: {
   headings: AiTocHeading[]
   variant?: 'desktop' | 'mobile'
+  locale?: Locale
 }) {
+  const t = getMessages(locale).aiDaily
   const navRef = React.useRef<HTMLElement>(null)
   const detailsRef = React.useRef<HTMLDetailsElement>(null)
   const [showDetails, setShowDetails] = React.useState(false)
@@ -144,8 +148,10 @@ export function AiDailyTableOfContents({
         className="mb-5 rounded-2xl border border-zinc-200/80 bg-white/80 px-4 py-3 shadow-sm dark:border-zinc-700/50 dark:bg-zinc-900/70 lg:hidden"
       >
         <summary className="flex cursor-pointer list-none items-center justify-between text-xs font-semibold text-zinc-800 dark:text-zinc-200">
-          <span>📑 本期目录（共 {visibleHeadings.length} 节，点击快速跳转）</span>
-          <span className="text-zinc-400 dark:text-zinc-500">展开 ▾</span>
+          <span>{t.tocMobileSummary(visibleHeadings.length)}</span>
+          <span className="text-zinc-400 dark:text-zinc-500">
+            {t.tocMobileToggleExpand}
+          </span>
         </summary>
         <div className="mt-3 border-t border-zinc-100 pt-2.5 dark:border-zinc-800">
           {detailCount > 0 && (
@@ -156,12 +162,14 @@ export function AiDailyTableOfContents({
                 onClick={() => setShowDetails((prev) => !prev)}
                 className="rounded-md bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
               >
-                {showDetails ? '仅看章节' : `显示细项 (${detailCount})`}
+                {showDetails
+                  ? t.tocMobileSectionsOnly
+                  : t.tocMobileShowDetails(detailCount)}
               </button>
             </div>
           )}
           <nav
-            aria-label="移动端本期目录"
+            aria-label={t.tocMobileNavAria}
             className="max-h-64 space-y-1 overflow-y-auto pr-1"
           >
             {visibleHeadings.map((h) => {
@@ -198,7 +206,7 @@ export function AiDailyTableOfContents({
     <div className="flex min-h-0 flex-1 flex-col rounded-2xl border border-zinc-100 bg-white/80 p-4 shadow-sm dark:border-zinc-700/40 dark:bg-zinc-900/60">
       <div className="mb-2.5 flex items-center justify-between gap-2 border-b border-zinc-100 pb-2.5 dark:border-zinc-800">
         <h2 className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
-          📑 本期目录
+          {t.tocTitle}
         </h2>
         <div className="flex items-center gap-1.5">
           {detailCount > 0 && (
@@ -213,7 +221,9 @@ export function AiDailyTableOfContents({
                   : 'bg-zinc-100 text-zinc-600 hover:text-zinc-900 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'
               )}
             >
-              {showDetails ? '收起细项' : `细项 (${detailCount})`}
+              {showDetails
+                ? t.tocDesktopHideDetails
+                : t.tocDesktopShowDetails(detailCount)}
             </button>
           )}
           <button
@@ -229,14 +239,14 @@ export function AiDailyTableOfContents({
             }}
             className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 transition hover:text-zinc-900 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
           >
-            ↑ 顶部
+            {t.tocTop}
           </button>
         </div>
       </div>
 
       <nav
         ref={navRef}
-        aria-label="本期目录"
+        aria-label={t.tocNavAria}
         className="ai-toc-nav min-h-0 flex-1 space-y-0.5 overflow-y-auto pr-1"
       >
         {visibleHeadings.map((h) => {

@@ -1,31 +1,38 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
+import { usePathname } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import React from 'react'
 
 import { LightningIcon, MoonIcon, SunIcon } from '~/assets'
 import { Tooltip } from '~/components/ui/Tooltip'
+import { getMessages, localeFromPathname } from '~/lib/i18n'
 
-const themes = [
-  {
-    label: '浅色模式',
-    value: 'light',
-    icon: SunIcon,
-  },
-  {
-    label: '深色模式',
-    value: 'dark',
-    icon: MoonIcon,
-  },
-]
 export function ThemeSwitcher() {
   const [mounted, setMounted] = React.useState(false)
   const [open, setOpen] = React.useState(false)
+  const pathname = usePathname()
+  const t = getMessages(localeFromPathname(pathname)).nav
+  const themes = React.useMemo(
+    () => [
+      {
+        label: t.themeLight,
+        value: 'light',
+        icon: SunIcon,
+      },
+      {
+        label: t.themeDark,
+        value: 'dark',
+        icon: MoonIcon,
+      },
+    ],
+    [t.themeDark, t.themeLight]
+  )
   const { setTheme, theme, resolvedTheme } = useTheme()
   const ThemeIcon = React.useMemo(
-    () => themes.find((t) => t.value === theme)?.icon ?? LightningIcon,
-    [theme]
+    () => themes.find((item) => item.value === theme)?.icon ?? LightningIcon,
+    [theme, themes]
   )
 
   React.useEffect(() => setMounted(true), [])
@@ -44,7 +51,7 @@ export function ThemeSwitcher() {
         <Tooltip.Trigger asChild>
           <button
             type="button"
-            aria-label="切换颜色主题"
+            aria-label={t.themeSwitchAria}
             className="group rounded-full bg-gradient-to-b from-zinc-50/50 to-white/90 px-3 py-2 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition dark:from-zinc-900/50 dark:to-zinc-800/90 dark:ring-white/10 dark:hover:ring-white/20"
             onClick={toggleTheme}
           >
@@ -60,7 +67,8 @@ export function ThemeSwitcher() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                 >
-                  {themes.find((t) => t.value === theme)?.label || "系统模式"}
+                  {themes.find((item) => item.value === theme)?.label ||
+                    t.themeSystem}
                 </motion.div>
               </Tooltip.Content>
             </Tooltip.Portal>

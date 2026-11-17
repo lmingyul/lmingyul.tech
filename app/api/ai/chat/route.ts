@@ -7,6 +7,7 @@ import {
   type ChatHistoryMessage,
   getStaticFallbackAnswer,
 } from '~/lib/ai-persona'
+import { type Locale } from '~/lib/i18n'
 import { getIP } from '~/lib/ip'
 import { createRatelimit, redis } from '~/lib/redis'
 
@@ -28,6 +29,7 @@ const requestSchema = z.object({
     )
     .max(6)
     .optional(),
+  locale: z.enum(['zh', 'en']).optional(),
 })
 
 const STREAM_HEADERS = {
@@ -58,29 +60,52 @@ async function checkDailyBudgetAvailable(): Promise<boolean> {
 }
 
 export async function POST(req: NextRequest) {
-  const ip = getIP(req)
-  const { success } = await aiChatRatelimit.limit(`ai_chat:${ip}`)
-  if (!success) {
-    return NextResponse.json(
-      { error: '提问太频繁啦，喝口水歇几分钟再继续聊吧 ☕' },
-      { status: 429 }
-    )
-  }
-
-  let body: unknown
+  let body: unknown = null
   try {
     body = await req.json()
   } catch {
     return NextResponse.json({ error: '请求格式不正确' }, { status: 400 })
   }
 
-  const parsed = requestSchema.safeParse(body)
-  if (parsed.success === false) {
-    const firstIssue =
-      parsed.error.issues[0]?.message ?? '请输入有效的问题内容'
-    return NextResponse.json({ error: firstIssue }, { status: 400 })
+  const rawLocale =
+    body &&
+    typeof body === 'object' &&
+    'locale' in body &&
+    (body as { locale?: unknown }).locale === 'en'
+      ? ('en' satisfies Locale)
+      : ('zh' satisfies Locale)
+
+  const ip = getIP(req)
+  const { success } = await aiChatRatelimit.limit(`ai_chat:${ip}`)
+  if (!success) {
+    return NextResponse.json(
+      {
+        error:
+          rawLocale === 'en'
+            ? 'Too many questions — grab a coffee and try again in a few minutes ☕'
+            : '提问太频繁啦，喝口水歇几分钟再继续聊吧 ☕',
+      },
+      { status: 429 }
+    )
   }
 
+  const parsed = requestSchema.safeParse(body)
+  if (parsed.success === false) {
+    const firstIssue = parsed.error.issues[0]
+    if (rawLocale === 'en') {
+      const msg =
+        firstIssue?.code === 'too_big'
+          ? 'Please keep questions under 500 characters'
+          : 'Please enter a valid question'
+      return NextResponse.json({ error: msg }, { status: 400 })
+    }
+    return NextResponse.json(
+      { error: firstIssue?.message ?? '请输入有效的问题内容' },
+      { status: 400 }
+    )
+  }
+
+  const locale: Locale = parsed.data.locale ?? 'zh'
   const question = parsed.data.question ?? ''
   const history: ChatHistoryMessage[] = (parsed.data.history ?? []).flatMap(
     (item) =>
@@ -90,7 +115,8 @@ export async function POST(req: NextRequest) {
   )
   const { messages, topChunks, postCount } = await buildPersonaPromptContext(
     question,
-    history
+    history,
+    locale
   )
 
   const apiKey = env.DEEPSEEK_API_KEY?.trim()
@@ -98,7 +124,7 @@ export async function POST(req: NextRequest) {
 
   if (!apiKey || !withinBudget) {
     return makePlainStreamResponse(
-      getStaticFallbackAnswer(question, topChunks, postCount)
+      getStaticFallbackAnswer(question, topChunks, postCount, locale)
     )
   }
 
@@ -127,14 +153,14 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error('[ai/chat] Upstream connection failed:', err)
     return makePlainStreamResponse(
-      getStaticFallbackAnswer(question, topChunks, postCount)
+      getStaticFallbackAnswer(question, topChunks, postCount, locale)
     )
   }
 
   if (!upstream.ok || !upstream.body) {
     console.error('[ai/chat] Upstream HTTP error:', upstream.status)
     return makePlainStreamResponse(
-      getStaticFallbackAnswer(question, topChunks, postCount)
+      getStaticFallbackAnswer(question, topChunks, postCount, locale)
     )
   }
 
@@ -182,7 +208,7 @@ export async function POST(req: NextRequest) {
         if (!emittedAny) {
           controller.enqueue(
             encoder.encode(
-              getStaticFallbackAnswer(question, topChunks, postCount)
+              getStaticFallbackAnswer(question, topChunks, postCount, locale)
             )
           )
         }
@@ -191,7 +217,7 @@ export async function POST(req: NextRequest) {
         if (!emittedAny) {
           controller.enqueue(
             encoder.encode(
-              getStaticFallbackAnswer(question, topChunks, postCount)
+              getStaticFallbackAnswer(question, topChunks, postCount, locale)
             )
           )
         }
