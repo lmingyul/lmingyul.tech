@@ -1,8 +1,10 @@
 import { type Metadata } from 'next'
 
 import { AboutPageView } from '~/app/(main)/about/AboutPageView'
+import { JsonLd } from '~/components/JsonLd'
 import { url } from '~/lib'
 import { getMessages } from '~/lib/i18n'
+import { buildAboutJsonLd } from '~/lib/structured-data'
 
 const enSeo = getMessages('en').seo
 const title = 'About Me'
@@ -31,7 +33,12 @@ export const metadata = {
 } satisfies Metadata
 
 export default function EnAboutPage() {
-  return <AboutPageView locale="en" />
+  return (
+    <>
+      <JsonLd data={buildAboutJsonLd('en')} />
+      <AboutPageView locale="en" />
+    </>
+  )
 }
 
 export const revalidate = 3600

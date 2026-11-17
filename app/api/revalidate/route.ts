@@ -21,6 +21,11 @@ function handleRevalidate(req: NextRequest) {
   revalidatePath('/projects')
   revalidatePath('/feed.xml')
   revalidatePath('/en/feed.xml')
+  revalidatePath('/ai/feed.xml')
+  revalidatePath('/en/ai/feed.xml')
+  revalidatePath('/llms.txt')
+  revalidatePath('/llms-full.txt')
+  revalidatePath('/robots.txt')
   revalidatePath('/sitemap.xml')
 
   return NextResponse.json({

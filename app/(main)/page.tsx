@@ -2,7 +2,9 @@ import { type Metadata } from 'next'
 import React from 'react'
 
 import { HomePageView } from '~/app/(main)/HomePageView'
+import { JsonLd } from '~/components/JsonLd'
 import { url } from '~/lib'
+import { buildHomeJsonLd } from '~/lib/structured-data'
 
 export const metadata: Metadata = {
   alternates: {
@@ -16,7 +18,12 @@ export const metadata: Metadata = {
 }
 
 export default function BlogHomePage() {
-  return <HomePageView locale="zh" />
+  return (
+    <>
+      <JsonLd data={buildHomeJsonLd('zh')} />
+      <HomePageView locale="zh" />
+    </>
+  )
 }
 
 export const revalidate = 60

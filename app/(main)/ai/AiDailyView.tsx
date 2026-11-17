@@ -17,7 +17,7 @@ import { AiDailyTableOfContents } from './AiDailyTableOfContents'
 export function AiDailyView({
   issues,
   activeIssue,
-  isIndexPage = false,
+  isIndexPage: _isIndexPage = false,
   locale = 'zh',
 }: {
   issues: AiDailyIssueSummary[]
@@ -100,10 +100,7 @@ export function AiDailyView({
           >
             {issues.map((issue, idx) => {
               const isCurrent = issue.slug === activeIssue.slug
-              const href =
-                idx === 0 && isIndexPage
-                  ? localizePath('/ai', locale)
-                  : localizePath(`/ai/${issue.slug}`, locale)
+              const href = localizePath(`/ai/${issue.slug}`, locale)
               return (
                 <Link
                   key={issue.slug}
@@ -158,10 +155,7 @@ export function AiDailyView({
                 >
                   {issues.map((issue, idx) => {
                     const isCurrent = issue.slug === activeIssue.slug
-                    const href =
-                      idx === 0 && isIndexPage
-                        ? localizePath('/ai', locale)
-                        : localizePath(`/ai/${issue.slug}`, locale)
+                    const href = localizePath(`/ai/${issue.slug}`, locale)
 
                     return (
                       <Link

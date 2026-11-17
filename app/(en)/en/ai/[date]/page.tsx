@@ -2,8 +2,10 @@ import { type Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { AiDailyView } from '~/app/(main)/ai/AiDailyView'
+import { JsonLd } from '~/components/JsonLd'
 import { url } from '~/lib'
 import { getMessages } from '~/lib/i18n'
+import { buildAiDailyJsonLd } from '~/lib/structured-data'
 import { getAiDailyIssue, getAiDailyIssues } from '~/sanity/queries'
 
 const t = getMessages('en').aiDaily
@@ -72,7 +74,18 @@ export default async function EnAiDailyIssuePage({
   }
 
   return (
-    <AiDailyView issues={issues} activeIssue={activeIssue} locale="en" />
+    <>
+      {!activeIssue.isFallback && (
+        <JsonLd
+          data={buildAiDailyJsonLd({
+            issue: activeIssue,
+            issuesCount: issues.length,
+            locale: 'en',
+          })}
+        />
+      )}
+      <AiDailyView issues={issues} activeIssue={activeIssue} locale="en" />
+    </>
   )
 }
 

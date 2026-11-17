@@ -2,10 +2,12 @@ import { type Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { BlogPostPage } from '~/app/(main)/blog/BlogPostPage'
+import { JsonLd } from '~/components/JsonLd'
 import { kvKeys } from '~/config/kv'
 import { env } from '~/env.mjs'
 import { url } from '~/lib'
 import { redis } from '~/lib/redis'
+import { buildBlogPostJsonLd } from '~/lib/structured-data'
 import { getBlogPost } from '~/sanity/queries'
 
 export const generateMetadata = async ({
@@ -118,13 +120,16 @@ export default async function EnBlogPostPage({
   }
 
   return (
-    <BlogPostPage
-      post={post}
-      views={views}
-      relatedViews={relatedViews}
-      reactions={reactions.length > 0 ? reactions : undefined}
-      locale="en"
-    />
+    <>
+      {!post.isFallback && <JsonLd data={buildBlogPostJsonLd(post, 'en')} />}
+      <BlogPostPage
+        post={post}
+        views={views}
+        relatedViews={relatedViews}
+        reactions={reactions.length > 0 ? reactions : undefined}
+        locale="en"
+      />
+    </>
   )
 }
 

@@ -2,8 +2,10 @@ import { type Metadata } from 'next'
 import React from 'react'
 
 import { HomePageView } from '~/app/(main)/HomePageView'
+import { JsonLd } from '~/components/JsonLd'
 import { url } from '~/lib'
 import { getMessages } from '~/lib/i18n'
+import { buildHomeJsonLd } from '~/lib/structured-data'
 
 export const metadata: Metadata = {
   title: {
@@ -20,7 +22,12 @@ export const metadata: Metadata = {
 }
 
 export default function EnHomePage() {
-  return <HomePageView locale="en" />
+  return (
+    <>
+      <JsonLd data={buildHomeJsonLd('en')} />
+      <HomePageView locale="en" />
+    </>
+  )
 }
 
 export const revalidate = 60

@@ -51,9 +51,29 @@ export const metadata: Metadata = {
   },
   alternates: {
     types: {
-      'application/rss+xml': [{ url: '/feed.xml', title: 'RSS 订阅' }],
+      'application/rss+xml': [
+        { url: '/feed.xml', title: 'RSS 订阅' },
+        { url: '/ai/feed.xml', title: 'AI 每日简讯 RSS' },
+      ],
     },
   },
+  ...(process.env.GOOGLE_SITE_VERIFICATION?.trim() ||
+  process.env.BING_SITE_VERIFICATION?.trim()
+    ? {
+        verification: {
+          ...(process.env.GOOGLE_SITE_VERIFICATION?.trim()
+            ? { google: process.env.GOOGLE_SITE_VERIFICATION.trim() }
+            : {}),
+          ...(process.env.BING_SITE_VERIFICATION?.trim()
+            ? {
+                other: {
+                  'msvalidate.01': process.env.BING_SITE_VERIFICATION.trim(),
+                },
+              }
+            : {}),
+        },
+      }
+    : {}),
 }
 
 export const viewport: Viewport = {

@@ -1,7 +1,9 @@
 import { type Metadata } from 'next'
 
 import { AboutPageView } from '~/app/(main)/about/AboutPageView'
+import { JsonLd } from '~/components/JsonLd'
 import { url } from '~/lib'
+import { buildAboutJsonLd } from '~/lib/structured-data'
 
 const title = '关于我'
 const description =
@@ -30,7 +32,12 @@ export const metadata = {
 } satisfies Metadata
 
 export default function AboutPage() {
-  return <AboutPageView locale="zh" />
+  return (
+    <>
+      <JsonLd data={buildAboutJsonLd('zh')} />
+      <AboutPageView locale="zh" />
+    </>
+  )
 }
 
 export const revalidate = 3600

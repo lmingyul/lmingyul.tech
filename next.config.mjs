@@ -83,6 +83,30 @@ const nextConfig = {
         source: '/en/rss.xml',
         destination: '/en/feed.xml',
       },
+      {
+        source: '/ai/feed',
+        destination: '/ai/feed.xml',
+      },
+      {
+        source: '/ai/rss',
+        destination: '/ai/feed.xml',
+      },
+      {
+        source: '/ai/rss.xml',
+        destination: '/ai/feed.xml',
+      },
+      {
+        source: '/en/ai/feed',
+        destination: '/en/ai/feed.xml',
+      },
+      {
+        source: '/en/ai/rss',
+        destination: '/en/ai/feed.xml',
+      },
+      {
+        source: '/en/ai/rss.xml',
+        destination: '/en/ai/feed.xml',
+      },
     ]
   },
 }

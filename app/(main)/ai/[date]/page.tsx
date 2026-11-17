@@ -1,7 +1,9 @@
 import { type Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
+import { JsonLd } from '~/components/JsonLd'
 import { url } from '~/lib'
+import { buildAiDailyJsonLd } from '~/lib/structured-data'
 import { getAiDailyIssue, getAiDailyIssues } from '~/sanity/queries'
 
 import { AiDailyView } from '../AiDailyView'
@@ -61,7 +63,18 @@ export default async function AiDailyIssuePage({
     notFound()
   }
 
-  return <AiDailyView issues={issues} activeIssue={activeIssue} />
+  return (
+    <>
+      <JsonLd
+        data={buildAiDailyJsonLd({
+          issue: activeIssue,
+          issuesCount: issues.length,
+          locale: 'zh',
+        })}
+      />
+      <AiDailyView issues={issues} activeIssue={activeIssue} />
+    </>
+  )
 }
 
 export const revalidate = 60

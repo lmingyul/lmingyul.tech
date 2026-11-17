@@ -1,6 +1,8 @@
 import { type Metadata } from 'next'
 
+import { JsonLd } from '~/components/JsonLd'
 import { url } from '~/lib'
+import { buildAiDailyJsonLd } from '~/lib/structured-data'
 import { getAiDailyIssue, getAiDailyIssues } from '~/sanity/queries'
 
 import { AiDailyView } from './AiDailyView'
@@ -28,6 +30,11 @@ export const metadata = {
       en: url('/en/ai').href,
       'x-default': url('/ai').href,
     },
+    types: {
+      'application/rss+xml': [
+        { url: '/ai/feed.xml', title: 'AI 每日简讯 RSS' },
+      ],
+    },
   },
 } satisfies Metadata
 
@@ -38,7 +45,17 @@ export default async function AiIndexPage() {
   ])
 
   return (
-    <AiDailyView issues={issues} activeIssue={latestIssue} isIndexPage />
+    <>
+      <JsonLd
+        data={buildAiDailyJsonLd({
+          issue: latestIssue,
+          issuesCount: issues.length,
+          isIndexPage: true,
+          locale: 'zh',
+        })}
+      />
+      <AiDailyView issues={issues} activeIssue={latestIssue} isIndexPage />
+    </>
   )
 }
 

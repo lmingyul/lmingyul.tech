@@ -4,6 +4,7 @@ import { getMessages } from '~/lib/i18n'
 import { seo } from '~/lib/seo'
 import { getLatestBlogPosts } from '~/sanity/queries'
 
+export const dynamic = 'force-dynamic'
 export const revalidate = 60
 
 const enSeo = getMessages('en').seo
@@ -16,7 +17,7 @@ export async function GET() {
     feed_url: `${seo.url.href}en/feed.xml`,
     language: 'en',
     image_url: `${seo.url.href}opengraph-image.png`,
-    generator: 'PHP 9.0',
+    generator: 'Next.js (lmingyul.top)',
   })
 
   const data = await getLatestBlogPosts({ limit: 999, locale: 'en' })
@@ -44,7 +45,7 @@ export async function GET() {
 
   return new Response(feed.xml(), {
     headers: {
-      'content-type': 'application/xml',
+      'content-type': 'application/xml; charset=utf-8',
     },
   })
 }

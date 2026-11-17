@@ -37,5 +37,9 @@ export default authMiddleware({
     '/en/rss',
     '/en/feed',
     '/ama',
+    '/robots.txt',
+    '/sitemap.xml',
+    '/llms.txt',
+    '/llms-full.txt',
   ],
 })

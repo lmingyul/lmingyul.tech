@@ -35,6 +35,7 @@ export const metadata: Metadata = {
     types: {
       'application/rss+xml': [
         { url: '/en/feed.xml', title: enSeo.rssTitle },
+        { url: '/en/ai/feed.xml', title: 'AI Daily Digest RSS' },
       ],
     },
   },

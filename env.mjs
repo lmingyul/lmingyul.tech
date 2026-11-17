@@ -17,6 +17,8 @@ const server = z.object({
   DEEPSEEK_API_KEY: z.string().optional(),
   DEEPSEEK_BASE_URL: z.string().optional(),
   DEEPSEEK_MODEL: z.string().optional(),
+  GOOGLE_SITE_VERIFICATION: z.string().optional(),
+  BING_SITE_VERIFICATION: z.string().optional(),
 })
 
 const client = z.object({
@@ -54,6 +56,8 @@ const processEnv = {
   DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY,
   DEEPSEEK_BASE_URL: process.env.DEEPSEEK_BASE_URL,
   DEEPSEEK_MODEL: process.env.DEEPSEEK_MODEL,
+  GOOGLE_SITE_VERIFICATION: process.env.GOOGLE_SITE_VERIFICATION,
+  BING_SITE_VERIFICATION: process.env.BING_SITE_VERIFICATION,
 }
 
 // Don't touch the part below

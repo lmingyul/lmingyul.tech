@@ -3,6 +3,7 @@ import RSS from 'rss'
 import { seo } from '~/lib/seo'
 import { getLatestBlogPosts } from '~/sanity/queries'
 
+export const dynamic = 'force-dynamic'
 export const revalidate = 60 // 1 minute
 
 export async function GET() {
@@ -13,7 +14,7 @@ export async function GET() {
     feed_url: `${seo.url.href}feed.xml`,
     language: 'zh-CN',
     image_url: `${seo.url.href}opengraph-image.png`,
-    generator: 'PHP 9.0',
+    generator: 'Next.js (lmingyul.top)',
   })
 
   const data = await getLatestBlogPosts({ limit: 999 })
@@ -39,7 +40,7 @@ export async function GET() {
 
   return new Response(feed.xml(), {
     headers: {
-      'content-type': 'application/xml',
+      'content-type': 'application/xml; charset=utf-8',
     },
   })
 }
