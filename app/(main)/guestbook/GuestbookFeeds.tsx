@@ -55,6 +55,7 @@ function Message({
           </b>
           <time
             dateTime={message.createdAt.toString()}
+            suppressHydrationWarning
             className="inline-flex select-none text-[12px] font-medium opacity-40"
           >
             {dayjs(message.createdAt).locale(dayjsLocale).fromNow()}

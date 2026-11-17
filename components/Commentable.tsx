@@ -371,7 +371,10 @@ function Comment({
             )}
           >
             {!isMyself && <span>{parseDisplayName(c.userInfo)}</span>}
-            <span className="inline-flex select-none text-[10px] font-medium opacity-40">
+            <span
+              suppressHydrationWarning
+              className="inline-flex select-none text-[10px] font-medium opacity-40"
+            >
               {dayjs(c.createdAt).locale(dayjsLocale).fromNow()}
             </span>
           </span>

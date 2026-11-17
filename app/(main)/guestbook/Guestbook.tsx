@@ -16,21 +16,28 @@ import { GuestbookInput } from './GuestbookInput'
 export function Guestbook(props: { messages?: GuestbookDto[] }) {
   const pathname = usePathname()
   const t = getMessages(localeFromPathname(pathname)).guestbook
+  const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => setMounted(true), [])
 
   return (
     <section className="max-w-2xl">
-      <SignedOut>
-        <SignInButton mode="modal" redirectUrl={url(pathname).href}>
-          <Button type="button">
-            <UserArrowLeftIcon className="mr-1 h-5 w-5" />
-            {t.signInToPost}
-          </Button>
-        </SignInButton>
-      </SignedOut>
+      {mounted && (
+        <>
+          <SignedOut>
+            <SignInButton mode="modal" redirectUrl={url(pathname).href}>
+              <Button type="button">
+                <UserArrowLeftIcon className="mr-1 h-5 w-5" />
+                {t.signInToPost}
+              </Button>
+            </SignInButton>
+          </SignedOut>
 
-      <SignedIn>
-        <GuestbookInput />
-      </SignedIn>
+          <SignedIn>
+            <GuestbookInput />
+          </SignedIn>
+        </>
+      )}
 
       <GuestbookFeeds messages={props.messages} />
     </section>

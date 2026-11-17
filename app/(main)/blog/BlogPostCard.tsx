@@ -1,4 +1,4 @@
-import { parseDateTime } from '@zolplay/utils'
+import { extendDateTime, parseDateTime } from '@zolplay/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -11,6 +11,8 @@ import {
 import { getMessages, type Locale, localizePath } from '~/lib/i18n'
 import { prettifyNumber } from '~/lib/math'
 import { type Post } from '~/sanity/schemas/post'
+
+extendDateTime()
 
 export function BlogPostCard({
   post,
@@ -79,9 +81,10 @@ export function BlogPostCard({
             <span className="inline-flex items-center space-x-1 text-[12px] font-medium text-[--post-image-fg] md:text-sm">
               <CalendarIcon />
               <span>
-                {parseDateTime({ date: new Date(publishedAt) })?.format(
-                  'YYYY/MM/DD'
-                )}
+                {parseDateTime({
+                  date: new Date(publishedAt),
+                  timezone: 'Asia/Shanghai',
+                })?.format('YYYY/MM/DD')}
               </span>
             </span>
 

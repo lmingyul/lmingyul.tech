@@ -186,6 +186,13 @@ function UserInfo({ signInLabel }: { signInLabel: string }) {
     }
   }, [user?.primaryEmailAddress?.verification.strategy])
 
+  const [mounted, setMounted] = React.useState(false)
+  React.useEffect(() => setMounted(true), [])
+
+  if (!mounted) {
+    return null
+  }
+
   return (
     <AnimatePresence>
       <SignedIn key="user-info">

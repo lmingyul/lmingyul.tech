@@ -3,8 +3,12 @@ import React from 'react'
 
 import { HomePageView } from '~/app/(main)/HomePageView'
 import { url } from '~/lib'
+import { getMessages } from '~/lib/i18n'
 
 export const metadata: Metadata = {
+  title: {
+    absolute: getMessages('en').seo.defaultTitle,
+  },
   alternates: {
     canonical: url('/en').href,
     languages: {

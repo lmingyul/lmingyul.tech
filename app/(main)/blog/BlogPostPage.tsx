@@ -1,6 +1,6 @@
 'use client'
 
-import { parseDateTime } from '@zolplay/utils'
+import { extendDateTime, parseDateTime } from '@zolplay/utils'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -28,6 +28,8 @@ import { type PostDetail } from '~/sanity/schemas/post'
 
 import { BlogPostCard } from './BlogPostCard'
 import { BlogPostTableOfContents } from './BlogPostTableOfContents'
+
+extendDateTime()
 
 export function BlogPostPage({
   post,
@@ -120,6 +122,7 @@ export function BlogPostPage({
                   <span>
                     {parseDateTime({
                       date: new Date(post.publishedAt),
+                      timezone: 'Asia/Shanghai',
                     })?.format('YYYY/MM/DD')}
                   </span>
                 </time>

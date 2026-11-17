@@ -79,13 +79,14 @@ export function Headline({ locale: localeProp }: { locale?: Locale }) {
         {sep}
         <span className="whitespace-nowrap">
           <Designer label={t.alchemist} />
-          {sep}
+          {sep.trimEnd()}
         </span>
         <span className="block h-2" />
         <span className="whitespace-nowrap">
           <OCD label={t.ocd} />
-          {sep}
+          {sep.trimEnd()}
         </span>
+        {locale === 'en' ? ' ' : ''}
         <Founder label={t.introvert} />
       </motion.h1>
       <motion.p
