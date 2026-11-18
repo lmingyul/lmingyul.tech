@@ -567,12 +567,7 @@ export async function AboutPageView({ locale = 'zh' }: { locale?: Locale }) {
       <section className="mt-20">
         <SectionHeading
           icon={<PencilSwooshIcon className="h-5 w-5" />}
-          title={isEn ? 'Writing Activity' : '写作足迹'}
-          subtitle={
-            isEn
-              ? 'Each square is a day; darker means more posts'
-              : '每一格是一天，颜色越深当天发布越多'
-          }
+          title={isEn ? 'Footprints' : '足迹'}
         />
         <WritingHeatmap locale={locale} activity={activity} />
       </section>
