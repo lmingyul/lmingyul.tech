@@ -198,7 +198,7 @@ export function AiSummaryCard({
         phase === 'typing' && 'cursor-pointer'
       )}
     >
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex min-h-7 items-center justify-between gap-3">
         <h2 className="flex items-center gap-1.5 text-xs font-semibold text-lime-700 dark:text-lime-400">
           <SparkleIcon className="h-4 w-4 flex-none" aria-hidden="true" />
           <span>{t.aiSummaryTitle}</span>
@@ -211,7 +211,7 @@ export function AiSummaryCard({
                 event.stopPropagation()
                 finishImmediately()
               }}
-              className="inline-flex min-h-6 items-center rounded-md px-2 py-0.5 text-xs font-medium text-lime-700 transition-colors hover:bg-lime-500/15 active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600 dark:text-lime-300 dark:hover:bg-lime-400/15 dark:focus-visible:outline-lime-400"
+              className="inline-flex min-h-6 items-center rounded-md px-2 py-0.5 text-xs font-medium leading-4 text-lime-700 transition-colors hover:bg-lime-500/15 active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600 dark:text-lime-300 dark:hover:bg-lime-400/15 dark:focus-visible:outline-lime-400"
             >
               {t.aiSummarySkip}
             </button>
