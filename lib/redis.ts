@@ -238,23 +238,33 @@ export const redis = {
     }
     try {
       const raw = await client.call(
-        'ZUNION',
+        'zunion',
         String(keys.length),
         ...keys,
         'WITHSCORES'
       )
-      if (!Array.isArray(raw)) {
+      if (!Array.isArray(raw) || raw.length === 0) {
         return []
       }
       const pairs: Array<[string, number]> = []
-      for (let i = 0; i + 1 < raw.length; i += 2) {
-        const memberRaw = raw[i]
-        const scoreRaw = raw[i + 1]
-        if (memberRaw == null) continue
+      const pushPair = (memberRaw: unknown, scoreRaw: unknown) => {
+        if (memberRaw == null) return
         const member = String(memberRaw)
         const score = Number(scoreRaw)
         if (member && Number.isFinite(score) && score > 0) {
           pairs.push([member, score])
+        }
+      }
+
+      if (Array.isArray(raw[0])) {
+        for (const entry of raw) {
+          if (Array.isArray(entry) && entry.length >= 2) {
+            pushPair(entry[0], entry[1])
+          }
+        }
+      } else {
+        for (let i = 0; i + 1 < raw.length; i += 2) {
+          pushPair(raw[i], raw[i + 1])
         }
       }
       pairs.sort((a, b) => b[1] - a[1])
