@@ -1,4 +1,5 @@
 import { type Metadata } from 'next'
+import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
 
 import { AiDailyView } from '~/app/(main)/ai/AiDailyView'
@@ -6,6 +7,7 @@ import { JsonLd } from '~/components/JsonLd'
 import { url } from '~/lib'
 import { getMessages } from '~/lib/i18n'
 import { buildAiDailyJsonLd } from '~/lib/structured-data'
+import { recordContentView } from '~/lib/trending'
 import { getAiDailyIssue, getAiDailyIssues } from '~/sanity/queries'
 
 const t = getMessages('en').aiDaily
@@ -72,6 +74,8 @@ export default async function EnAiDailyIssuePage({
   if (!activeIssue) {
     notFound()
   }
+
+  await recordContentView(headers(), 'ai')
 
   return (
     <>

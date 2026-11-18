@@ -9,7 +9,7 @@ const VISITOR_HASH_SALT = 'lmingyul-weekly-uv-v1'
 const BOT_UA_PATTERN =
   /bot|crawler|spider|slurp|mediapartners|adsbot|google-extended|oai-searchbot|chatgpt-user|gptbot|claudebot|claude-searchbot|claude-user|perplexitybot|perplexity-user|applebot|bytespider|facebookexternalhit|facebot|twitterbot|slackbot|discordbot|telegrambot|whatsapp|linkedinbot|embedly|pinterest|vkshare|outbrain|w3c_validator|lighthouse|pagespeed|gtmetrix|headlesschrome|phantomjs|prerender|uptimerobot|better uptime|pingdom|statuscake|datadog|curl\/|wget\/|python-requests|python-urllib|aiohttp|httpx|go-http-client|java\/|okhttp|axios\/|node-fetch|undici|libwww-perl|ruby|scrapy|feedfetcher|tt-rss|inoreader|feedly|netnewswire/i
 
-type HeaderReader = Pick<Headers, 'get'>
+export type HeaderReader = Pick<Headers, 'get'>
 
 function normalizeIP(raw: string | null | undefined): string | null {
   if (!raw) return null
@@ -68,17 +68,22 @@ function computeVisitorDigest(ip: string, userAgent: string): string {
     .slice(0, 16)
 }
 
+export function resolveVisitorDigest(reqHeaders: HeaderReader): string | null {
+  if (!isLikelyHumanNavigation(reqHeaders)) {
+    return null
+  }
+  const ip = extractPublicIP(reqHeaders)
+  const ua = reqHeaders.get('user-agent')?.trim() ?? ''
+  if (!ip || !ua) {
+    return null
+  }
+  return computeVisitorDigest(ip, ua)
+}
+
 export async function recordAndCountWeeklyVisitors(
   reqHeaders: HeaderReader
 ): Promise<number | null> {
-  let member: string | null = null
-  if (isLikelyHumanNavigation(reqHeaders)) {
-    const ip = extractPublicIP(reqHeaders)
-    const ua = reqHeaders.get('user-agent')?.trim() ?? ''
-    if (ip && ua) {
-      member = computeVisitorDigest(ip, ua)
-    }
-  }
+  const member = resolveVisitorDigest(reqHeaders)
 
   return redis.rollingUniqueCount(
     kvKeys.weeklyVisitors,

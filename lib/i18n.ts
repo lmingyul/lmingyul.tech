@@ -160,6 +160,12 @@ const zhMessages = {
     fallbackCaption: (idx: number) => `旅途瞬间 ${idx + 1}`,
   },
   home: {
+    trending: '大家都在看',
+    trendingPost: '文章',
+    trendingAi: 'AI 板块',
+    trendingAiTitle: 'AI 每日简讯',
+    trendingAiFallbackSub: '每日追踪大模型与 Agent 工程前沿信号',
+    trendingVisitors: (count: number) => `${count} 位访客`,
     recentPosts: '近期文章',
   },
   resume: {
@@ -356,6 +362,12 @@ const enMessages: typeof zhMessages = {
     fallbackCaption: (idx: number) => `Travel moment ${idx + 1}`,
   },
   home: {
+    trending: 'Popular right now',
+    trendingPost: 'Article',
+    trendingAi: 'AI Section',
+    trendingAiTitle: 'AI Daily Brief',
+    trendingAiFallbackSub: 'Daily signals on LLMs, agents, and open source',
+    trendingVisitors: (count: number) => `${count} visitors`,
     recentPosts: 'Recent Posts',
   },
   resume: {

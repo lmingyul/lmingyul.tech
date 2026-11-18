@@ -1,8 +1,10 @@
 import { type Metadata } from 'next'
+import { headers } from 'next/headers'
 
 import { JsonLd } from '~/components/JsonLd'
 import { url } from '~/lib'
 import { buildAiDailyJsonLd } from '~/lib/structured-data'
+import { recordContentView } from '~/lib/trending'
 import { getAiDailyIssue, getAiDailyIssues } from '~/sanity/queries'
 
 import { AiDailyView } from './AiDailyView'
@@ -43,6 +45,8 @@ export default async function AiIndexPage() {
     getAiDailyIssues(),
     getAiDailyIssue(),
   ])
+
+  await recordContentView(headers(), 'ai')
 
   return (
     <>

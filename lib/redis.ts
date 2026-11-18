@@ -8,6 +8,7 @@ const globalForRedis = globalThis as unknown as {
   ioRedis?: Redis
   memStore?: Map<string, { value: string; expiresAt?: number }>
   zsetStore?: Map<string, Map<string, number>>
+  setStore?: Map<string, { members: Set<string>; expiresAt?: number }>
 }
 
 const memStore =
@@ -15,9 +16,13 @@ const memStore =
   new Map<string, { value: string; expiresAt?: number }>()
 const zsetStore =
   globalForRedis.zsetStore ?? new Map<string, Map<string, number>>()
+const setStore =
+  globalForRedis.setStore ??
+  new Map<string, { members: Set<string>; expiresAt?: number }>()
 if (process.env.NODE_ENV !== 'production') {
   globalForRedis.memStore = memStore
   globalForRedis.zsetStore = zsetStore
+  globalForRedis.setStore = setStore
 }
 
 function getClient(): Redis | null {
@@ -162,7 +167,114 @@ export const redis = {
       return null
     }
   },
+
+  async trackDailyUnique(
+    seenKey: string,
+    dayKey: string,
+    visitor: string,
+    target: string,
+    seenTtlSeconds: number,
+    dayTtlSeconds: number
+  ): Promise<boolean | null> {
+    if (!visitor || !target) return false
+    const client = getClient()
+    if (!client) {
+      const nowMs = Date.now()
+      let seen = setStore.get(seenKey)
+      if (!seen || (seen.expiresAt && nowMs > seen.expiresAt)) {
+        seen = {
+          members: new Set<string>(),
+          expiresAt: nowMs + seenTtlSeconds * 1000,
+        }
+        setStore.set(seenKey, seen)
+      }
+      if (seen.members.has(visitor)) {
+        return false
+      }
+      seen.members.add(visitor)
+      let bucket = zsetStore.get(dayKey)
+      if (!bucket) {
+        bucket = new Map<string, number>()
+        zsetStore.set(dayKey, bucket)
+      }
+      bucket.set(target, (bucket.get(target) ?? 0) + 1)
+      return true
+    }
+    try {
+      const added = await client.eval(
+        TRENDING_HIT_LUA,
+        2,
+        seenKey,
+        dayKey,
+        visitor,
+        target,
+        String(seenTtlSeconds),
+        String(dayTtlSeconds)
+      )
+      return Number(added) === 1
+    } catch (err) {
+      console.error('[Redis.trackDailyUnique]', err)
+      return null
+    }
+  },
+
+  async zunionWithScores(
+    keys: string[]
+  ): Promise<Array<[string, number]> | null> {
+    if (keys.length === 0) return []
+    const client = getClient()
+    if (!client) {
+      const totals = new Map<string, number>()
+      for (const key of keys) {
+        const bucket = zsetStore.get(key)
+        if (!bucket) continue
+        bucket.forEach((score, member) => {
+          totals.set(member, (totals.get(member) ?? 0) + score)
+        })
+      }
+      return Array.from(totals.entries())
+        .filter(([, score]) => score > 0)
+        .sort((a, b) => b[1] - a[1])
+    }
+    try {
+      const raw = await client.call(
+        'ZUNION',
+        String(keys.length),
+        ...keys,
+        'WITHSCORES'
+      )
+      if (!Array.isArray(raw)) {
+        return []
+      }
+      const pairs: Array<[string, number]> = []
+      for (let i = 0; i + 1 < raw.length; i += 2) {
+        const memberRaw = raw[i]
+        const scoreRaw = raw[i + 1]
+        if (memberRaw == null) continue
+        const member = String(memberRaw)
+        const score = Number(scoreRaw)
+        if (member && Number.isFinite(score) && score > 0) {
+          pairs.push([member, score])
+        }
+      }
+      pairs.sort((a, b) => b[1] - a[1])
+      return pairs
+    } catch (err) {
+      console.error('[Redis.zunionWithScores]', err)
+      return null
+    }
+  },
 }
+
+const TRENDING_HIT_LUA = `
+local added = redis.call('SADD', KEYS[1], ARGV[1])
+redis.call('EXPIRE', KEYS[1], tonumber(ARGV[3]))
+if added == 1 then
+  redis.call('ZINCRBY', KEYS[2], 1, ARGV[2])
+  redis.call('EXPIRE', KEYS[2], tonumber(ARGV[4]))
+end
+return added
+`
 
 const ROLLING_WINDOW_UV_LUA = `
 local now = tonumber(ARGV[1])

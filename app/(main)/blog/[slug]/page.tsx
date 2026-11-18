@@ -1,4 +1,5 @@
 import { type Metadata } from 'next'
+import { headers } from 'next/headers'
 import { notFound } from 'next/navigation'
 
 import { BlogPostPage } from '~/app/(main)/blog/BlogPostPage'
@@ -8,6 +9,7 @@ import { env } from '~/env.mjs'
 import { url } from '~/lib'
 import { redis } from '~/lib/redis'
 import { buildBlogPostJsonLd } from '~/lib/structured-data'
+import { recordContentView } from '~/lib/trending'
 import { getBlogPost } from '~/sanity/queries'
 
 export const generateMetadata = async ({
@@ -76,6 +78,8 @@ export default async function BlogPage({
   if (!post) {
     notFound()
   }
+
+  await recordContentView(headers(), `post:${post._id}`)
 
   let views: number
   if (env.VERCEL_ENV === 'production') {
