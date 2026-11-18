@@ -3,12 +3,16 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
-import { LightningIcon, SparkleIcon } from '~/assets'
+import { LightningIcon } from '~/assets'
 import { Container } from '~/components/ui/Container'
 import { getMessages, type Locale } from '~/lib/i18n'
 import { getTrendingItems } from '~/lib/trending'
 
 extendDateTime()
+
+const AI_TRENDING_COVER_SRC = '/images/ai-daily-fastfood.webp'
+const AI_TRENDING_COVER_LQIP =
+  'data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAABwBACdASoYAA4APtFYpEwoJSOiMAgBABoJYwC7MoADTrXyhy3t4oc73yyEAAD+9o1Hy96m8rZNArvOHqTSLRFDjKAuCFj+QyNOuUueteD39/Vcjlqxo/e8AAA='
 
 export async function TrendingSection({
   locale = 'zh',
@@ -43,6 +47,10 @@ export async function TrendingSection({
         <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
           {items.map((item, idx) => {
             const rank = String(idx + 1).padStart(2, '0')
+            const coverSrc =
+              item.kind === 'post' ? item.imageUrl : AI_TRENDING_COVER_SRC
+            const coverLqip =
+              item.kind === 'post' ? item.lqip : AI_TRENDING_COVER_LQIP
             const postDateText =
               item.kind === 'post'
                 ? parseDateTime({
@@ -67,30 +75,16 @@ export async function TrendingSection({
                     {rank}
                   </span>
 
-                  {item.kind === 'post' ? (
-                    <Image
-                      src={item.imageUrl}
-                      alt=""
-                      fill
-                      unoptimized
-                      placeholder={item.lqip ? 'blur' : 'empty'}
-                      blurDataURL={item.lqip}
-                      sizes="(max-width: 640px) 96px, (max-width: 1024px) 33vw, 320px"
-                      className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:transform-none"
-                    />
-                  ) : (
-                    <div className="relative flex h-full w-full items-center justify-center bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-950 transition-transform duration-300 ease-out before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_78%_22%,rgba(132,204,22,0.28),transparent_62%)] group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:transform-none">
-                      <span className="relative z-10 inline-flex items-center gap-1.5 rounded-full border border-lime-400/30 bg-lime-400/10 px-2.5 py-1 text-lime-300">
-                        <SparkleIcon
-                          className="h-4 w-4 shrink-0"
-                          aria-hidden="true"
-                        />
-                        <span className="hidden font-mono text-xs font-medium tracking-tight sm:inline">
-                          /ai
-                        </span>
-                      </span>
-                    </div>
-                  )}
+                  <Image
+                    src={coverSrc}
+                    alt=""
+                    fill
+                    unoptimized
+                    placeholder={coverLqip ? 'blur' : 'empty'}
+                    blurDataURL={coverLqip}
+                    sizes="(max-width: 640px) 96px, (max-width: 1024px) 33vw, 320px"
+                    className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:transform-none"
+                  />
                 </div>
 
                 <div className="flex min-w-0 flex-1 flex-col justify-between gap-1 sm:gap-2 sm:p-4">
