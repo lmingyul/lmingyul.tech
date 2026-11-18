@@ -465,3 +465,73 @@ html.dark .ai-toc-link:is(:target-current, .target-current) {
   border-inline-start-color: #a3e635;
   background-color: rgba(163, 230, 53, 0.14);
 }
+
+/* About Writing Heatmap horizontal scroll fade */
+@property --heatmap-fade-start {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --heatmap-fade-end {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes heatmap-reveal-fade-start {
+  to {
+    --heatmap-fade-start: var(--heatmap-fade-size);
+  }
+}
+
+@keyframes heatmap-hide-fade-end {
+  from {
+    --heatmap-fade-end: var(--heatmap-fade-size);
+  }
+}
+
+.heatmap-scroller {
+  overflow-x: auto;
+  scroll-padding-inline: 1.5rem;
+  --heatmap-fade-size: 1.5rem;
+}
+
+@supports (mask-composite: subtract) {
+  .heatmap-scroller {
+    mask:
+      linear-gradient(black, black) no-clip subtract,
+      linear-gradient(to right, black, transparent) 0 0 /
+        var(--heatmap-fade-start) 100% no-repeat no-clip,
+      linear-gradient(to right, transparent, black) 100% 0 /
+        var(--heatmap-fade-end) 100% no-repeat no-clip;
+  }
+
+  @supports (animation-timeline: scroll(self inline)) {
+    .heatmap-scroller {
+      animation:
+        heatmap-reveal-fade-start linear both,
+        heatmap-hide-fade-end linear both;
+      animation-timeline: scroll(self inline);
+      animation-range:
+        0 var(--heatmap-fade-size),
+        calc(100% - var(--heatmap-fade-size)) 100%;
+    }
+  }
+
+  @supports not (animation-timeline: scroll(self inline)) {
+    .heatmap-scroller {
+      transition:
+        --heatmap-fade-start 0.2s,
+        --heatmap-fade-end 0.2s;
+    }
+
+    .heatmap-scroller.more-start {
+      --heatmap-fade-start: var(--heatmap-fade-size);
+    }
+
+    .heatmap-scroller.more-end {
+      --heatmap-fade-end: var(--heatmap-fade-size);
+    }
+  }
+}

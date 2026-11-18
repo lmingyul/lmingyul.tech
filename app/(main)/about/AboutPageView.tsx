@@ -1,17 +1,20 @@
 import Image from 'next/image'
 import Balancer from 'react-wrap-balancer'
 
+import { WritingHeatmap } from '~/app/(main)/about/WritingHeatmap'
 import {
   BriefcaseIcon,
   GitHubIcon,
   Layers3Icon,
   MailIcon,
+  PencilSwooshIcon,
   SparkleIcon,
 } from '~/assets'
 import portraitImage from '~/assets/Portrait.png'
 import { SocialLink } from '~/components/links/SocialLink'
 import { Container } from '~/components/ui/Container'
 import { type Locale, localizePath } from '~/lib/i18n'
+import { getWritingActivity } from '~/lib/writing-activity'
 
 type CareerItem = {
   organization: string
@@ -395,8 +398,9 @@ function SectionHeading({
   )
 }
 
-export function AboutPageView({ locale = 'zh' }: { locale?: Locale }) {
+export async function AboutPageView({ locale = 'zh' }: { locale?: Locale }) {
   const isEn = locale === 'en'
+  const activity = await getWritingActivity(locale)
   const careerItems = CAREER_ITEMS_BY_LOCALE[locale]
   const gearItems = GEAR_ITEMS_BY_LOCALE[locale]
   const travelPhotos = TRAVEL_PHOTOS_BY_LOCALE[locale]
@@ -558,6 +562,19 @@ export function AboutPageView({ locale = 'zh' }: { locale?: Locale }) {
             </div>
           </div>
         </aside>
+      </section>
+
+      <section className="mt-20">
+        <SectionHeading
+          icon={<PencilSwooshIcon className="h-5 w-5" />}
+          title={isEn ? 'Writing Activity' : '写作足迹'}
+          subtitle={
+            isEn
+              ? 'Each square is a day; darker means more posts'
+              : '每一格是一天，颜色越深当天发布越多'
+          }
+        />
+        <WritingHeatmap locale={locale} activity={activity} />
       </section>
 
       <section className="mt-20">
