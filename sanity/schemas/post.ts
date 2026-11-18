@@ -39,7 +39,12 @@ export const Post = z.object({
   hasTranslation: z.boolean().optional(),
 })
 export type Post = z.infer<typeof Post>
+export type PostAiSummary = {
+  summary: string
+  points: string[]
+}
 export type PostDetail = Post & {
   headings: PostHeadingBlock[]
   related?: Post[]
+  aiSummary?: PostAiSummary
 }

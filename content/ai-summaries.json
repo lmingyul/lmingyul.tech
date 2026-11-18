@@ -1,0 +1,1034 @@
+{
+  "version": 1,
+  "items": {
+    "2022-09-review": {
+      "hash": "726aa37abfb7e887",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:50:39.890Z",
+      "zh": {
+        "summary": "本文是作者对 2022 年 9 月的月度回顾，记录了工作繁忙、中秋加班一天以及疫情下持续核酸检测的生活状态。输入方面，作者阅读 4 本书（读完 1 本），看了 1 部港式喜剧电影，用碎片时间在小宇宙听完 32 个播客、共 34 小时 34 分钟；输出方面写出 6 篇技术笔记。",
+        "points": [
+          "阅读 4 本书仅读完《小狗钱钱》，其余三本《暗时间》《我们为什么要睡觉》《你是你吃出来的》仍在读。",
+          "利用通勤、排队核酸、洗澡等碎片时间在小宇宙听播客，当月共 32 个、34 小时 34 分钟。",
+          "当月输出 6 篇博客文章，包括 Java 2 篇、MySQL 3 篇、Redis 1 篇。"
+        ]
+      },
+      "en": {
+        "summary": "This post reviews the author's September 2022, a busy month with one day of Mid-Autumn overtime and over a month of 24-hour COVID testing. The author read 4 books (finishing 1), watched 1 Hong Kong comedy film, listened to 32 podcasts totaling 34 hours 34 minutes on Xiaoyuzhou during fragmented time, and published 6 technical blog posts.",
+        "points": [
+          "Finished only The Dog Coin among 4 books; Dark Time, Why We Sleep and You Are What You Eat remained in progress.",
+          "Used commuting, queuing for COVID tests and showering to listen to 32 podcasts, 34 hours 34 minutes in total.",
+          "Published 6 blog posts in September: 2 on Java, 3 on MySQL and 1 on Redis."
+        ]
+      }
+    },
+    "2022-10-review": {
+      "hash": "d605a6ab3309e58e",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:50:46.226Z",
+      "zh": {
+        "summary": "本文回顾2022年10月的输入与输出：因邻近项目交付，作者工作繁忙，还需带新人上手新项目，整体输入输出偏少；当月阅读4本书（2本读完、2本在读），观看2部电影，收听播客36小时34分钟，输出5篇文章，项目暂无进展，并希望找到工作与生活的平衡。",
+        "points": [
+          "工作因项目交付临近而繁忙，同时需要带新人上手新项目，作者认为当月输入与输出总体较少。",
+          "10月阅读4本书，其中2本读完、2本在读；观看2部电影，未看电视剧。",
+          "收听播客36小时34分钟，输出5篇文章，文中列出3篇读书笔记和1篇Spring学习笔记，项目暂无进展。"
+        ]
+      },
+      "en": {
+        "summary": "This post reviews October 2022, a month dominated by project delivery work and onboarding a newcomer to a new project. The author reports reading four books, with two finished and two in progress, watching two movies, listening to 36 hours and 34 minutes of podcasts, and publishing five blog posts, while project work made no progress. The post closes with a wish to find a better work-life balance.",
+        "points": [
+          "Project delivery deadlines and onboarding a newcomer made work busy and reduced overall input and output.",
+          "The author read four books, finished two and left two in progress, and watched two movies.",
+          "Podcast listening reached 36 hours 34 minutes, five blog posts were published, and project work made no progress."
+        ]
+      }
+    },
+    "2022-11-review": {
+      "hash": "cc9fe86d1be07793",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:50:39.793Z",
+      "zh": {
+        "summary": "本文是作者 2022 年 11 月的月度回顾，主要记录因年底项目交付连续加班 13 天、最终在 30 号完成团队目标的经历，并简单盘点当月输入与输出，包括读完 2 本书、观看 1 部电视剧、收听 37 小时播客，以及产出 1 篇 Spring 学习笔记。",
+        "points": [
+          "临近年底交付，作者最长连续上班 13 天，最终赶在 30 号完成团队目标",
+          "阅读《暗时间》与《置身事内》共 2 本，并认为后者有助于理解中国经济政策",
+          "用 infuse 配合阿里云盘整理影音库，当月播客收听时长 37 小时 26 分钟"
+        ]
+      },
+      "en": {
+        "summary": "This post is a monthly review of November 2022, describing a busy period of year-end project delivery in which the author worked 13 consecutive days and met the team goal on the 30th. It also briefly lists inputs and outputs, including 2 books, 1 TV series, 37 hours of podcasts, and 1 Spring study note.",
+        "points": [
+          "The author worked up to 13 straight days and finished the team target on the 30th",
+          "Read two books, including a work on the origins of China's economic policy",
+          "Used infuse with Alibaba Cloud Drive to organize a media library"
+        ]
+      }
+    },
+    "2022-annual-review": {
+      "hash": "01a8da51bab9e28f",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:50:43.700Z",
+      "zh": {
+        "summary": "本文是作者2022年度回顾，记录其成为正式程序员第一年的工作成长、疫情期间从核酸封控到感染新冠的生活经历，以及编程、读书、影视、音乐和播客等输入。作者反思编程学习贪多不精，希望明年在技术深度、健康与爱好上持续进步。",
+        "points": [
+          "作者今年从Scala转向Java，并在架构师受伤时临时担任项目负责人，体会到统筹工作的难度。",
+          "自6月以来半年共写19篇文章，播客全年收听253小时，用碎片时间积累输入。",
+          "作者反思编程学习什么都想学却难深入，提醒自己欲速则不达，慢才是真正的快。"
+        ]
+      },
+      "en": {
+        "summary": "This post is the author's 2022 annual review, covering their first year as a full-time programmer, the pandemic from repeated testing and lockdowns to a COVID infection, and their input habits in programming, books, film, music, and podcasts. The author reflects on shallow learning in programming and hopes to improve technical depth, health, and hobbies next year.",
+        "points": [
+          "The author switched from Scala to Java and briefly served as project lead when the team architect was injured.",
+          "Over half a year since June, the author wrote 19 articles and listened to 253 hours of podcasts.",
+          "The author admits wanting to learn many programming topics without going deep and aims to value depth over speed."
+        ]
+      }
+    },
+    "2023-01-review": {
+      "hash": "5b2edf50c30cbeb9",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:50:42.444Z",
+      "zh": {
+        "summary": "本文是 2023 年 1 月的月度回顾，记录了春节 14 天假期中的家庭活动，包括大扫除、逛花街、吃年夜饭、寺庙祭拜、游顺峰山公园、逛动物园和观看 CINITY 版《流浪地球 2》。作者还更新了个人信息流与工作流，将笔记软件换成 Obsidian，阅读器换成 Readwise Reader，音频 App 换成 Pocket Casts，并提到正在阅读《三体》、收听播客 33 小时、本月未写博客。",
+        "points": [
+          "春节共休 14 天，包括 5 天年假、2 天周末和春节假期，行程以家庭活动为主",
+          "信息流工具更新：Notion 换 Obsidian，Reeder 5 换 Readwise Reader，小宇宙换 Pocket Casts",
+          "本月阅读 0 本书、在看《三体》，收听播客 33 小时 12 分钟，博客文章为 0 篇"
+        ]
+      },
+      "en": {
+        "summary": "This post is a January 2023 monthly recap covering a 14-day Spring Festival break filled with family activities such as cleaning, flower markets, reunion dinner, temple visits, park walks, and watching The Wandering Earth 2 in a CINITY theater. The author also updated personal information and workflow tools, switching from Notion to Obsidian, Reeder 5 to Readwise Reader, and Xiaoyuzhou to Pocket Casts, while reading The Three-Body Problem, listening to 33 hours of podcasts, and publishing no blog posts.",
+        "points": [
+          "Spring Festival break totaled 14 days using 5 annual leave days plus weekends and the holiday",
+          "Tool changes included Obsidian for notes, Readwise Reader for text, and Pocket Casts for audio",
+          "Read 0 books with The Three-Body Problem in progress, listened to 33 hours 12 minutes of podcasts, wrote 0 posts"
+        ]
+      }
+    },
+    "2023-02-review": {
+      "hash": "8f704300e174cc28",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:50:54.948Z",
+      "zh": {
+        "summary": "本文回顾了 2023 年 2 月的经历：公司裁员与团队重组后，作者从写代码转向故障处理，因招聘市场低迷选择暂不离职并继续打磨技术；生活上续租、断舍离，阅读较少，收听 32 小时 ChatGPT 与裁员主题播客，仅产出 1 篇学习笔记。",
+        "points": [
+          "团队重组后接手防火墙职责，日常工作变为故障定位、分析与指派，编码时间减少。",
+          "因招聘市场收缩和自身实力考虑，决定暂不离职，先提升技术等待时机。",
+          "生活上续租并断舍离，收听 32 小时播客，阅读 0 本书，仅完成 1 篇学习笔记。"
+        ]
+      },
+      "en": {
+        "summary": "This post reviews February 2023, a month of layoffs and team restructuring. After taking over firewall duties, the author shifted from coding to fault locating, analysis, and assignment. Citing a tight job market and personal skill gaps, the author decided to stay, improve technical skills, and wait for a better opportunity. Life updates include renewing the rental, decluttering, little reading, 32 hours of podcasts on ChatGPT and layoffs, and one study note.",
+        "points": [
+          "Team changes included three old members transferring out and new experts joining; the author then took over firewall duties.",
+          "Colleagues sent dozens of applications with no response, reinforcing the decision to stay and build skills.",
+          "Living space was decluttered, the rental renewed for one year, and podcast listening reached 32 hours."
+        ]
+      }
+    },
+    "2023-03-review": {
+      "hash": "f6c08418621532fd",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:50:48.352Z",
+      "zh": {
+        "summary": "本文是作者 2023 年 3 月的月度回顾，记录了防火墙事务挤占编码时间、向 leader 表达转做开发的诉求后工作量反而叠加的处境，并盘点了当月读完《三体》第一部、观看 3 部电影和 1 部电视剧、收听 32 小时 ChatGPT 相关播客以及博客零产出的情况。",
+        "points": [
+          "整月只合入一单代码，长期脱离编码后连问题定位都变得吃力",
+          "向 leader 提出想做开发后拿到了新需求，但原有防火墙事务并未减少",
+          "Pocket Casts 在不科学上网时无法使用，最终换回小宇宙收听 32 小时播客"
+        ]
+      },
+      "en": {
+        "summary": "This post is a March 2023 monthly recap. Firewall support work consumed most of the author's time, leaving only one code commit merged; after raising a preference for development work, new tasks arrived but the firewall duties were not reduced. The month covered the first volume of The Three-Body Problem, three films, one series, 32 hours of ChatGPT-related podcasts, and no blog posts.",
+        "points": [
+          "Only one code commit was merged all month, and long gaps away from coding made issue diagnosis harder",
+          "A talk with the leader brought new development tasks while firewall work stayed unchanged",
+          "Pocket Casts failed without a VPN, so podcast listening returned to Xiaoyuzhou for 32 hours"
+        ]
+      }
+    },
+    "2023-annual-review": {
+      "hash": "1c549dbf04140525",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:50:56.126Z",
+      "zh": {
+        "summary": "本文以照片形式回顾 2023 年：经历高烧与久咳，初次使用 ChatGPT 与 Midjourney 并借 AI 辅助编码学习，购置电动车，看张杰、周杰伦、五月天演唱会，赴武汉、云南及港澳旅行，遭遇小车祸，6 月裸辞后健身并自学计算机基础课程，投递 47 家公司、面试 15 场拿到 3 个 offer，入职搜索相关岗位，并列出 2024 年目标。",
+        "points": [
+          "把 ChatGPT 当作新的知识入口，用于入门学习和代码优化，认为不会革掉程序员的命，积极拥抱新工具的人才能获益。",
+          "裸辞后集中办理档案、户口、护照等事务，坚持健身瘦了近 10 斤，并按 csdiy.wiki 从逻辑电路、汇编、编译原理学起。",
+          "投递 47 家公司、面试 15 场后拿到 3 个 offer，感悟是找工作即个人预期与公司预期不断匹配，年底社招更看重岗位相关经验。"
+        ]
+      },
+      "en": {
+        "summary": "This post reviews 2023 through photos: a severe fever and long cough, first encounters with ChatGPT and Midjourney used for learning and code optimization, an electric scooter purchase, concerts by Zhang Jie, Jay Chou and Mayday, trips to Wuhan, Yunnan, Hong Kong and Macau, a minor traffic accident, quitting in June, months of fitness and self-study of computer science basics, then 47 applications and 15 interviews yielding 3 offers before joining a search team, plus 2024 goals.",
+        "points": [
+          "AI is treated as a new entry point to knowledge rather than a threat to programmers.",
+          "After quitting he exercised, lost nearly 10 jin, and studied computer science basics through csdiy.wiki.",
+          "47 applications and 15 interviews produced 3 offers; year-end hiring favored candidates with relevant experience."
+        ]
+      }
+    },
+    "ai-across-rd-workflow": {
+      "hash": "653a8f1cd00fbfc6",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:50:54.416Z",
+      "zh": {
+        "summary": "本文系统梳理将 AI 融入研发全流程的实践，涵盖用 DeepResearch 调研方向、NotebookLM 拆解资料、ChatGPT Atlas 阅读论文、模型翻译与 OCR 提取，以及 DeepWiKi、Code Wiki、Codex、Claude Code 辅助代码学习；还介绍用项目任务自动跟踪信息、优化文档与公式插图，并强调拆解问题、设计工作流和掌握工具使用方法。",
+        "points": [
+          "DeepResearch 适合从零调研新方向，但需甄别信源权威性、论文引用与仓库影响力。",
+          "NotebookLM 可导入文档、网页和视频，生成思维导图、音频、闪卡与测试题来拆解学习资料。",
+          "写文档时可用模型生成标题、摘要、大纲，并用 OCR 将公式截图转成 Latex，再让模型设计插图 prompt。"
+        ]
+      },
+      "en": {
+        "summary": "This post outlines a practical workflow for integrating AI across research and development, from using DeepResearch to survey a field, NotebookLM to break down learning materials, and ChatGPT Atlas to read papers, to translation and OCR tools for extracting content. It also covers DeepWiKi, Code Wiki, Codex, and Claude Code for code comprehension, plus automated task tracking and AI-assisted document writing with formulas and illustrations. It concludes that problem decomposition and workflow design matter more than tool mastery.",
+        "points": [
+          "DeepResearch accelerates initial field surveys, but source authority, citation counts, and repository influence still need verification.",
+          "NotebookLM can turn uploaded documents, webpages, and videos into mind maps, audio, flashcards, and quizzes for structured learning.",
+          "For documentation, models help draft titles, abstracts, outlines, convert formula screenshots to Latex, and design illustration prompts."
+        ]
+      }
+    },
+    "ai-learning-bookmarks": {
+      "hash": "df3683edc03cd543",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:50:50.255Z",
+      "zh": {
+        "summary": "本文是一份 AI 学习资料收藏夹，汇集作者认为优质的学习资料、文章、博客和博主，按文章、教程、视频分类整理。目前文章部分收录 The Illustrated Transformer，视频部分收录 MIT 课程 TinyML and Efficient Deep Learning Computing 及其 B 站翻译版。",
+        "points": [
+          "按文章、教程、视频三类持续整理 AI 学习资源",
+          "原理类推荐 The Illustrated Transformer 图解文章",
+          "视频推荐 MIT TinyML 与高效深度学习课程，附 B 站翻译版链接"
+        ]
+      },
+      "en": {
+        "summary": "This post is a curated AI learning resource collection, gathering articles, blogs, bloggers, tutorials, and videos the author finds useful. Resources are grouped by type. Currently it lists The Illustrated Transformer under articles and the MIT course TinyML and Efficient Deep Learning Computing under videos, including a Bilibili-translated version.",
+        "points": [
+          "Resources are organized into articles, tutorials, and videos for ongoing curation",
+          "The Illustrated Transformer is recommended for understanding Transformer principles",
+          "The MIT TinyML and Efficient Deep Learning Computing course is linked with a Bilibili translation"
+        ]
+      }
+    },
+    "ai-tips-2026-w3": {
+      "hash": "0d4281a4c5e4b35d",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:50:57.037Z",
+      "zh": {
+        "summary": "本文汇总 2026 年第 3 周的 AI 使用技巧：介绍 Apple Pay 支持绑定国内银行发行的 Visa 信用卡，由此便利订阅国外模型与购买美区礼品卡；说明用 eSIM 写卡与漫游获得较纯净的国外 IP，以注册和访问国外服务；并演示用快捷指令在国行 iPhone 上搭建可切换模型的 AI 助手，方便长辈使用。",
+        "points": [
+          "Apple Pay 绑定 Visa 信用卡可降低实体卡被盗刷风险，并免手续费在美国 Apple 官网购买礼品卡订阅服务。",
+          "通过 eSIM 写卡（如 EasyEUICC、beesim）搭配 Redteago、3HK 等套餐开启漫游，可获得较纯净的国外 IP。",
+          "用快捷指令调用豆包、ChatGPT、Gemini 等模型，一键唤醒手机 AI 助手，适合推荐给家中长辈。"
+        ]
+      },
+      "en": {
+        "summary": "This post collects AI usage tips for the third week of 2026. It notes that Apple Pay now supports Visa credit cards issued by major Chinese banks, simplifying subscriptions to foreign models and US Apple gift card purchases. It also covers using eSIM writing tools and roaming for cleaner foreign IPs, and building a switchable AI assistant on China-market iPhones via Shortcuts.",
+        "points": [
+          "Binding a Visa card to Apple Pay reduces physical card theft risk and avoids gift card fees on Apple's US site.",
+          "eSIM writing tools such as EasyEUICC and beesim, paired with Redteago or 3HK plans, provide cleaner foreign IPs via roaming.",
+          "Shortcuts can invoke Doubao, ChatGPT, Gemini and other models as a one-tap phone assistant suitable for elderly users."
+        ]
+      }
+    },
+    "arthas-getting-started": {
+      "hash": "b4d5771ccd72990e",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:04.383Z",
+      "zh": {
+        "summary": "本文介绍阿里开源的 Java 在线诊断工具 Arthas，说明其可在不修改代码的情况下查看方法入参、返回值、调用路径、耗时和线程等信息。内容涵盖运行环境、容器内下载解压、attach 进程、卸载步骤，以及 dashboard、thread、watch、trace、stack、jad 等常用命令的入门用法。",
+        "points": [
+          "容器内先解压安装包，再运行 arthas-boot.jar 并输入进程号完成 attach。",
+          "dashboard 分线程、JVM 内存和运行环境三块展示实时数据，可替代部分 top 查看需求。",
+          "watch 可观察入参、返回值、异常和 target 属性，trace 展示方法内部调用路径及各节点耗时。"
+        ]
+      },
+      "en": {
+        "summary": "This post introduces Arthas, Alibaba's open source Java online monitoring and diagnostic tool, as a faster alternative to adding logs, replacing JARs, and restarting services. It explains the supported JDK and platform requirements, then walks through manual download, container unzip, attach via arthas-boot.jar, uninstall steps, and common commands such as help, dashboard, thread, watch, trace, stack, and jad for real time troubleshooting.",
+        "points": [
+          "In container environments, download the release manually, unzip it into a dedicated directory, run arthas-boot.jar, and select the target Java process ID.",
+          "dashboard shows thread, JVM memory, and runtime environment data in three sections for real time system inspection.",
+          "watch inspects method inputs, return values, exceptions, and target fields, while trace reports internal call paths and per node timing."
+        ]
+      }
+    },
+    "ascend-npu-commands": {
+      "hash": "25c497e7b175cd41",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:50:57.580Z",
+      "zh": {
+        "summary": "本文整理了华为昇腾环境下的常用命令与验证方法，涵盖使用 moxing 库在 ModelArts 平台对 OBS 文件进行上传、下载、桶间拷贝与删除，npu-smi 的字段含义及 info、watch 等监控命令，以及通过 openEuler 系统信息、CPU 信息和 PyTorch 的 torch_npu 张量运算来确认 NPU 环境正常。",
+        "points": [
+          "OBS 操作依赖 moxing，单文件用 mox.file.copy，目录用 copy_parallel，删除目录需加 recursive=True。",
+          "npu-smi 类似 nvidia-smi，info watch 可滚动查看功耗、温度、AICore 与内存占用，-d 可设刷新间隔。",
+          "验证 NPU 是否可用时，导入 torch_npu 后将张量搬到 npu 并做矩阵乘法，能输出结果即环境正常。"
+        ]
+      },
+      "en": {
+        "summary": "This post compiles common commands for Huawei Ascend environments, covering the moxing library for uploading, downloading, copying between buckets, and deleting OBS files on ModelArts; the npu-smi tool for monitoring NPU status and performance along with its field meanings; and methods to verify a working environment, including openEuler and CPU information checks plus a PyTorch torch_npu matrix multiplication test.",
+        "points": [
+          "OBS operations rely on moxing: use mox.file.copy for single files and copy_parallel for directories.",
+          "npu-smi info watch scrolls power, temperature, AICore and memory usage, with -d setting the refresh interval.",
+          "Import torch_npu, move tensors to npu, and run matrix multiplication to confirm the NPU works."
+        ]
+      }
+    },
+    "avoid-excessive-if-else": {
+      "hash": "dbdf3141f55a7c44",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:00.541Z",
+      "zh": {
+        "summary": "本文围绕 Java 代码中大量 if-else 或深层嵌套导致的可读性和维护性问题，介绍了七种常用重构方式：尽早返回、switch 或三元运算符、Optional、枚举、策略模式、注册表和责任链模式，并结合代码示例说明各自的用法。",
+        "points": [
+          "尽早返回在方法入口判断不合法场景并直接返回，可省去一层 if 包裹。",
+          "Optional 的 ifPresentOrElse 可替代针对 null 判断的 if-else 分支。",
+          "策略模式提炼 ResultStrategy 接口，用 Map 映射 apiType 与具体实现。"
+        ]
+      },
+      "en": {
+        "summary": "This post examines seven common techniques for reducing large if-else blocks and deeply nested conditionals in Java, including early returns, switch or ternary operators, Optional, enums, the strategy pattern, a registry map, and the chain of responsibility pattern. It presents before-and-after code examples to show how each approach can improve readability and maintainability.",
+        "points": [
+          "Early returns check invalid conditions at method entry and remove one level of if nesting.",
+          "Optional.ifPresentOrElse replaces null-check branches with a more compact expression.",
+          "The strategy pattern extracts a ResultStrategy interface and maps apiType values to implementations."
+        ]
+      }
+    },
+    "chatgpt-for-coding": {
+      "hash": "0d1f51fff42ee0c2",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:50:59.381Z",
+      "zh": {
+        "summary": "本文记录了作者在编程工作中使用 ChatGPT 的实践场景，涵盖代码理解、编写代码、修复与优化代码、SQL 优化、生成测试数据和单元测试用例，以及借助它获取需求思路和学习新技术，并提醒不可完全依赖其输出。",
+        "points": [
+          "用代码解释、修复 BUG、优化代码等指令，让 ChatGPT 梳理陌生代码逻辑并定位问题所在行。",
+          "生成代码报错时可描述问题让它完善，或只让它指出需要修改哪一行以节省 token。",
+          "长对话建议分段交流并确认它已理解，回答基本可用时小部分修改应自己动手，避免较劲。"
+        ]
+      },
+      "en": {
+        "summary": "This post records the author's practical uses of ChatGPT in programming: explaining unfamiliar code, writing code in unfamiliar languages, fixing and optimizing code and SQL, generating test data and unit tests, and getting ideas for requirements and learning new technologies. It stresses that ChatGPT is not omnipotent and should not be fully relied upon.",
+        "points": [
+          "Use prompts such as explain code, fix bug, and optimize code to review logic and narrow down error locations.",
+          "When generated code fails, describe the problem and ask for fixes, or request only the lines that need changing to save tokens.",
+          "Split long conversations into segments, confirm understanding, and finish small edits yourself instead of insisting on a perfect answer."
+        ]
+      }
+    },
+    "claude-code-cheatsheet": {
+      "hash": "dfe0d37c9c452332",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:50:59.665Z",
+      "zh": {
+        "summary": "本文是一份 Claude Code 命令速查表，系统整理了键盘快捷键、Slash 命令、CLI 启动参数、五大扩展系统（CLAUDE.md、自定义命令、Skills、子代理、MCP）、权限模式、Hooks、配置优先级、文件结构、回退检查点与高级工作流程，并强调工具迭代快，命令需及时保鲜。",
+        "points": [
+          "快捷键覆盖会话控制、导航、编辑与后台任务，Shift+Tab 可切换 Normal、Auto-Accept、Plan 三种权限模式",
+          "扩展系统含 CLAUDE.md 项目记忆、自定义 Slash 命令、Skills、子代理与 MCP 服务器，另有插件机制",
+          "回退仅能恢复对话与代码，Bash 产生的数据库、API、删除等副作用无法撤销"
+        ]
+      },
+      "en": {
+        "summary": "This post is a Claude Code cheat sheet covering keyboard shortcuts, Slash commands, CLI launch flags, the five extension systems (CLAUDE.md, custom commands, Skills, sub-agents, MCP), permission modes, Hooks, configuration precedence, file layout, rewind checkpoints, and advanced workflows, while noting that commands may change as the tool iterates quickly.",
+        "points": [
+          "Shift+Tab cycles Normal, Auto-Accept, and Plan permission modes; Ctrl+B sends a running task to the background",
+          "Extensions include CLAUDE.md project memory, custom Slash commands in .claude/commands, Skills, sub-agents, and MCP servers",
+          "Rewind restores conversation or code, but Bash side effects such as database writes, API calls, and deletions cannot be undone"
+        ]
+      }
+    },
+    "deepseekmath-v2-notes": {
+      "hash": "6670fe87e956e2f7",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:08.297Z",
+      "zh": {
+        "summary": "本文是 DeepSeekMath-V2 的学习笔记，围绕从基于最终答案的奖励转向可自我验证的数学推理展开，介绍验证器、元验证器与学生模型的冷启动训练、自评奖励设计和 RFT 合并为单一模型的过程，并讨论置信度奖励与自动化验证的启发。",
+        "points": [
+          "结果奖励会让模型出现答案正确但证明过程错误，因此论文转向可自我验证的数学推理。",
+          "冷启动先训练验证器与元验证器，再用评语和自评训练学生，证明与自评奖励占比为 3:1。",
+          "RFT 阶段用拒绝采样数据训练，把生成、验证、元验证能力合并到一个模型，并通过多数投票筛选证明。"
+        ]
+      },
+      "en": {
+        "summary": "This post summarizes DeepSeekMath-V2, which argues for moving from outcome-based rewards to self-verifiable mathematical reasoning. It describes cold-start training of a verifier and meta-verifier, self-evaluation rewards for the student model, and RFT that consolidates generation, verification, and meta-verification into a single model. It also discusses confidence rewards and automated verification as practical takeaways.",
+        "points": [
+          "Outcome-based rewards can produce correct answers with flawed proofs, motivating self-verifiable mathematical reasoning.",
+          "Cold-start training builds a verifier and meta-verifier, then trains the student with proof and self-evaluation rewards weighted 3:1.",
+          "RFT uses rejection sampling to merge generator, verifier, and meta-verifier into a single model and applies majority voting during testing."
+        ]
+      }
+    },
+    "favorite-ai-2025": {
+      "hash": "5943bcae76bcb28c",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:05.432Z",
+      "zh": {
+        "summary": "本文梳理作者2025年使用的AI产品与信息源，涵盖Gemini、ChatGPT、Perplexity、Cursor、Windsurf、Claude Code等，并介绍OpenSpec规范编码流程及学习渠道，强调善用AI本身是一种重要能力。",
+        "points": [
+          "主力工具从Perplexity转向Google Gemini生态，并用NotebookLM构建个人知识库。",
+          "Claude Code可执行命令并支持MCP，配合Claude Code Router可接入多家模型API。",
+          "OpenSpec强调先定规格再写代码，按Draft、Review、Implement、Archive四阶段降低返工。"
+        ]
+      },
+      "en": {
+        "summary": "This post reviews the author's favorite AI products and information sources in 2025, including Gemini, ChatGPT, Perplexity, Cursor, Windsurf, and Claude Code. It explains NotebookLM, OpenSpec's spec-first coding workflow, Claude Code Router, and recommends blogs, YouTube courses, and podcasts for learning. The author concludes that using AI well is itself an important skill and encourages readers to overcome AI shame.",
+        "points": [
+          "The author shifted from Perplexity to Google Gemini and uses NotebookLM as a personal knowledge base.",
+          "Claude Code can run commands and use MCP, while Claude Code Router connects it to multiple model APIs.",
+          "OpenSpec's Draft, Review, Implement, Archive workflow reduces rework by confirming specifications before coding."
+        ]
+      }
+    },
+    "futu-interview-round-1": {
+      "hash": "4b3a4cc1bb99eac7",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:02.988Z",
+      "zh": {
+        "summary": "本文记录富途后端开发岗一面面经，面试时长约一小时二十四分钟。内容覆盖 Java 基础、并发、JVM、MySQL 事务与锁、索引、数据结构与算法，并深入追问 SpringCloud OpenFeign、日志链路以及 MySQL 迁移 PostgreSQL 的平滑切换方案。",
+        "points": [
+          "Java 部分追问 StringBuilder 性能、集合特点，以及 HashMap 并发问题与解决方式",
+          "数据库聚焦事务隔离等级、间隙锁、主键索引与唯一索引的差异",
+          "项目环节考察 OpenFeign 调用、日志链路落地与不停服迁移数据库的方案"
+        ]
+      },
+      "en": {
+        "summary": "This post records a first-round backend developer interview at Futu, lasting about one hour and twenty-four minutes. It covers Java basics, concurrency, JVM, MySQL transactions, locks and indexes, data structures and algorithms, plus project questions on SpringCloud OpenFeign, logging traces, and migrating from MySQL to PostgreSQL.",
+        "points": [
+          "Java questions probe StringBuilder performance, collection types, and HashMap issues under concurrency",
+          "Database topics include transaction isolation levels, gap locks, and primary versus unique index differences",
+          "Project discussion covers OpenFeign usage, log trace implementation, and zero-downtime database migration"
+        ]
+      }
+    },
+    "git-commands": {
+      "hash": "a7b89cb06f3273c0",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:09.102Z",
+      "zh": {
+        "summary": "本文是一篇 Git 常用命令速查笔记，按基本操作、查询、撤销、堆栈与分支等场景整理命令用法。内容覆盖安装与用户配置、init 与 clone、status/add/diff、commit 与 push，并说明 git log、git blame、git bisect 的查历史与查错用途，以及 checkout、restore、reset 回退和 stash、merge、rebase、cherry-pick 的典型用法。",
+        "points": [
+          "git config 分为 local、global、system 三个作用域，默认为 local；用户名与邮箱在每台机器上配置一次即可。",
+          "git bisect 用二分查找定位首次引入错误的提交，需要人工执行 good 或 bad 标记，结束用 reset 退出。",
+          "需求被临时 BUG 打断时用 git stash 保存现场，stash pop 恢复并删除记录，stash apply 则保留堆栈。"
+        ]
+      },
+      "en": {
+        "summary": "This post is a quick reference of commonly used Git commands, organized into basic operations, querying, undoing changes, stashing and branching. It covers installation and user configuration, git init and clone, status, add and diff, commit and push, plus log, blame and bisect for tracing history and bugs, along with checkout, restore, reset and stash, merge, rebase and cherry-pick usage.",
+        "points": [
+          "git config has local, global and system scopes, so user name and email usually only need setting once per machine.",
+          "git bisect runs a binary search across commits to find the first bad commit, requiring good or bad marks from the tester.",
+          "git stash saves unfinished work for urgent fixes, while stash pop removes the entry and stash apply keeps it."
+        ]
+      }
+    },
+    "graph-rag-notes": {
+      "hash": "f5e9b59765245202",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:10.958Z",
+      "zh": {
+        "summary": "本文介绍 Graph RAG 的基本概念、相对传统 RAG 的优势与完整流程，说明其利用 LLM 从非结构化文本提取实体、关系和摘要构建知识图谱，再通过社区检测、社区报告和全局或局部检索提升复杂问答与超长文档处理能力。",
+        "points": [
+          "数据索引阶段完成文本切分、实体与关系提取、摘要生成、社区检测、向量嵌入和 Parquet 存储。",
+          "关系挖掘需识别三元组，并计算实体的 level 和 degree，以衡量节点重要程度和连接度。",
+          "检索分 Global Search 和 Local Search，前者用社区摘要做 map-reduce，后者围绕实体扩展邻居与文本块。"
+        ]
+      },
+      "en": {
+        "summary": "This post explains Graph RAG, a knowledge graph based retrieval augmentation method, covering its advantages over traditional RAG, the data indexing and query workflows, a worked demo of entity and relationship extraction, community reports, and global and local search. It describes how an LLM extracts entities, relationships, and summaries from unstructured text, builds hierarchical communities, and uses community reports or entity-centric subgraphs to answer complex questions over long documents.",
+        "points": [
+          "The indexing pipeline includes text unit splitting, entity and relationship extraction, summarization, community detection, vector embedding, and Parquet storage.",
+          "Relationship mining identifies triples and computes level and degree to measure entity importance and connectivity.",
+          "Global Search uses community summaries with map-reduce, while Local Search expands from entities to neighbors and related text units."
+        ]
+      }
+    },
+    "idea-common-settings": {
+      "hash": "740c93799221db38",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:07.887Z",
+      "zh": {
+        "summary": "本文记录了作者在 IDEA 2022.3.2（Mac 版）中的常用设置，涵盖 Xcode-Dark 主题、JetBrains Mono 与 Fira Code 字体、启动项与自动更新、JVM 启动参数、UTF-8 编码、代码提示大小写、Java 文件头注释模板、自动编译、Maven Reload 以及 serialVersionUID 提示等，目的是提升编码效率，内容会持续更新。",
+        "points": [
+          "通过 Help 菜单中的 Edit Custom VM Options 调整 -Xms2048m、-Xmx8192m 等 JVM 参数，可让 IDE 运行更流畅。",
+          "建议取消 IDEA 软件自身的自动更新，只保留插件更新，以防引入兼容性问题。",
+          "为 class、interface、Enum 配置含 ${USER}、日期的文件头注释模板，并去掉代码提示的大小写勾选。"
+        ]
+      },
+      "en": {
+        "summary": "This post records the author's commonly used settings in IDEA 2022.3.2 on Mac, covering the Xcode-Dark theme, JetBrains Mono and Fira Code fonts, startup options, disabling automatic IDE updates, JVM options, UTF-8 encoding, case-insensitive code completion, Java file header templates, auto-compile, Maven reload, and the serialVersionUID hint, aiming to improve coding efficiency. The series will keep updating.",
+        "points": [
+          "Edit idea.vmoptions via Help to set -Xms2048m and -Xmx8192m for smoother IDE performance.",
+          "Disable IDEA's own auto-update but keep plugin updates to avoid compatibility issues.",
+          "Use ${USER} and date variables in class, interface and enum header templates, and uncheck case-sensitive completion."
+        ]
+      }
+    },
+    "idea-plugins": {
+      "hash": "f5c00f4efeae9937",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:18.618Z",
+      "zh": {
+        "summary": "本文整理作者日常开发中在 IDEA 常用的插件，按外观、工具、代码规范和取舍优化分类，涵盖 Nyan Progress Bar、GsonFormatPlus、MyBatisX、SonarLint 等，并提醒插件过多会影响运行与编译性能，需要适当禁用和调整内存。",
+        "points": [
+          "外观类推荐 Nyan Progress Bar、Xcode-Dark Theme、Rainbow Brackets 与 CodeGlance Pro，兼顾美观与代码定位。",
+          "工具类覆盖 GsonFormatPlus 的 JSON 转 Java、Maven Helper 依赖分析、MyBatisX 代码生成和 String Manipulation 字符串处理。",
+          "可用 Analyze Plugin Startup Performance 分析插件对项目启动的影响，禁用不用的插件并适当提高 IDEA 内存上限。"
+        ]
+      },
+      "en": {
+        "summary": "This post lists the IDEA plugins the author uses in daily development, grouped into appearance, utility, code quality and optimization categories, including Nyan Progress Bar, GsonFormatPlus, MyBatisX and SonarLint. It notes that too many plugins can affect IDEA performance and code compilation, so unused ones should be disabled.",
+        "points": [
+          "Appearance plugins such as Xcode-Dark Theme, Rainbow Brackets and CodeGlance Pro improve readability and code navigation.",
+          "Utility picks include GsonFormatPlus for JSON to Java, Maven Helper for dependency analysis and String Manipulation via Alt + M.",
+          "Use Analyze Plugin Startup Performance to find costly plugins, disable unused ones and raise the IDEA memory limit."
+        ]
+      }
+    },
+    "idempotent-once-operations": {
+      "hash": "4881336d94ab3e62",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:10.670Z",
+      "zh": {
+        "summary": "本文讨论 Java 程序中适合只执行一次的操作，指出 Pattern 对象、线程池、通用常量、配置文件读取和日志对象初始化等操作成本较高，应避免重复执行；并介绍了用静态变量、静态代码块、Spring Bean、@PostConstruct 注解和单例对象等方式实现只初始化一次。",
+        "points": [
+          "str.matches 和 replaceAll 每次调用都会新建 Pattern 对象，建议将其定义为静态变量并复用。",
+          "全字符串匹配时用 matcher(str).matches() 通常比 find() 更高效，因为 matches 针对这类匹配做了优化。",
+          "Spring Bean 与 @PostConstruct 由容器管理，可在启动或依赖注入完成后完成一次性初始化。"
+        ]
+      },
+      "en": {
+        "summary": "This post explains which Java operations should run only once, such as creating Pattern objects, initializing thread pools, defining constants, reading configuration files, and initializing loggers. It recommends static variables, static blocks, Spring Beans, @PostConstruct methods, and singleton objects to avoid costly repeated work and improve runtime performance.",
+        "points": [
+          "str.matches and replaceAll create a new Pattern on every call, so compile common regexes once as static final fields.",
+          "matcher(str).matches() is usually more efficient than find() because matches is optimized for whole-string matching.",
+          "Spring Beans and @PostConstruct methods let the container handle one-time initialization during startup or after dependency injection."
+        ]
+      }
+    },
+    "java-equals-and-hashcode": {
+      "hash": "a0ca39e8133f53eb",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:16.436Z",
+      "zh": {
+        "summary": "本文围绕 Java 中判断两个对象是否相等，梳理了 ==、equals() 与 hashCode() 的用法和关系。== 比较对象地址，equals() 默认行为与 == 相同，重写后可比较对象内容；hashCode() 用于提升 HashMap、HashSet 等集合操作效率。文章强调重写 equals() 时必须同时重写 hashCode()，否则可能导致 HashSet 中出现重复对象。",
+        "points": [
+          "== 对基本类型比较值，对引用类型比较两个变量是否指向同一对象地址。",
+          "未重写 equals() 时其底层使用 ==，重写后可先判引用与类型，再比较对象内容。",
+          "HashSet 先用 hashCode() 定位，再用 equals() 复核，只重写 equals() 会让重复对象被加入集合。"
+        ]
+      },
+      "en": {
+        "summary": "This post explains how Java compares objects using ==, equals(), and hashCode(). The == operator checks object address, while equals() defaults to the same behavior but can be overridden to compare content. hashCode() supports efficient hash-based collections such as HashMap and HashSet. The article stresses that overriding equals() requires overriding hashCode() as well, otherwise duplicate objects may be stored in a HashSet.",
+        "points": [
+          "For reference types, == checks whether two variables reference the same object, not whether their contents match.",
+          "An overridden equals() can check reference identity, class type, and field values to compare object content.",
+          "HashSet uses hashCode() to locate buckets and equals() to confirm matches, so missing hashCode() breaks duplicate detection."
+        ]
+      }
+    },
+    "java-refactoring-helpers": {
+      "hash": "f9df231abaeb9ee2",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:12.913Z",
+      "zh": {
+        "summary": "本文围绕 Java 代码重构展开，说明业务演进和多人改动会让旧结构逐渐失配，因此重构贯穿软件生命周期。文章整理了提取、内联、封装、重命名、移动和精简等常用手段，以及对应的 IDEA 快捷键，并介绍利用 IDE 检查、JaCoCo、Sonar、ArchUnit 和 AI 助手辅助发现问题的做法。",
+        "points": [
+          "重构应优先使用 IDE 工具，非必要不要手动移动代码，以减少出错。",
+          "函数或变量若找不到合适的名字，往往说明它违反了单一职责，需要重新设计。",
+          "JaCoCo 配合流水线 Sonar 保障单元测试覆盖，ArchUnit 则用于校验包与类的架构约束。"
+        ]
+      },
+      "en": {
+        "summary": "This post explains why Java code needs continuous refactoring as business requirements grow and different developers change the codebase. It lists common techniques such as extract, inline, encapsulate, rename, move, and simplify, along with IDEA shortcuts, and introduces supporting tools including IDE inspection, JaCoCo with Sonar, ArchUnit, and AI assistants.",
+        "points": [
+          "Prefer IDE refactoring tools over manual code movement to reduce the chance of errors.",
+          "A function or variable that cannot be named clearly likely violates single responsibility and needs redesign.",
+          "JaCoCo with pipeline Sonar checks unit test coverage, while ArchUnit enforces package and class architecture rules."
+        ]
+      }
+    },
+    "kag-notes": {
+      "hash": "25c05e267671e0fe",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:13.293Z",
+      "zh": {
+        "summary": "本文介绍蚂蚁开源的 KAG 问答框架，它基于图谱和大语言模型，面向垂直领域知识库构建逻辑推理问答方案，可克服传统 RAG 向量相似度计算歧义带来的噪声问题。文章梳理了其核心功能、LLM 友好的语义化知识管理与逻辑符号引导的混合推理引擎，并说明 kg-builder 与 kg-solver 两部分架构。",
+        "points": [
+          "提出 LLMFriSPG 知识表示，在同一知识类型上兼容无 schema 信息抽取与有 schema 专业知识构建。",
+          "混合推理引擎以规划、推理、检索三类运算符，集成图谱推理、逻辑计算、Chunk 检索与 LLM 推理。",
+          "架构分 kg-builder、kg-solver、kag-model 三部分，本次开源仅涉及前两者。"
+        ]
+      },
+      "en": {
+        "summary": "This post introduces KAG, an open-source question answering framework from Ant Group that combines knowledge graphs with large language models to build logical reasoning QA solutions for vertical-domain knowledge bases. It explains how KAG addresses the noise caused by ambiguity in traditional RAG vector similarity, and covers its core features, LLM-friendly semantic knowledge management, hybrid reasoning engine, and the kg-builder and kg-solver components.",
+        "points": [
+          "LLMFriSPG knowledge representation supports both schema-free extraction and schema-constrained expert knowledge construction.",
+          "A logic-symbol-guided engine uses planning, reasoning, and retrieval operators to integrate graph reasoning, computation, chunk retrieval, and LLM inference.",
+          "The framework has three parts, kg-builder, kg-solver, and kag-model, but only the first two are open-sourced in this release."
+        ]
+      }
+    },
+    "langchain-notes": {
+      "hash": "93ff4d16dd8d1854",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:15.098Z",
+      "zh": {
+        "summary": "本文是一份 Langchain 学习笔记，介绍这一专为大语言模型应用设计的框架：它能获取外部数据源，并让模型与其环境交互，同时梳理了 Models、Chain、Agents、Prompts、Indexes、Memory 六大组件各自的作用。",
+        "points": [
+          "框架两大特性是接入其他数据源的数据，以及让语言模型与环境交互。",
+          "Chain 是核心机制，串联 Model、Memory、Indexes 以实现连续对话。",
+          "Indexes 将文档存入向量数据库，按查询返回最相关文档；Memory 分短期与长期。"
+        ]
+      },
+      "en": {
+        "summary": "This post is a study note on LangChain, a framework designed for large language model applications. It outlines two core capabilities, fetching data from other sources and letting models interact with their environment, then introduces the six components: Models, Chain, Agents, Prompts, Indexes and Memory, with a brief note on each.",
+        "points": [
+          "Two stated features: accessing external data sources and enabling model interaction with the environment.",
+          "Chain is the core mechanism linking Model, Memory and Indexes for continuous dialogue.",
+          "Indexes build a vector database knowledge base; Memory covers short and long term storage."
+        ]
+      }
+    },
+    "lazy-graph-rag-notes": {
+      "hash": "1ef7d31584fcf879",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:15.386Z",
+      "zh": {
+        "summary": "本文介绍微软推出的 LazyGraphRAG，一种基于 GraphRAG 的改进方案。它把索引阶段的大模型调用推迟到查询时，用通用 NLP 技术提取实体和关系，索引成本仅为传统 GraphRAG 的 0.1%，从而提升查询效率并降低构建知识图谱的开销。",
+        "points": [
+          "索引阶段不调用 LLM，而用名词短语提取、共现分析和图算法完成实体关系图与社区检测",
+          "查询时由 LLM 分解并扩展子查询，结合嵌入匹配、最佳优先与广度优先搜索定位相关文本和社区",
+          "引入可调节的相关性测试预算参数，用于在查询成本与答案质量之间取得平衡"
+        ]
+      },
+      "en": {
+        "summary": "This post reviews LazyGraphRAG, Microsoft's improvement on GraphRAG. It defers LLM calls from indexing to query time and builds entity and relation graphs with general NLP techniques, cutting indexing cost to about 0.1% of traditional GraphRAG while improving query efficiency and answer quality.",
+        "points": [
+          "Indexing uses noun phrase extraction, co-occurrence analysis and graph algorithms instead of LLM calls",
+          "At query time an LLM decomposes and expands subqueries, then embedding matching plus best-first and breadth-first search locate relevant text and communities",
+          "A tunable relevance-test budget parameter balances query cost against answer quality"
+        ]
+      }
+    },
+    "light-rag": {
+      "hash": "22e474d42d0f17a4",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:24.451Z",
+      "zh": {
+        "summary": "本文介绍简化版 Graph RAG 方法 Light RAG，它去掉 Graph RAG 的社区部分，直接基于实体及关系构建图谱，降低复杂度与 token 消耗，并提升索引和查询速度。文章梳理其轻量设计、双重检索、索引与查询流程、增量更新、对比结果及实际局限。",
+        "points": [
+          "Light RAG 去掉社区构建，直接以实体为节点、关系为边建图，降低 token 消耗。",
+          "查询支持 local、global、hybrid 三种模式，分别通过实体和关系向量库召回并组装上下文。",
+          "实际局限包括实体关系抽取依赖 LLM、预定义实体类型泛化难，以及 high_level 主题词召回质量不高。"
+        ]
+      },
+      "en": {
+        "summary": "This post introduces Light RAG, a simplified Graph RAG approach that removes the community component and builds a graph directly from entities and relations. It describes the lightweight design, dual vector and graph retrieval, local, global and hybrid query modes, incremental updates, benchmark comparisons, and practical limitations such as entity extraction and high level recall quality.",
+        "points": [
+          "Light RAG removes community construction from Graph RAG and builds the graph directly from entities and relations.",
+          "Queries use local, global, and hybrid modes, combining entity and relation vector stores with graph based context assembly.",
+          "Limitations include LLM dependent entity extraction, difficult predefined entity types, and uneven high level keyword recall."
+        ]
+      }
+    },
+    "linux-command": {
+      "hash": "beadd82cf8a35d0e",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:22.731Z",
+      "zh": {
+        "summary": "本文系统整理了日常开发常用的 Linux 命令，覆盖目录查看、权限修改、文件内容查看、管道、文件查找、sed 替换、归档压缩、磁盘与进程管理、性能监控和网络诊断等，并给出常用参数与示例，便于需要时查找使用。",
+        "points": [
+          "chmod +x 可为脚本添加执行权限，chmod 777 让所有用户可读可写可执行。",
+          "sed 的 s 命令支持首处替换和加 g 的全局替换，可配合 -e 执行多个指令。",
+          "top 中按 M 或 P 分别按内存和 CPU 排序，sar、vmstat、free 用于性能监控。"
+        ]
+      },
+      "en": {
+        "summary": "This post compiles frequently used Linux commands for daily development, covering directory listing, permission changes, file content viewing, pipelines, file search, sed text replacement, Bash shortcuts, archiving and backup, disk usage, process management, performance monitoring, and network diagnostics. It presents common options and short examples for quick reference rather than a systematic tutorial.",
+        "points": [
+          "It shows ls -lht for sorting by modification time and tree -FC for colored directory structure display with file type markers.",
+          "It explains tail -f -n 1000 for log tracking and grep -R -n for recursive code searches with line numbers.",
+          "It notes top shortcuts M and P for memory and CPU sorting, plus sar, vmstat, and free for performance monitoring."
+        ]
+      }
+    },
+    "lombok-guide": {
+      "hash": "25ae0addc472d601",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:21.991Z",
+      "zh": {
+        "summary": "本文介绍 Java 工具库 Lombok 的安装配置、常见注解用法与代码示例，并剖析其利用 JSR 269 注解处理器在编译期修改抽象语法树生成代码的原理。文章同时列出 @Data 破坏封装性、equals 忽略父类属性、可读性与调试性下降、侵入性强等坑，认为只在团队有共识且充分了解它时才适合使用。",
+        "points": [
+          "Lombok 在 javac 解析出抽象语法树后由注解处理器动态增加节点，再生成字节码 Class 文件。",
+          "@Data 默认 callSuper=false，equals 只比较子类属性，且为所有字段提供读写方法，破坏封装性。",
+          "项目组中一人使用 Lombok，其他人就必须安装 IDE 插件并引入依赖，还会影响 JDK 升级与依赖版本仲裁。"
+        ]
+      },
+      "en": {
+        "summary": "This post introduces Lombok, a Java library that generates getters, setters, constructors and toString code at compile time, covering installation, common annotations such as @Data, @Builder and @Slf4j, plus the JSR 269 annotation processing mechanism behind it. It also examines the drawbacks, including broken encapsulation, weaker readability and debugging, and strong intrusiveness for teams, concluding that Lombok should be adopted only with team consensus.",
+        "points": [
+          "Lombok modifies the abstract syntax tree during compilation via a JSR 269 annotation processor, so generated methods never appear in source code.",
+          "@Data defaults to callSuper=false, so equals ignores inherited fields, and it exposes setters for every field, weakening encapsulation.",
+          "Every teammate must install the IDE plugin and add the dependency, while JDK upgrades and conflicting Lombok versions can cause trouble."
+        ]
+      }
+    },
+    "mac-network-hub-with-surge": {
+      "hash": "edde1432880e09a9",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:23.997Z",
+      "zh": {
+        "summary": "本文记录如何用 Surge for Mac 的网关模式把家中 Mac 变成网络枢纽，让 Switch、Apple TV 等设备共享代理科学上网，从而省下加速器年费。文中给出设置静态 IP、关闭路由器 DHCP、开启 Surge DHCP 服务器、将设备设为使用 Surge 作为网关等步骤，并提醒 Mac 需保持开机且不休眠。",
+        "points": [
+          "先把 Mac 以太网设为静态 IP 并关闭路由器 DHCP，再在 Surge 设备页开启 DHCP 服务器。",
+          "设备右键选择使用 Surge 作为网关并建议设固定 IP，iPhone 需关闭私有无线局域网地址才可识别。",
+          "若其他设备 YouTube 卡在加载，可把该设备 Wi-Fi 的 DNS 手动改为 192.0.2.2 解决。"
+        ]
+      },
+      "en": {
+        "summary": "This post explains how to turn a Mac running Surge for Mac into a home network gateway so other devices, such as a Nintendo Switch or Apple TV, can share its proxy and go online without paying for a game accelerator. It walks through assigning a static IP, disabling the router's DHCP, enabling Surge's DHCP server, and marking devices to use Surge as gateway, and notes the Mac must stay awake.",
+        "points": [
+          "Set a static IP on the Mac's Ethernet, turn off the router's DHCP, then enable Surge's DHCP server.",
+          "Assign devices to use Surge as gateway with a fixed IP, and disable Private Wi-Fi Address on iPhone.",
+          "If YouTube stalls on client devices, manually set their Wi-Fi DNS to 192.0.2.2; the Mac must never sleep."
+        ]
+      }
+    },
+    "metax-gpu-commands": {
+      "hash": "76995963afe6bc07",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:23.981Z",
+      "zh": {
+        "summary": "本文面向沐曦（MetaX）GPU 环境，整理 mx-smi 监控工具的常用命令，涵盖整体状态查看、按毫秒间隔持续刷新、指定单卡查询，以及显存、利用率和进程等细分信息的获取方式，并附有各命令的实际输出示例。",
+        "points": [
+          "mx-smi 默认输出显存、功耗、温度、利用率及进程列表等整体状态。",
+          "使用 mx-smi -l 1000 可按 1000 毫秒间隔自动刷新，Ctrl+C 退出。",
+          "通过 -i 指定 GPU，配合 --show-memory、--show-usage、--show-process 查看细分信息。"
+        ]
+      },
+      "en": {
+        "summary": "This post compiles commonly used mx-smi commands for MetaX GPU environments, covering overall status display, periodic refresh, querying a specific GPU, and detailed views of memory, utilization, and running processes, each illustrated with sample command output.",
+        "points": [
+          "Running mx-smi shows memory, power, temperature, utilization, and process lists.",
+          "mx-smi -l 1000 refreshes status every 1000 milliseconds until Ctrl+C is pressed.",
+          "Use -i to target one GPU and --show-memory, --show-usage, --show-process for details."
+        ]
+      }
+    },
+    "overload-vs-override": {
+      "hash": "d499e37a3e7843d6",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:24.674Z",
+      "zh": {
+        "summary": "本文系统讲解 Java 中重载与重写这两个易混概念。重载发生在同一个类中，要求同名方法具有不同的参数类型或顺序，常用于构造器；重写发生在父子类之间，子类方法覆盖父类同名方法，需要遵循访问权限、返回类型和异常类型的限制，并可用 @Override 注解检查重写是否合法。",
+        "points": [
+          "重载依据参数的类型或顺序区分，返回值不能区分重载方法。",
+          "基本类型参数会自动向上提升，如 int 实参可匹配 long 形参。",
+          "重写需满足访问权限不缩小、返回类型协变、异常不扩大三条原则。"
+        ]
+      },
+      "en": {
+        "summary": "This post explains overloading and overriding in Java. Overloading means same-named methods in one class with different parameter types or order, often used for constructors. Overriding means a subclass method replaces a parent method with the same signature, subject to rules on access, return type and exceptions, and can be checked with @Override.",
+        "points": [
+          "Return type alone cannot distinguish overloaded methods, only parameter lists can.",
+          "Primitive arguments may be widened automatically, so an int can call a long overload.",
+          "Overriding must not narrow access, and return and exception types may only be narrowed or kept."
+        ]
+      }
+    },
+    "passkeys-first-experience": {
+      "hash": "697cc0c3d139d930",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:26.406Z",
+      "zh": {
+        "summary": "本文记录作者初次体验 Passkeys 无密码登录的过程，先说明 Passkeys 基于 FIDO 联盟和 W3C 标准，用 Touch ID、Face ID 等验证身份并以密钥对替代密码，再分步介绍在 GitHub 开启功能预览、添加 Passkey 并用 iPhone 扫码存入 iCloud 钥匙串，最后分享用面容 ID 或 Apple Watch 快速登录的实际感受。",
+        "points": [
+          "Passkeys 密钥对端到端加密并随 iCloud 钥匙串同步，可与密码并存互不干扰。",
+          "GitHub 需先在 Feature preview 中启用 Passkeys，再到密码与身份验证设置里添加。",
+          "添加和登录均可用手机扫码存入密钥，保存在电脑的密钥可用 Apple Watch 双击登录。"
+        ]
+      },
+      "en": {
+        "summary": "This post recounts a first attempt at passwordless login with Passkeys, explaining that the technology relies on FIDO Alliance and W3C standards and replaces passwords with encrypted key pairs verified via Touch ID or Face ID. It then walks through enabling the GitHub feature preview, adding a passkey by scanning a QR code with an iPhone into iCloud Keychain, and logging in with Face ID or an Apple Watch.",
+        "points": [
+          "Passkey key pairs are end-to-end encrypted in iCloud Keychain and can coexist with passwords.",
+          "GitHub requires enabling Passkeys in Feature preview before adding one in security settings.",
+          "A passkey stored on a computer allows login by double-clicking an Apple Watch."
+        ]
+      }
+    },
+    "playwright-guide": {
+      "hash": "b4d963c4301c58a3",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:31.641Z",
+      "zh": {
+        "summary": "本文介绍 Microsoft 构建的 Playwright 跨浏览器 Web 测试与自动化框架，支持 Chromium、Firefox、WebKit 及 Node.js、Python、.NET、Java。文章梳理其端到端测试、网络拦截、代码生成与追踪等能力，并重点说明 Playwright MCP 基于结构化可访问性快照与网页交互，可在 Claude Code 中安装，内置 22 个工具，还拆解了导航、开标签页和启动浏览器的实现流程。",
+        "points": [
+          "Playwright 提供统一 API，用单一代码库自动化 Chromium、Firefox 和 WebKit，并支持四种编程语言。",
+          "Playwright MCP 不依赖截图识别，而使用 structured accessibility snapshots，更适合 agent 可控操作。",
+          "文章拆解 browser_navigate 工具，说明 ensureTab 创建页面、page.goto 导航以及 launchPersistentContext 启动真实浏览器进程。"
+        ]
+      },
+      "en": {
+        "summary": "This post introduces Playwright, Microsoft's cross browser framework for reliable Web testing and browser automation across Chromium, Firefox, and WebKit, with support for Node.js, Python, .NET, and Java. It summarizes capabilities such as end to end testing, network interception, code generation, and tracing. It then focuses on Playwright MCP, which uses structured accessibility snapshots rather than screenshot recognition, can be installed in Claude Code, exposes 22 tools, and is explained through source level walkthroughs of navigation, tab creation, and browser launch.",
+        "points": [
+          "Playwright offers a unified API to automate Chromium, Firefox, and WebKit from one codebase in four languages.",
+          "Playwright MCP relies on structured accessibility snapshots, making browser actions more controllable for LLM agents than visual clicking.",
+          "The article traces browser_navigate, ensureTab, page.goto, and launchPersistentContext to show how the MCP server opens tabs and starts a real browser."
+        ]
+      }
+    },
+    "post-training-hyperparameters": {
+      "hash": "a29ac1ba90741747",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:29.859Z",
+      "zh": {
+        "summary": "本文系统梳理大模型后训练的超参数设置，涵盖 epochs、学习率、warmup、调度器、梯度累积与有效批次大小、weight decay 等通用参数，并给出 LoRA 的 rank、alpha、dropout 与 target modules 配置建议，以及 GRPO 强化学习中 beta、num_iterations、epsilon、importance_sampling_level、reward_weights 的取值策略和常见故障的调参对策。",
+        "points": [
+          "LoRA 与 QLoRA 微调学习率可从 2e-4 起步，DPO、GRPO 等强化学习从 5e-6 起步，全参微调需设置更低的值",
+          "建议把 LoRA 应用到全部线性层，即 q、k、v、o 与 gate、up、down，同时调整注意力层与 MLP 层效果最优",
+          "有效批次大小等于 batch_size 乘以 gradient_accumulation_steps，优先调小 batch_size 并增大累积步数以规避 OOM"
+        ]
+      },
+      "en": {
+        "summary": "This post compiles post-training hyperparameter guidance for LLMs, covering epochs, learning rates, warmup ratio and scheduler choice, gradient accumulation and effective batch size, and weight decay, then details LoRA settings such as rank, alpha, dropout and target modules, plus GRPO reinforcement learning knobs including beta, num_iterations, epsilon, importance_sampling_level and reward_weights, along with fixes for KL spikes, OOM and NaN loss.",
+        "points": [
+          "LoRA and QLoRA fine-tuning typically starts at a learning rate of 2e-4, while DPO and GRPO start near 5e-6",
+          "Applying LoRA to all linear layers, attention plus MLP, is recommended over adapting q_proj and v_proj only",
+          "Effective batch size equals batch_size times gradient_accumulation_steps, so keep batch_size small to avoid OOM"
+        ]
+      }
+    },
+    "qwen2-5-72b-mac-m1-max": {
+      "hash": "e5c9f2d538766dfe",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:27.138Z",
+      "zh": {
+        "summary": "本文记录了在 Mac M1 Max 64G 电脑上本地部署开源模型 Qwen2.5-72B 的完整过程，先通过 Ollama 安装并运行模型，再借助 Text generation web UI 搭建可视化对话界面，最后与千问、Claude-3.5-sonnet、ChatGPT-o1-mini 做了简单的能力对比。",
+        "points": [
+          "Ollama 不是 LLM，而是让开发者在本地运行与部署大型语言模型的工具平台。",
+          "使用 run 命令可自动检查并下载模型，终端对话不美观时可用 Text generation web UI 提供界面。",
+          "解压后运行 start_macos.sh 并选择对应芯片，出现 127.0.0.1:7860 地址即部署成功。"
+        ]
+      },
+      "en": {
+        "summary": "This post documents how to deploy the open-source Qwen2.5-72B model locally on a Mac M1 Max 64G, installing Ollama to download and run the model, then setting up the Text generation web UI for a visual chat interface, and finally giving a brief capability comparison with Qwen, Claude-3.5-sonnet and ChatGPT-o1-mini.",
+        "points": [
+          "Ollama is described not as an LLM but as a tool platform for running and deploying large models locally.",
+          "The run command auto-checks and downloads the model, while Text generation web UI provides a friendlier interface.",
+          "Running start_macos.sh and selecting the matching chip yields a working local URL at 127.0.0.1:7860."
+        ]
+      }
+    },
+    "rag-notes": {
+      "hash": "79d15f6b0c59a58a",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:30.267Z",
+      "zh": {
+        "summary": "本文梳理 RAG（检索增强生成）的基本概念与提出背景，说明其通过外部知识库检索弥补大模型在领域知识、时效性、幻觉与可追溯性上的不足，并详解传统 RAG 的索引、检索、生成三阶段流程，最后列出其在检索质量、知识库规模、时延、上下文窗口及复杂推理方面的局限。",
+        "points": [
+          "作者把 RAG 类比为开卷考试，把模型 Fine-tune 类比为考前学习的闭卷考试，二者定位不同",
+          "传统 RAG 流程分为索引、检索、生成三阶段，索引包含文档解析清洗、切块、embedding 与向量库存储",
+          "传统 RAG 的短板包括依赖检索模型精度与知识库规模、推理耗时长、受 token 窗口限制，跨文本段与需推理的复杂查询表现不佳"
+        ]
+      },
+      "en": {
+        "summary": "This post explains what RAG (Retrieval Augmented Generation) is and why it is needed, noting that retrieving from external knowledge bases compensates for LLM limits in domain knowledge, timeliness, hallucination and source traceability. It then details the three stages of conventional RAG, namely indexing, retrieval and generation, and lists its shortcomings in retrieval quality, knowledge base size, latency, context windows and complex reasoning.",
+        "points": [
+          "RAG is compared to an open-book exam, while fine-tuning is likened to studying beforehand for a closed-book exam",
+          "The indexing stage parses and cleans documents, splits them into chunks, embeds them and stores vectors in a vector database",
+          "Conventional RAG depends on retrieval accuracy and knowledge base scale, adds latency, and struggles with cross-chunk and reasoning-heavy queries"
+        ]
+      }
+    },
+    "rate-limiting-implementation": {
+      "hash": "cd29b5887752b73d",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:33.268Z",
+      "zh": {
+        "summary": "本文系统梳理了限流的原理与实现：先说明限流用于保护处理能力有限的系统，再对比计数器、固定窗口、滑动窗口、漏桶与令牌桶五种算法的优缺点，最后介绍按 IP、业务 ID、调用关系、个性化等维度限流，以及基于 Guava RateLimiter 的单机方案和基于 Redis+Lua、Sentinel、网关的分布式方案。",
+        "points": [
+          "固定窗口按单位时间计数，实现简单但流量不平滑，窗口末尾的突发请求可能击垮系统。",
+          "令牌桶按固定速率放入令牌并缓存空闲令牌，可限制平均速率并应对突发流量，因此最常用。",
+          "分布式限流依赖中心化组件，常用 Redis+Lua 保证原子性并减少网络开销。"
+        ]
+      },
+      "en": {
+        "summary": "This post explains rate limiting as a way to protect systems with finite processing capacity. It compares counter, fixed window, sliding window, leaky bucket and token bucket algorithms, noting that token bucket absorbs bursts best and is most used. It then covers limiting by IP, business ID, call relationships and personalized rules, plus single-machine implementations with Guava RateLimiter and distributed ones using Redis with Lua, Sentinel or gateways.",
+        "points": [
+          "Fixed window counting is simple but uneven, and bursts at the end of a window can overwhelm the system.",
+          "Token bucket stores idle tokens to absorb bursts, while leaky bucket drains at a fixed rate and cannot.",
+          "Distributed rate limiting needs a central store; Redis with Lua gives atomicity, less network overhead and script reuse."
+        ]
+      }
+    },
+    "self-evolving-agents": {
+      "hash": "007e48d8faf912e3",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:35.556Z",
+      "zh": {
+        "summary": "本文系统梳理了 GUI Agent 的定义、架构与训练方法，对比其与 API Agent 在所用模型、动作形式和执行流程上的差异，并介绍感知、记忆、推理规划与交互等核心组件，分析数据分布外泛化、奖励分配等落地难点，最后讨论智能体在模型、工具与架构层面的自主进化路径及其训练环境。",
+        "points": [
+          "GUI Agent 输出坐标点击与文本输入等动作，需先解析页面再规划，区别于调用函数的 API Agent",
+          "常见架构拆分为规划、决策与反思三个角色，多智能体协作效果更好但延迟更高",
+          "强化学习依赖奖励函数设计，页面布局频繁变动与高昂训练成本是主要障碍"
+        ]
+      },
+      "en": {
+        "summary": "This post surveys GUI agents that operate graphical interfaces through clicks, typing and visual navigation, contrasting them with API agents in terms of models, actions and execution flow. It outlines planning, decision and reflection agent architectures, perception and memory components, and training through instruction tuning or reinforcement learning. It then examines out-of-distribution and reward-assignment difficulties, and discusses self-evolution across models, tools and architectures along with the environments used for training.",
+        "points": [
+          "GUI agents emit coordinates, text and swipes as actions, whereas API agents call tools and functions",
+          "Multi-agent designs improve collaboration but add latency compared with a single VLM agent",
+          "Reinforcement learning depends on reward design, and unstable page layouts plus high training cost limit it"
+        ]
+      }
+    },
+    "singleton-pattern-deep-dive": {
+      "hash": "c7bc710a27c96947",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:38.209Z",
+      "zh": {
+        "summary": "本文以一个自定义递增 ID 生成器为例，说明单例模式如何保证一个类只有一个实例，并分析饿汉式、懒汉式、双重检测、静态内部类和枚举五种实现方式的线程安全、延迟加载与代码复杂度，强调应根据具体场景选择，而不是追求唯一最优写法。",
+        "points": [
+          "单例通过私有构造、静态实例和公共获取方法阻止外部重复创建对象。",
+          "懒汉式需 synchronized 保证线程安全，双重检测还需 volatile 防止指令重排序。",
+          "静态内部类兼顾懒加载与线程安全，枚举实现简单但不支持懒加载。"
+        ]
+      },
+      "en": {
+        "summary": "This post uses a custom incremental ID generator to explain why multiple IDGenerator instances can produce duplicate IDs, then reviews five singleton implementations: eager initialization, lazy initialization, double-checked locking, static inner class, and enum. It compares thread safety, lazy loading, synchronization overhead, and code complexity, and concludes that no single implementation is best; the choice should depend on the specific scenario.",
+        "points": [
+          "The eager approach creates the instance at class loading, ensuring thread safety but potentially wasting resources.",
+          "Lazy initialization requires synchronized access, while double-checked locking adds a second null check and volatile.",
+          "Static inner class supports lazy loading through JVM class loading; enum is simple and thread-safe but not lazy."
+        ]
+      }
+    },
+    "spring-spel-use-cases": {
+      "hash": "71453f5c075620f5",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:36.434Z",
+      "zh": {
+        "summary": "本文介绍 Spring 表达式语言 SpEL 的常见使用场景，先说明其可在运行时解析表达式并生成值，常用于注解和 XML 配置，再梳理解析器、表达式、上下文三个核心概念及表达式解析、上下文设置、表达式求值、结果返回的处理过程，最后以自定义注解结合 AOP 和 SpEL 记录操作日志为例展示实践方式。",
+        "points": [
+          "SpEL 由解析器、表达式和上下文组成，上下文可设置变量、函数和类型转换。",
+          "处理流程为表达式解析、上下文设置、表达式求值、结果返回，解析阶段生成抽象语法树。",
+          "通过 LogRecordBefore、LogRecordAfter 注解与 AOP，将方法参数放入 SpEL 上下文记录操作日志。"
+        ]
+      },
+      "en": {
+        "summary": "This post introduces common use scenarios for Spring Expression Language (SpEL), explaining that it can parse expressions at runtime and generate values, and is often used in Spring annotations and XML configuration. It outlines the core concepts of parser, expression, and context, describes the processing flow from expression parsing and context setup to evaluation and result return, and demonstrates recording operation logs with custom annotations, AOP, and SpEL.",
+        "points": [
+          "SpEL consists of a parser, an expression, and a context that can hold variables, functions, and type conversion settings.",
+          "The processing flow covers expression parsing, context setup, expression evaluation, and result return, with parsing producing an abstract syntax tree.",
+          "Custom LogRecordBefore and LogRecordAfter annotations with AOP place method parameters into the SpEL context to record operation logs."
+        ]
+      }
+    },
+    "stable-diffusion-getting-started": {
+      "hash": "79b88d308f1d4b4f",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:39.569Z",
+      "zh": {
+        "summary": "本文记录了在 Apple Silicon Mac 上安装并上手 Stable Diffusion 的过程，包括用 Homebrew 准备 Python 3.10 环境、拉取 AUTOMATIC1111 WebUI 代码、下载 2.1 模型与配套配置文件并运行 webui.sh，同时介绍了文生图、图生图、图扩展图三种玩法，以及提示词权重、渐变、反向词和更换模型的用法。",
+        "points": [
+          "先装 Python 3.10 与依赖并克隆 WebUI 仓库，模型放入 models 目录，配置文件须与模型同名。",
+          "出现 NansException 报错时，改用 --no-half 等启动参数，并勾选 Upcast cross attention layer to float32。",
+          "步长建议 30 左右，CFG Scale 取 7 到 10 较均衡，提示词可用括号加数值调权重，并用 [词1:词2:比例] 做渐变。"
+        ]
+      },
+      "en": {
+        "summary": "This post walks through installing and trying out Stable Diffusion on an Apple Silicon Mac, from preparing Python 3.10 with Homebrew and cloning the AUTOMATIC1111 WebUI repository to downloading the 2.1 model with a matching config file and running webui.sh. It also covers text to image, image to image and mask based outpainting, plus prompt weighting, gradients, negative prompts and swapping in community models.",
+        "points": [
+          "Setup needs Python 3.10, a cloned WebUI repo, and a model whose config yaml shares the same filename.",
+          "A NansException during generation is fixed with --no-half style launch arguments and the float32 upcast setting.",
+          "Sampling steps near 30 and CFG Scale of 7 to 10 balance quality, while bracket syntax controls weights and gradients."
+        ]
+      }
+    },
+    "stay-comfortable-to-persist": {
+      "hash": "f368d9d46d4e2a05",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:40.693Z",
+      "zh": {
+        "summary": "本文从学外语、学技术、健身等常半途而废的经历出发，分析高目标带来身心抗拒是难以坚持的原因，并借刘未鹏《暗时间》中过早退出是一切失败根源的观点，提出让自己保持舒服状态，从每天背5个单词、刷一道题等小目标入手，靠长期积累持续做事。",
+        "points": [
+          "目标过大会让身心产生抗拒，导致事情无疾而终",
+          "借《暗时间》观点指出过早退出是一切失败的根源",
+          "每天背5个单词、刷一道题，以低侵入的小目标积累成效"
+        ]
+      },
+      "en": {
+        "summary": "This post reflects on repeatedly abandoning interests such as languages, cooking, guitar, fitness, and coding practice. It attributes the problem to setting overly ambitious goals that create physical and mental resistance. Drawing on Liu Weipeng's book Dark Time and the idea that quitting too early is the root of failure, it recommends staying comfortable and starting with tiny daily goals, such as five words or one problem, so consistency and accumulation can slowly produce results.",
+        "points": [
+          "Large goals create physical and mental resistance that makes people quit",
+          "Liu Weipeng's Dark Time states that quitting too early is the root of failure",
+          "Small daily goals such as five words or one coding problem sustain consistency"
+        ]
+      }
+    },
+    "stopwatch-task-timing": {
+      "hash": "94b758315991b0c7",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:39.638Z",
+      "zh": {
+        "summary": "本文介绍 Spring 框架 org.springframework.util 包下 StopWatch 工具类的用法，通过统计总耗时、获取单个任务耗时、格式化打印各任务耗时占比等示例展示其 API，并说明其基于任务链表记录开始与结束时间的实现原理。文章还总结了一个实例同时只能运行一个 task 的局限，以及结合 ThreadLocal、拦截器和自定义注解在接口调用链中统计耗时、定位性能瓶颈的扩展实践。",
+        "points": [
+          "传统 System.currentTimeMillis 写法简单但需为每个任务维护 startTime 变量，代码中易散落大量时间变量。",
+          "start 时指定任务名即可按任务记录耗时，prettyPrint 输出各任务纳秒耗时与占总时间百分比。",
+          "一个 StopWatch 实例同时只能运行一个 task，需并行记录多个任务时要 new 多个实例。"
+        ]
+      },
+      "en": {
+        "summary": "This post explains how to use Spring's StopWatch utility from the org.springframework.util package to measure task execution time. It demonstrates recording total elapsed time, retrieving the last task's duration, printing a formatted breakdown of each task's time and percentage, and reading task info, then outlines the internal linked-list implementation. It also notes the limitation that one instance can only run one task at a time, and shows extensions using ThreadLocal, a HandlerInterceptor and a custom @Timed annotation to trace request timings.",
+        "points": [
+          "Manual System.currentTimeMillis timing requires a startTime variable per task, which clutters the code.",
+          "Naming tasks at start lets prettyPrint show each task's nanoseconds and percentage of total time.",
+          "A single instance cannot start a new task until the current one stops; use separate instances for concurrency."
+        ]
+      }
+    },
+    "vim-customization": {
+      "hash": "c59e9a9671d7fd25",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:40.792Z",
+      "zh": {
+        "summary": "本文介绍如何通过配置 .vimrc 文件改善容器中默认 Vim 的使用体验。作者说明了基础选项，如关闭 Vi 兼容模式、启用语法高亮、显示行号与增量搜索等，也列出了自己在快捷键、缩进、编码、折叠、外观和 Taglist 插件等方面的自定义设置。作者通常还会把这个配置文件保存在 GitHub 仓库中，需要时直接 clone 下来使用。",
+        "points": [
+          "为文本文件设置 80 字符行宽，并在打开文件时跳转到上次编辑位置",
+          "编码检测顺序设为 utf-8、gb2312、gbk、gb18030，启用 256 色和 desert 主题",
+          "Tab 宽度设为 4 并转换为空格，折叠基于语法，默认折叠级别为 100"
+        ]
+      },
+      "en": {
+        "summary": "This post explains how to improve a bare-bones Vim installation, such as one inside a container, by creating and editing a .vimrc file. It covers basic options like disabling Vi compatibility, enabling syntax highlighting, line numbers, and incremental search, then details personal settings for key mappings, indentation, encoding, folding, appearance, and the Taglist plugin. The author keeps the config in a GitHub repository for quick cloning.",
+        "points": [
+          "Key mappings write selected text to a temp file and read it back in normal mode",
+          "File encoding detection tries utf-8, gb2312, gbk, and gb18030, with UTF-8 terminal encoding",
+          "Tabs are set to four spaces, folding uses syntax with a default fold level of 100"
+        ]
+      }
+    },
+    "zego-interview-round-1": {
+      "hash": "fa487b2aa191eace",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:51:42.681Z",
+      "zh": {
+        "summary": "本文记录即构科技 DevOps 开发岗 2023 年 5 月一场 52 分钟的一面，面试以发散性问题为主而非八股文。内容涵盖数据库迁移与选型对比、容器与物理服务器的扩展性、MySQL 与 PostgreSQL 水平扩展及数据一致性，以及 Java 开源组件、面向对象与面向过程、Spring AOP 与依赖注入，最后包含一道三语言人数逻辑题和求第 k 大元素的算法题。",
+        "points": [
+          "数据库部分追问选型维度：除性能外还需考虑数据量增长瓶颈，以及扩展后如何保证一致性",
+          "Java 部分考察开源组件理解、面向对象与面向过程差异，以及 Spring AOP 与依赖注入原理",
+          "逻辑题为 100 人中三种语言人数的最大最小值，算法题要求分析时间与空间复杂度"
+        ]
+      },
+      "en": {
+        "summary": "This post recounts a 52-minute first-round DevOps developer interview at ZEGO in May 2023, which focused on open-ended questions rather than rote textbook knowledge. Topics included database migration and selection trade-offs, container versus physical server scalability, MySQL and PostgreSQL horizontal scaling and data consistency, Java open-source components, object-oriented versus procedural programming, Spring AOP and dependency injection, plus a logic puzzle and a kth-largest-element algorithm problem.",
+        "points": [
+          "Database questions probed selection criteria beyond performance, including future data growth limits and post-scaling consistency",
+          "Java questions covered familiarity with open-source components, OOP versus procedural design, and Spring AOP and DI internals",
+          "A logic puzzle asked the max and min counts for three programming languages among 100 people, followed by a complexity analysis task"
+        ]
+      }
+    }
+  }
+}

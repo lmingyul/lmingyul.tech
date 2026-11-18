@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "ai:summary": "node scripts/summarize-posts.mjs",
     "build": "next build",
     "db:generate": "drizzle-kit generate:pg",
     "db:push": "drizzle-kit push:pg",

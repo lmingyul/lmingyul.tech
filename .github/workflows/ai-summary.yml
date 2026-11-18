@@ -1,0 +1,54 @@
+name: AI summaries
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'content/posts/*.md'
+      - 'scripts/summarize-posts.mjs'
+      - '.github/workflows/ai-summary.yml'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Regenerate all summaries'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ai-summary
+  cancel-in-progress: false
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.4.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Generate AI summaries
+        run: pnpm ai:summary ${{ inputs.force && '--force' || '' }}
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          DEEPSEEK_MODEL: ${{ secrets.DEEPSEEK_MODEL || 'deepseek-flash' }}
+      - name: Commit updated summaries
+        run: |
+          git diff --quiet -- content/ai-summaries.json && exit 0
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add content/ai-summaries.json
+          git commit -m 'chore(content): update AI summaries'
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep 5
+          done
+          exit 1

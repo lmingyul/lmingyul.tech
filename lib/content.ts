@@ -13,6 +13,7 @@ import {
 import { type Locale } from '~/lib/i18n'
 import {
   type Post,
+  type PostAiSummary,
   type PostDetail,
   type PostHeadingBlock,
 } from '~/sanity/schemas/post'
@@ -322,12 +323,68 @@ function toPostSummary(post: StoredPost): Post {
   }
 }
 
-function toPostDetail(post: StoredPost, related?: Post[]): PostDetail {
+function toPostDetail(
+  post: StoredPost,
+  related?: Post[],
+  aiSummary?: PostAiSummary
+): PostDetail {
   return {
     ...toPostSummary(post),
     headings: post.headings,
     related,
+    ...(aiSummary ? { aiSummary } : {}),
   }
+}
+
+type LocalizedSummaryData = {
+  summary?: unknown
+  points?: unknown
+}
+
+type AiSummaryEntry = {
+  zh?: LocalizedSummaryData
+  en?: LocalizedSummaryData
+}
+
+type AiSummaryFile = {
+  version?: number
+  items?: Record<string, AiSummaryEntry>
+}
+
+async function readAiSummaries(): Promise<Record<string, AiSummaryEntry>> {
+  try {
+    const raw = await fs.readFile(
+      path.join(getContentRoot(), 'ai-summaries.json'),
+      'utf8'
+    )
+    const parsed = JSON.parse(raw) as AiSummaryFile
+    return parsed?.items && typeof parsed.items === 'object' ? parsed.items : {}
+  } catch {
+    return {}
+  }
+}
+
+function pickLocalizedAiSummary(
+  entry: AiSummaryEntry | undefined,
+  locale: Locale
+): PostAiSummary | undefined {
+  const block = entry?.[locale]
+  if (!block || typeof block !== 'object') {
+    return undefined
+  }
+
+  const summary = typeof block.summary === 'string' ? block.summary.trim() : ''
+  const points = Array.isArray(block.points)
+    ? block.points
+        .map((item) => (typeof item === 'string' ? item.trim() : ''))
+        .filter(Boolean)
+    : []
+
+  if (!summary || points.length === 0) {
+    return undefined
+  }
+
+  return { summary, points }
 }
 
 export async function getAllLatestBlogPostSlugs(
@@ -392,7 +449,10 @@ export async function getBlogPost(
   slug: string,
   locale: Locale = 'zh'
 ): Promise<PostDetail | undefined> {
-  const posts = await readLocalizedPosts(locale)
+  const [posts, aiSummaries] = await Promise.all([
+    readLocalizedPosts(locale),
+    readAiSummaries(),
+  ])
   const decoded = safeDecode(slug)
   const target = posts.find(
     (post) => !post.draft && (post.slug === slug || post.slug === decoded)
@@ -427,8 +487,9 @@ export async function getBlogPost(
   }
 
   const related = relatedCandidates.slice(0, 3).map(toPostSummary)
+  const aiSummary = pickLocalizedAiSummary(aiSummaries[target.slug], locale)
 
-  return toPostDetail(target, related)
+  return toPostDetail(target, related, aiSummary)
 }
 
 export async function getBlogPostById(

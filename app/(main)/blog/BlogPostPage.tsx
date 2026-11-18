@@ -26,6 +26,7 @@ import { getMessages, type Locale, localizePath } from '~/lib/i18n'
 import { prettifyNumber } from '~/lib/math'
 import { type PostDetail } from '~/sanity/schemas/post'
 
+import { AiSummaryCard } from './AiSummaryCard'
 import { BlogPostCard } from './BlogPostCard'
 import { BlogPostTableOfContents } from './BlogPostTableOfContents'
 
@@ -217,6 +218,14 @@ export function BlogPostPage({
                   {t.fallbackLinkLabel}
                 </Link>
               </div>
+            )}
+            {post.aiSummary && (
+              <AiSummaryCard
+                key={`${locale}:${post.slug}`}
+                aiSummary={post.aiSummary}
+                locale={locale}
+                lang={isFallbackArticle ? 'en' : undefined}
+              />
             )}
             <Prose className="mt-8">
               <PostPortableText value={post.body} />
