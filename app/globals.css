@@ -535,3 +535,83 @@ html.dark .ai-toc-link:is(:target-current, .target-current) {
     }
   }
 }
+
+/* Blog tag navigation mobile horizontal scroll fade */
+@property --tag-fade-start {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --tag-fade-end {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes tag-reveal-fade-start {
+  to {
+    --tag-fade-start: var(--tag-fade-size);
+  }
+}
+
+@keyframes tag-hide-fade-end {
+  from {
+    --tag-fade-end: var(--tag-fade-size);
+  }
+}
+
+.blog-tag-scroller {
+  --tag-fade-size: 2.5rem;
+}
+
+@media (max-width: 639px) {
+  .blog-tag-scroller {
+    overflow-x: auto;
+    scroll-padding-inline: 2.5rem;
+    scroll-snap-type: x proximity;
+  }
+
+  .blog-tag-scroller > li {
+    scroll-snap-align: start;
+  }
+
+  @supports (mask-composite: subtract) {
+    .blog-tag-scroller {
+      mask:
+        linear-gradient(black, black) no-clip subtract,
+        linear-gradient(to right, black, transparent) 0 0 /
+          var(--tag-fade-start) 100% no-repeat no-clip,
+        linear-gradient(to right, transparent, black) 100% 0 /
+          var(--tag-fade-end) 100% no-repeat no-clip;
+    }
+
+    @supports (animation-timeline: scroll(self inline)) {
+      .blog-tag-scroller {
+        animation:
+          tag-reveal-fade-start linear both,
+          tag-hide-fade-end linear both;
+        animation-timeline: scroll(self inline);
+        animation-range:
+          0 var(--tag-fade-size),
+          calc(100% - var(--tag-fade-size)) 100%;
+      }
+    }
+
+    @supports not (animation-timeline: scroll(self inline)) {
+      .blog-tag-scroller {
+        transition:
+          --tag-fade-start 0.2s,
+          --tag-fade-end 0.2s;
+      }
+
+      .blog-tag-scroller.more-start {
+        --tag-fade-start: var(--tag-fade-size);
+      }
+
+      .blog-tag-scroller.more-end {
+        --tag-fade-end: var(--tag-fade-size);
+      }
+    }
+  }
+}

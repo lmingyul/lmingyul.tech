@@ -10,16 +10,21 @@ import {
 } from '~/assets'
 import { getMessages, type Locale, localizePath } from '~/lib/i18n'
 import { prettifyNumber } from '~/lib/math'
+import { localizePostTags } from '~/lib/post-tags'
 import { type Post } from '~/sanity/schemas/post'
 
 extendDateTime()
+
+export type BlogCardPost = Omit<Post, 'body'> & {
+  body?: string
+}
 
 export function BlogPostCard({
   post,
   views,
   locale = 'zh',
 }: {
-  post: Post
+  post: BlogCardPost
   views: number
   locale?: Locale
 }) {
@@ -34,6 +39,7 @@ export function BlogPostCard({
   } = post
   const t = getMessages(locale).blog
   const isChineseFallbackOnEn = locale === 'en' && Boolean(isFallback)
+  const displayCategories = localizePostTags(categories, locale)
 
   return (
     <Link
@@ -88,12 +94,10 @@ export function BlogPostCard({
               </span>
             </span>
 
-            {Array.isArray(categories) && (
+            {displayCategories.length > 0 && (
               <span className="inline-flex items-center space-x-1 text-[12px] font-medium text-[--post-image-fg] md:text-sm">
                 <ScriptIcon />
-                <span lang={isChineseFallbackOnEn ? 'zh-CN' : undefined}>
-                  {categories.join(', ')}
-                </span>
+                <span>{displayCategories.join(', ')}</span>
               </span>
             )}
           </span>

@@ -6,6 +6,7 @@ import { SocialLink } from '~/components/links/SocialLink'
 import { Container } from '~/components/ui/Container'
 import { url } from '~/lib'
 import { getMessages } from '~/lib/i18n'
+import { resolveTagParam } from '~/lib/post-tags'
 
 const t = getMessages('en').blog
 
@@ -31,7 +32,11 @@ export const metadata = {
   },
 } satisfies Metadata
 
-export default function EnBlogPage() {
+export default function EnBlogPage({
+  searchParams,
+}: {
+  searchParams?: { tag?: string | string[] }
+}) {
   return (
     <Container className="mt-16 sm:mt-24">
       <header className="max-w-2xl">
@@ -45,9 +50,12 @@ export default function EnBlogPage() {
           <SocialLink href="/en/feed.xml" platform="rss" />
         </p>
       </header>
-      <BlogPosts limit={200} locale="en" filterable />
+      <BlogPosts
+        limit={200}
+        locale="en"
+        filterable
+        initialTag={resolveTagParam(searchParams?.tag, 'en')}
+      />
     </Container>
   )
 }
-
-export const revalidate = 60

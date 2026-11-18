@@ -24,6 +24,7 @@ import { Button } from '~/components/ui/Button'
 import { Container } from '~/components/ui/Container'
 import { getMessages, type Locale, localizePath } from '~/lib/i18n'
 import { prettifyNumber } from '~/lib/math'
+import { buildBlogTagHref, localizePostTags } from '~/lib/post-tags'
 import { type PostDetail } from '~/sanity/schemas/post'
 
 import { AiSummaryCard } from './AiSummaryCard'
@@ -49,6 +50,8 @@ export function BlogPostPage({
   const isFallbackArticle = locale === 'en' && Boolean(post.isFallback)
   const otherLocale: Locale = locale === 'en' ? 'zh' : 'en'
   const otherLocaleHref = localizePath(`/blog/${post.slug}`, otherLocale)
+  const localizedCategories = localizePostTags(post.categories, locale)
+  const blogBasePath = localizePath('/blog', locale)
 
   return (
     <Container className="mt-16 lg:mt-32">
@@ -104,7 +107,7 @@ export function BlogPostPage({
                 />
               </motion.div>
               <motion.div
-                className="flex w-full items-center space-x-4 text-sm font-medium text-zinc-600/80 dark:text-zinc-400/80"
+                className="flex w-full flex-wrap items-center gap-x-4 gap-y-2 text-sm font-medium text-zinc-600/80 dark:text-zinc-400/80"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
@@ -127,10 +130,23 @@ export function BlogPostPage({
                     })?.format('YYYY/MM/DD')}
                   </span>
                 </time>
-                <span className="inline-flex items-center space-x-1.5">
-                  <ScriptIcon />
-                  <span>{post.categories?.join(', ')}</span>
-                </span>
+                {localizedCategories.length > 0 && (
+                  <span
+                    lang={isFallbackArticle ? 'en' : undefined}
+                    className="inline-flex flex-wrap items-center gap-1.5"
+                  >
+                    <ScriptIcon className="shrink-0" />
+                    {localizedCategories.map((tag) => (
+                      <Link
+                        key={tag}
+                        href={buildBlogTagHref(blogBasePath, tag)}
+                        className="inline-flex items-center rounded-md bg-zinc-100/90 px-2 py-0.5 text-xs font-medium leading-4 text-zinc-700 ring-1 ring-zinc-900/5 transition-[color,background-color,box-shadow,transform] duration-150 ease-out hover:bg-lime-500/15 hover:text-lime-800 hover:ring-lime-600/30 active:scale-[0.97] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600 dark:bg-zinc-800/80 dark:text-zinc-300 dark:ring-white/10 dark:hover:bg-lime-400/15 dark:hover:text-lime-300 dark:hover:ring-lime-400/30 dark:focus-visible:outline-lime-400"
+                      >
+                        {tag}
+                      </Link>
+                    ))}
+                  </span>
+                )}
               </motion.div>
               <motion.h1
                 className="mt-6 w-full text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl"
