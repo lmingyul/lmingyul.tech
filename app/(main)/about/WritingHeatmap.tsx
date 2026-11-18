@@ -385,7 +385,7 @@ export function WritingHeatmap({
         <div
           role="group"
           aria-label={isEn ? 'Select time range' : '选择时间范围'}
-          className="flex gap-1.5 overflow-x-auto pb-1 lg:w-24 lg:shrink-0 lg:flex-col lg:overflow-visible lg:pb-0"
+          className="flex flex-wrap gap-1.5 lg:w-24 lg:shrink-0 lg:flex-col lg:flex-nowrap"
         >
           {rangeOptions.map((option) => {
             const selected = range === option
@@ -407,7 +407,7 @@ export function WritingHeatmap({
                   setHovered(null)
                 }}
                 className={clsxm(
-                  'whitespace-nowrap rounded-lg px-3 py-1.5 text-left text-xs font-medium tabular-nums transition-[color,background-color,transform] duration-150 active:scale-[0.98]',
+                  'whitespace-nowrap rounded-lg px-2.5 py-1.5 text-left text-xs font-medium tabular-nums transition-[color,background-color,transform] duration-150 active:scale-[0.98] lg:px-3',
                   selected
                     ? 'bg-lime-600 text-white shadow-sm dark:bg-lime-500 dark:text-zinc-950'
                     : 'text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800/80'
