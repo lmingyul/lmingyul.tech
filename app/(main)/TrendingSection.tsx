@@ -23,6 +23,7 @@ export async function TrendingSection({
   const messages = getMessages(locale)
   const tHome = messages.home
   const tBlog = messages.blog
+  const tAi = messages.aiDaily
   const headingId = 'trending-section-heading'
 
   return (
@@ -51,8 +52,8 @@ export async function TrendingSection({
                 : null
             const subline =
               item.kind === 'ai'
-                ? item.latestDate && item.latestTitle
-                  ? `${item.latestDate} · ${item.latestTitle}`
+                ? item.latestDate
+                  ? `${item.latestDate.replace(/-/g, '/')} · ${tAi.archiveCount(item.issueCount)}`
                   : tHome.trendingAiFallbackSub
                 : `${postDateText} · ${item.readingTime.toFixed(0)}${tBlog.readingTimeSuffix}`
 
@@ -128,14 +129,7 @@ export async function TrendingSection({
                     </Link>
                   </h3>
 
-                  <p
-                    lang={
-                      item.kind === 'ai' && item.latestIsFallback
-                        ? 'zh-CN'
-                        : undefined
-                    }
-                    className="truncate text-xs text-zinc-500 dark:text-zinc-400"
-                  >
+                  <p className="truncate text-xs text-zinc-500 dark:text-zinc-400">
                     {subline}
                   </p>
                 </div>
