@@ -7,13 +7,17 @@ const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build'
 const globalForRedis = globalThis as unknown as {
   ioRedis?: Redis
   memStore?: Map<string, { value: string; expiresAt?: number }>
+  zsetStore?: Map<string, Map<string, number>>
 }
 
 const memStore =
   globalForRedis.memStore ??
   new Map<string, { value: string; expiresAt?: number }>()
+const zsetStore =
+  globalForRedis.zsetStore ?? new Map<string, Map<string, number>>()
 if (process.env.NODE_ENV !== 'production') {
   globalForRedis.memStore = memStore
+  globalForRedis.zsetStore = zsetStore
 }
 
 function getClient(): Redis | null {
@@ -117,7 +121,61 @@ export const redis = {
       return keys.map(() => null) as unknown as T
     }
   },
+
+  async rollingUniqueCount(
+    key: string,
+    windowSeconds: number,
+    member?: string | null
+  ): Promise<number | null> {
+    const now = Math.floor(Date.now() / 1000)
+    const cutoff = now - windowSeconds
+    const normalizedMember = member?.trim() ?? ''
+    const client = getClient()
+    if (!client) {
+      let bucket = zsetStore.get(key)
+      if (!bucket) {
+        bucket = new Map<string, number>()
+        zsetStore.set(key, bucket)
+      }
+      bucket.forEach((score, id) => {
+        if (score <= cutoff) {
+          bucket?.delete(id)
+        }
+      })
+      if (normalizedMember) {
+        bucket.set(normalizedMember, now)
+      }
+      return bucket.size
+    }
+    try {
+      const count = await client.eval(
+        ROLLING_WINDOW_UV_LUA,
+        1,
+        key,
+        String(now),
+        String(windowSeconds),
+        normalizedMember
+      )
+      return Number(count)
+    } catch (err) {
+      console.error('[Redis.rollingUniqueCount]', err)
+      return null
+    }
+  },
 }
+
+const ROLLING_WINDOW_UV_LUA = `
+local now = tonumber(ARGV[1])
+local window = tonumber(ARGV[2])
+local member = ARGV[3]
+local cutoff = now - window
+redis.call('ZREMRANGEBYSCORE', KEYS[1], '-inf', cutoff)
+if member ~= '' then
+  redis.call('ZADD', KEYS[1], now, member)
+  redis.call('EXPIRE', KEYS[1], window)
+end
+return redis.call('ZCARD', KEYS[1])
+`
 
 const RATE_LIMIT_LUA = `
 local current = redis.call('INCR', KEYS[1])

@@ -1,5 +1,6 @@
 export const kvKeys = {
   totalPageViews: 'total_page_views',
+  weeklyVisitors: 'weekly_visitors',
   lastVisitor: 'last_visitor',
   currentVisitor: 'current_visitor',
   postViews: (id: string) => `post:views:${id}`,

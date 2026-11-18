@@ -2,7 +2,7 @@ import { count, isNotNull } from 'drizzle-orm'
 import { headers } from 'next/headers'
 import React from 'react'
 
-import { CursorClickIcon, UsersIcon } from '~/assets'
+import { CursorClickIcon, EyeOpenIcon, UsersIcon } from '~/assets'
 import { PeekabooLink } from '~/components/links/PeekabooLink'
 import { Container } from '~/components/ui/Container'
 import { kvKeys } from '~/config/kv'
@@ -13,6 +13,7 @@ import countries from '~/lib/countries.json'
 import { getMessages, type Locale } from '~/lib/i18n'
 import { prettifyNumber } from '~/lib/math'
 import { redis } from '~/lib/redis'
+import { recordAndCountWeeklyVisitors } from '~/lib/visitor-stats'
 
 import { Newsletter } from './Newsletter'
 
@@ -29,11 +30,41 @@ async function TotalPageViews({ locale }: { locale: Locale }) {
 
   return (
     <span className="flex items-center justify-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 md:justify-start">
-      <UsersIcon className="h-4 w-4" />
+      <EyeOpenIcon className="h-4 w-4 shrink-0" aria-hidden="true" />
       <span title={t.viewsTitle(Intl.NumberFormat('en-US').format(views))}>
         {t.totalViews}&nbsp;
-        <span className="font-medium">
+        <span className="font-medium tabular-nums">
           {prettifyNumber(views, locale !== 'en')}
+        </span>
+      </span>
+    </span>
+  )
+}
+
+async function WeeklyVisitors({ locale }: { locale: Locale }) {
+  const t = getMessages(locale).footer
+  let visitors: number | null
+  if (env.VERCEL_ENV === 'production' && !isBuildPhase) {
+    visitors = await recordAndCountWeeklyVisitors(headers())
+  } else {
+    visitors = 128
+  }
+
+  if (visitors === null) {
+    return null
+  }
+
+  return (
+    <span className="flex items-center justify-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 md:justify-start">
+      <UsersIcon className="h-4 w-4 shrink-0" aria-hidden="true" />
+      <span
+        title={t.weeklyVisitorsTitle(
+          Intl.NumberFormat('en-US').format(visitors)
+        )}
+      >
+        {t.weeklyVisitors}&nbsp;
+        <span className="font-medium tabular-nums">
+          {prettifyNumber(visitors, locale !== 'en')}
         </span>
       </span>
     </span>
@@ -83,7 +114,7 @@ async function LastVisitorInfo({ locale }: { locale: Locale }) {
 
   return (
     <span className="flex items-center justify-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 md:justify-start">
-      <CursorClickIcon className="h-4 w-4" />
+      <CursorClickIcon className="h-4 w-4 shrink-0" aria-hidden="true" />
       <span>
         {t.lastVisitorFrom}&nbsp;
         {[lastVisitor.city, lastVisitor.country].filter(Boolean).join(', ')}
@@ -126,9 +157,12 @@ export async function Footer({ locale = 'zh' }: { locale?: Locale }) {
             </div>
           </Container.Inner>
           <Container.Inner className="mt-6">
-            <div className="flex flex-col items-center justify-start gap-2 sm:flex-row">
+            <div className="flex flex-col items-center justify-start gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4 sm:gap-y-2">
               <React.Suspense>
                 <TotalPageViews locale={locale} />
+              </React.Suspense>
+              <React.Suspense>
+                <WeeklyVisitors locale={locale} />
               </React.Suspense>
               <React.Suspense>
                 <LastVisitorInfo locale={locale} />

@@ -195,6 +195,9 @@ const zhMessages = {
   footer: {
     totalViews: '总浏览量',
     viewsTitle: (formatted: string) => `${formatted}次浏览`,
+    weeklyVisitors: '近一周访客',
+    weeklyVisitorsTitle: (formatted: string) =>
+      `最近 7 天共 ${formatted} 位独立访客`,
     lastVisitorFrom: '最近访客来自',
     forkPrefix: '网站是 Fork 另一个项目：',
   },
@@ -400,6 +403,9 @@ const enMessages: typeof zhMessages = {
   footer: {
     totalViews: 'Total views',
     viewsTitle: (formatted: string) => `${formatted} total page views`,
+    weeklyVisitors: 'Weekly visitors',
+    weeklyVisitorsTitle: (formatted: string) =>
+      `${formatted} unique visitors in the past 7 days`,
     lastVisitorFrom: 'Recent visitor from',
     forkPrefix: 'Customized & forked from open-source: ',
   },
