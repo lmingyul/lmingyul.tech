@@ -211,6 +211,27 @@
         ]
       }
     },
+    "ai-products-bookmarks": {
+      "hash": "ae653ed39abcd605",
+      "model": "deepseek-flash",
+      "generatedAt": "2026-11-18T14:54:59.517Z",
+      "zh": {
+        "summary": "本文是一份 AI 相关产品收藏夹，按 AI 集成、代码搜索与可视化三类，整理了 Poe、LobeChat、Cherry Studio、grep 和 Transformer Explainer 等工具及其主要用途。",
+        "points": [
+          "AI 集成类工具均可通过 API 调用不同 AI Model，LobeChat 与 Cherry Studio 还支持知识库和 MCP 功能",
+          "grep.app 用于快速搜索 GitHub 上具有类似功能的代码",
+          "Transformer Explainer 以可视化方式呈现 Transformer 的处理流程，有助于理解其原理"
+        ]
+      },
+      "en": {
+        "summary": "This post is a bookmark list of AI-related products grouped into three categories: AI integration tools such as Poe, LobeChat and Cherry Studio, the GitHub code search tool grep.app, and Transformer Explainer for visualizing how Transformers process input.",
+        "points": [
+          "Poe offers quick access to the latest AI models through a credit system.",
+          "LobeChat and Cherry Studio call different AI models via API and support knowledge bases and MCP.",
+          "Transformer Explainer visualizes the Transformer pipeline to help readers understand how it works."
+        ]
+      }
+    },
     "ai-tips-2026-w3": {
       "hash": "0d4281a4c5e4b35d",
       "model": "deepseek-flash",
