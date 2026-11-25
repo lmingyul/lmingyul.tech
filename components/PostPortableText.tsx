@@ -1,5 +1,6 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import ReactMarkdown from 'react-markdown'
 import rehypeKatex from 'rehype-katex'
 import rehypePrismPlus from 'rehype-prism-plus'
@@ -9,6 +10,22 @@ import remarkMath from 'remark-math'
 import { ClientOnly } from '~/components/ClientOnly'
 import { Commentable } from '~/components/Commentable'
 import { PeekabooLink } from '~/components/links/PeekabooLink'
+import { MERMAID_DATA_ATTR, rehypeMermaidBlocks } from '~/lib/rehype-mermaid'
+
+const MermaidDiagram = dynamic(
+  () => import('~/components/MermaidDiagram'),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        data-mermaid-loading="true"
+        className="not-prose my-6 flex min-h-[160px] items-center justify-center rounded-2xl border border-zinc-200/80 bg-white/80 text-xs text-zinc-400 dark:border-zinc-700/60 dark:bg-zinc-900/60 dark:text-zinc-500"
+      >
+        Mermaid…
+      </div>
+    ),
+  }
+)
 
 /**
  * 用于渲染文章正文（Markdown 字符串）
@@ -21,10 +38,21 @@ export function PostPortableText(props: { value: string }) {
     <ReactMarkdown
       remarkPlugins={[remarkGfm, remarkMath]}
       rehypePlugins={[
+        rehypeMermaidBlocks,
         [rehypePrismPlus, { ignoreMissing: true }],
         [rehypeKatex, { strict: 'ignore' }],
       ]}
       components={{
+        pre({ children, ...rest }) {
+          const preProps = { ...rest } as Record<string, unknown>
+          delete preProps.node
+          const chart = preProps[MERMAID_DATA_ATTR]
+          if (typeof chart === 'string') {
+            return <MermaidDiagram chart={chart} />
+          }
+          return <pre {...preProps}>{children}</pre>
+        },
+
         // 覆写 a 标签 → PeekabooLink
         a({ href = '', children, ...rest }) {
           const rel = href.startsWith('/') ? undefined : 'noreferrer noopener'

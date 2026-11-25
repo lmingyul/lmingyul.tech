@@ -1,5 +1,6 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import ReactMarkdown from 'react-markdown'
 import rehypeKatex from 'rehype-katex'
 import rehypePrismPlus from 'rehype-prism-plus'
@@ -11,6 +12,22 @@ import {
   type AiTocHeading,
   createHeadingSlugger,
 } from '~/lib/heading-slug'
+import { MERMAID_DATA_ATTR, rehypeMermaidBlocks } from '~/lib/rehype-mermaid'
+
+const MermaidDiagram = dynamic(
+  () => import('~/components/MermaidDiagram'),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        data-mermaid-loading="true"
+        className="not-prose my-6 flex min-h-[160px] items-center justify-center rounded-2xl border border-zinc-200/80 bg-white/80 text-xs text-zinc-400 dark:border-zinc-700/60 dark:bg-zinc-900/60 dark:text-zinc-500"
+      >
+        Mermaid…
+      </div>
+    ),
+  }
+)
 
 type HastNode = {
   type?: string
@@ -110,10 +127,20 @@ export function AiMarkdown({
       remarkPlugins={[remarkGfm, remarkMath]}
       rehypePlugins={[
         [rehypeAiHeadingIds, { headings }],
+        rehypeMermaidBlocks,
         [rehypePrismPlus, { ignoreMissing: true }],
         [rehypeKatex, { strict: 'ignore' }],
       ]}
       components={{
+        pre({ children, ...rest }) {
+          const preProps = { ...rest } as Record<string, unknown>
+          delete preProps.node
+          const chart = preProps[MERMAID_DATA_ATTR]
+          if (typeof chart === 'string') {
+            return <MermaidDiagram chart={chart} />
+          }
+          return <pre {...preProps}>{children}</pre>
+        },
         a({ href = '', children, ...rest }) {
           const rel = href.startsWith('/') ? undefined : 'noreferrer noopener'
           return (
