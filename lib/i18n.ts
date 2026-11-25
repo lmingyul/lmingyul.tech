@@ -206,6 +206,18 @@ const zhMessages = {
       `最近 7 天共 ${formatted} 位独立访客`,
     lastVisitorFrom: '最近访客来自',
     forkPrefix: '网站是 Fork 另一个项目：',
+    visitorTrendTitle: (days: number) => `近 ${days} 天访客趋势`,
+    visitorTrendAria: (days: number, total: string) =>
+      `近 ${days} 天累计 ${total} 位访客趋势图`,
+    visitorTrendModeAria: '切换访客趋势视图',
+    visitorTrendCumulative: '累计',
+    visitorTrendDaily: '每日',
+    visitorTrendTotalBadge: (formatted: string) => `${formatted} 位访客`,
+    visitorTrendTodayBadge: (formatted: string) => `今日 ${formatted} 位`,
+    visitorTrendTooltipCumulative: (cum: string, daily: string) =>
+      `累计 ${cum} · 当日 +${daily}`,
+    visitorTrendTooltipDaily: (daily: string, cum: string) =>
+      `当日 ${daily} 位 · 累计 ${cum}`,
   },
   newsletter: {
     heading: '动态更新',
@@ -448,6 +460,18 @@ const enMessages: typeof zhMessages = {
       `${formatted} unique visitors in the past 7 days`,
     lastVisitorFrom: 'Recent visitor from',
     forkPrefix: 'Customized & forked from open-source: ',
+    visitorTrendTitle: (days: number) => `${days}-day visitor trend`,
+    visitorTrendAria: (days: number, total: string) =>
+      `Visitor trend chart showing ${total} visitors over the last ${days} days`,
+    visitorTrendModeAria: 'Switch visitor trend view',
+    visitorTrendCumulative: 'Total',
+    visitorTrendDaily: 'Daily',
+    visitorTrendTotalBadge: (formatted: string) => `${formatted} visitors`,
+    visitorTrendTodayBadge: (formatted: string) => `Today ${formatted}`,
+    visitorTrendTooltipCumulative: (cum: string, daily: string) =>
+      `Total ${cum} · +${daily} daily`,
+    visitorTrendTooltipDaily: (daily: string, cum: string) =>
+      `${daily} daily · Total ${cum}`,
   },
   newsletter: {
     heading: 'Monthly Updates',

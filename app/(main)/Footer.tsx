@@ -1,4 +1,3 @@
-import { count, isNotNull } from 'drizzle-orm'
 import { headers } from 'next/headers'
 import React from 'react'
 
@@ -6,27 +5,31 @@ import { CursorClickIcon, EyeOpenIcon, UsersIcon } from '~/assets'
 import { PeekabooLink } from '~/components/links/PeekabooLink'
 import { Container } from '~/components/ui/Container'
 import { kvKeys } from '~/config/kv'
-import { db } from '~/db'
-import { subscribers } from '~/db/schema'
 import { env } from '~/env.mjs'
 import countries from '~/lib/countries.json'
 import { getMessages, type Locale } from '~/lib/i18n'
 import { prettifyNumber } from '~/lib/math'
 import { redis } from '~/lib/redis'
-import { recordAndCountWeeklyVisitors } from '~/lib/visitor-stats'
+import {
+  getMockFooterVisitorMetrics,
+  recordAndGetFooterVisitorMetrics,
+} from '~/lib/visitor-stats'
 
-import { Newsletter } from './Newsletter'
+import { VisitorTrendChart } from './VisitorTrendChart'
 
 const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build'
 
-async function TotalPageViews({ locale }: { locale: Locale }) {
-  const t = getMessages(locale).footer
-  let views: number
-  if (env.VERCEL_ENV === 'production' && !isBuildPhase) {
-    views = await redis.incr(kvKeys.totalPageViews)
-  } else {
-    views = 345678
+function TotalPageViews({
+  views,
+  locale,
+}: {
+  views: number | null
+  locale: Locale
+}) {
+  if (views === null) {
+    return null
   }
+  const t = getMessages(locale).footer
 
   return (
     <span className="flex items-center justify-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 md:justify-start">
@@ -41,18 +44,17 @@ async function TotalPageViews({ locale }: { locale: Locale }) {
   )
 }
 
-async function WeeklyVisitors({ locale }: { locale: Locale }) {
-  const t = getMessages(locale).footer
-  let visitors: number | null
-  if (env.VERCEL_ENV === 'production' && !isBuildPhase) {
-    visitors = await recordAndCountWeeklyVisitors(headers())
-  } else {
-    visitors = 128
-  }
-
+function WeeklyVisitors({
+  visitors,
+  locale,
+}: {
+  visitors: number | null
+  locale: Locale
+}) {
   if (visitors === null) {
     return null
   }
+  const t = getMessages(locale).footer
 
   return (
     <span className="flex items-center justify-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 md:justify-start">
@@ -76,11 +78,12 @@ type VisitorGeolocation = {
   city?: string
   flag: string
 }
-async function LastVisitorInfo({ locale }: { locale: Locale }) {
-  const t = getMessages(locale).footer
+
+async function resolveLastVisitor(
+  reqHeaders: Pick<Headers, 'get'>
+): Promise<VisitorGeolocation> {
   let lastVisitor: VisitorGeolocation | undefined = undefined
   if (env.VERCEL_ENV === 'production' && !isBuildPhase) {
-    const reqHeaders = headers()
     const cfCountry = reqHeaders.get('cf-ipcountry')
     const cfCity = reqHeaders.get('cf-ipcity') ?? undefined
 
@@ -105,12 +108,22 @@ async function LastVisitorInfo({ locale }: { locale: Locale }) {
     }
   }
 
-  if (!lastVisitor) {
-    lastVisitor = {
+  return (
+    lastVisitor ?? {
       country: 'US',
       flag: '🇺🇸',
     }
-  }
+  )
+}
+
+function LastVisitorInfo({
+  lastVisitor,
+  locale,
+}: {
+  lastVisitor: VisitorGeolocation
+  locale: Locale
+}) {
+  const t = getMessages(locale).footer
 
   return (
     <span className="flex items-center justify-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 md:justify-start">
@@ -124,50 +137,78 @@ async function LastVisitorInfo({ locale }: { locale: Locale }) {
   )
 }
 
-export async function Footer({ locale = 'zh' }: { locale?: Locale }) {
+function FooterCopyright({ locale }: { locale: Locale }) {
   const t = getMessages(locale).footer
-  let subCount = 0
-  if (!isBuildPhase) {
-    const [subs] = await db
-      .select({
-        subCount: count(),
-      })
-      .from(subscribers)
-      .where(isNotNull(subscribers.subscribedAt))
-    subCount = subs?.subCount ?? 0
-  }
 
+  return (
+    <p className="text-sm text-zinc-500/80 dark:text-zinc-400/80">
+      &copy; {new Date().getFullYear()}{' '}
+      {locale === 'en' ? 'Liang (lmingyul)' : '阿梁（lmingyul）'}.{' '}
+      {t.forkPrefix}
+      <PeekabooLink href="https://github.com/lmingyul/lmingyul.tech">
+        GitHub
+      </PeekabooLink>
+    </p>
+  )
+}
+
+async function FooterBody({ locale }: { locale: Locale }) {
+  const isProdRuntime = env.VERCEL_ENV === 'production' && !isBuildPhase
+  const reqHeaders = isProdRuntime ? headers() : new Headers()
+
+  const [totalViews, visitorMetrics, lastVisitor] = await Promise.all([
+    isBuildPhase
+      ? Promise.resolve(null)
+      : isProdRuntime
+        ? redis.incr(kvKeys.totalPageViews)
+        : Promise.resolve(345678),
+    isBuildPhase
+      ? Promise.resolve({ weeklyVisitors: null, trend: null })
+      : isProdRuntime
+        ? recordAndGetFooterVisitorMetrics(reqHeaders)
+        : Promise.resolve(getMockFooterVisitorMetrics()),
+    resolveLastVisitor(reqHeaders),
+  ])
+
+  return (
+    <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between md:gap-10">
+      <div className="flex flex-col items-center gap-4 text-center md:items-start md:text-left">
+        <FooterCopyright locale={locale} />
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 md:justify-start">
+          <TotalPageViews views={totalViews} locale={locale} />
+          <WeeklyVisitors
+            visitors={visitorMetrics.weeklyVisitors}
+            locale={locale}
+          />
+          <LastVisitorInfo lastVisitor={lastVisitor} locale={locale} />
+        </div>
+      </div>
+
+      {visitorMetrics.trend && (
+        <VisitorTrendChart
+          points={visitorMetrics.trend.points}
+          locale={locale}
+        />
+      )}
+    </div>
+  )
+}
+
+export function Footer({ locale = 'zh' }: { locale?: Locale }) {
   return (
     <footer className="mt-32">
       <Container.Outer>
         <div className="border-t border-zinc-100 pb-24 pt-10 dark:border-zinc-700/40 sm:pb-28">
           <Container.Inner>
-            <div className="mx-auto mb-8 max-w-md">
-              <Newsletter subCount={`${subCount}`} locale={locale} />
-            </div>
-            <div className="flex flex-col items-center justify-start gap-6 sm:flex-row">
-              <p className="text-sm text-zinc-500/80 dark:text-zinc-400/80">
-                &copy; {new Date().getFullYear()}{' '}
-                {locale === 'en' ? 'Liang (lmingyul)' : '阿梁（lmingyul）'}.{' '}
-                {t.forkPrefix}
-                <PeekabooLink href="https://github.com/lmingyul/lmingyul.tech">
-                  GitHub
-                </PeekabooLink>
-              </p>
-            </div>
-          </Container.Inner>
-          <Container.Inner className="mt-6">
-            <div className="flex flex-col items-center justify-start gap-2 sm:flex-row sm:flex-wrap sm:gap-x-4 sm:gap-y-2">
-              <React.Suspense>
-                <TotalPageViews locale={locale} />
-              </React.Suspense>
-              <React.Suspense>
-                <WeeklyVisitors locale={locale} />
-              </React.Suspense>
-              <React.Suspense>
-                <LastVisitorInfo locale={locale} />
-              </React.Suspense>
-            </div>
+            <React.Suspense
+              fallback={
+                <div className="flex flex-col items-center text-center md:items-start md:text-left">
+                  <FooterCopyright locale={locale} />
+                </div>
+              }
+            >
+              <FooterBody locale={locale} />
+            </React.Suspense>
           </Container.Inner>
         </div>
       </Container.Outer>

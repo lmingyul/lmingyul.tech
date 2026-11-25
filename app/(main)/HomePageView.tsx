@@ -1,20 +1,45 @@
+import { count, isNotNull } from 'drizzle-orm'
 import React from 'react'
 
 import { AskMe } from '~/app/(main)/AskMe'
 import { BlogPosts } from '~/app/(main)/blog/BlogPosts'
 import { Headline } from '~/app/(main)/Headline'
+import { Newsletter } from '~/app/(main)/Newsletter'
 import { Photos } from '~/app/(main)/Photos'
 import { Resume } from '~/app/(main)/Resume'
 import { TrendingSection } from '~/app/(main)/TrendingSection'
 import { PencilSwooshIcon } from '~/assets'
 import { Container } from '~/components/ui/Container'
+import { db } from '~/db'
+import { subscribers } from '~/db/schema'
 import { getMessages, type Locale } from '~/lib/i18n'
 import { getAllLatestBlogPostSlugs, getSettings } from '~/sanity/queries'
 
+const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build'
+
+async function getSubscriberCount(): Promise<number> {
+  if (isBuildPhase) {
+    return 0
+  }
+  try {
+    const [subs] = await db
+      .select({
+        subCount: count(),
+      })
+      .from(subscribers)
+      .where(isNotNull(subscribers.subscribedAt))
+    return subs?.subCount ?? 0
+  } catch (err) {
+    console.error('[HomePageView.getSubscriberCount]', err)
+    return 0
+  }
+}
+
 export async function HomePageView({ locale = 'zh' }: { locale?: Locale }) {
-  const [settings, postSlugs] = await Promise.all([
+  const [settings, postSlugs, subCount] = await Promise.all([
     getSettings(),
     getAllLatestBlogPostSlugs(locale),
+    getSubscriberCount(),
   ])
   const t = getMessages(locale).home
 
@@ -44,11 +69,12 @@ export async function HomePageView({ locale = 'zh' }: { locale?: Locale }) {
               preferTranslated={locale === 'en'}
             />
           </div>
-          <aside className="space-y-10 lg:sticky lg:top-8 lg:h-fit lg:pl-16 xl:pl-20">
+          <aside className="space-y-8 lg:sticky lg:top-8 lg:h-fit lg:pl-16 xl:pl-20">
             <AskMe postCount={postSlugs.length} locale={locale} />
             {settings?.resume && (
               <Resume resume={settings.resume} locale={locale} />
             )}
+            <Newsletter subCount={`${subCount}`} locale={locale} />
           </aside>
         </div>
       </Container>

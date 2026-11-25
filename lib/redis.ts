@@ -274,7 +274,137 @@ export const redis = {
       return null
     }
   },
+
+  async recordVisitorAndCountWeekly(opts: {
+    weeklyKey: string
+    windowSeconds: number
+    dailyKey: string
+    dailyTtlSeconds: number
+    sinceKey: string
+    dayStr: string
+    member?: string | null
+  }): Promise<{ weeklyCount: number; dailySince: string | null } | null> {
+    const now = Math.floor(Date.now() / 1000)
+    const nowMs = Date.now()
+    const cutoff = now - opts.windowSeconds
+    const normalizedMember = opts.member?.trim() ?? ''
+    const client = getClient()
+    if (!client) {
+      let weeklyBucket = zsetStore.get(opts.weeklyKey)
+      if (!weeklyBucket) {
+        weeklyBucket = new Map<string, number>()
+        zsetStore.set(opts.weeklyKey, weeklyBucket)
+      }
+      weeklyBucket.forEach((score, id) => {
+        if (score <= cutoff) {
+          weeklyBucket?.delete(id)
+        }
+      })
+      if (normalizedMember) {
+        weeklyBucket.set(normalizedMember, now)
+
+        let dailySet = setStore.get(opts.dailyKey)
+        if (!dailySet || (dailySet.expiresAt && nowMs > dailySet.expiresAt)) {
+          dailySet = {
+            members: new Set<string>(),
+            expiresAt: nowMs + opts.dailyTtlSeconds * 1000,
+          }
+          setStore.set(opts.dailyKey, dailySet)
+        } else {
+          dailySet.expiresAt = nowMs + opts.dailyTtlSeconds * 1000
+        }
+        dailySet.members.add(normalizedMember)
+
+        if (readMem(opts.sinceKey) === null) {
+          memStore.set(opts.sinceKey, { value: opts.dayStr })
+        }
+      }
+      const rawSince = readMem(opts.sinceKey)
+      const dailySince = rawSince ? rawSince.replace(/^"|"$/g, '') : null
+      return {
+        weeklyCount: weeklyBucket.size,
+        dailySince: dailySince || null,
+      }
+    }
+    try {
+      const res = (await client.eval(
+        RECORD_VISITOR_LUA,
+        3,
+        opts.weeklyKey,
+        opts.dailyKey,
+        opts.sinceKey,
+        String(now),
+        String(opts.windowSeconds),
+        normalizedMember,
+        String(opts.dailyTtlSeconds),
+        opts.dayStr
+      )) as [unknown, unknown]
+      const weeklyCount = Number(res?.[0] ?? 0)
+      const rawSince = res?.[1] != null ? String(res[1]).trim() : ''
+      const dailySince = rawSince ? rawSince.replace(/^"|"$/g, '') : ''
+      return {
+        weeklyCount: Number.isFinite(weeklyCount) ? weeklyCount : 0,
+        dailySince: dailySince || null,
+      }
+    } catch (err) {
+      console.error('[Redis.recordVisitorAndCountWeekly]', err)
+      return null
+    }
+  },
+
+  async scardMany(keys: string[]): Promise<number[] | null> {
+    if (keys.length === 0) return []
+    const client = getClient()
+    if (!client) {
+      const nowMs = Date.now()
+      return keys.map((key) => {
+        const entry = setStore.get(key)
+        if (!entry) return 0
+        if (entry.expiresAt && nowMs > entry.expiresAt) {
+          setStore.delete(key)
+          return 0
+        }
+        return entry.members.size
+      })
+    }
+    try {
+      const pipeline = client.pipeline()
+      for (const key of keys) {
+        pipeline.scard(key)
+      }
+      const results = await pipeline.exec()
+      if (!results) return null
+      return results.map(([err, val]) => {
+        if (err) return 0
+        const n = Number(val ?? 0)
+        return Number.isFinite(n) && n > 0 ? n : 0
+      })
+    } catch (err) {
+      console.error('[Redis.scardMany]', err)
+      return null
+    }
+  },
 }
+
+const RECORD_VISITOR_LUA = `
+local now = tonumber(ARGV[1])
+local window = tonumber(ARGV[2])
+local member = ARGV[3]
+local dailyTtl = tonumber(ARGV[4])
+local dayStr = ARGV[5]
+local cutoff = now - window
+redis.call('ZREMRANGEBYSCORE', KEYS[1], '-inf', cutoff)
+if member ~= '' then
+  redis.call('ZADD', KEYS[1], now, member)
+  redis.call('EXPIRE', KEYS[1], window)
+  redis.call('SADD', KEYS[2], member)
+  redis.call('EXPIRE', KEYS[2], dailyTtl)
+  redis.call('SET', KEYS[3], dayStr, 'NX')
+end
+local weeklyCount = redis.call('ZCARD', KEYS[1])
+local since = redis.call('GET', KEYS[3])
+return { weeklyCount, since or '' }
+`
 
 const TRENDING_HIT_LUA = `
 local added = redis.call('SADD', KEYS[1], ARGV[1])
