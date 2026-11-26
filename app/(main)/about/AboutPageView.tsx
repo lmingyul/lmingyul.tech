@@ -1,9 +1,16 @@
 import Image from 'next/image'
 import Balancer from 'react-wrap-balancer'
 
+import { SoftwareShowcase } from '~/app/(main)/about/SoftwareShowcase'
+import {
+  HARDWARE_ITEMS_BY_LOCALE,
+  SOFTWARE_GROUPS_BY_LOCALE,
+  SOFTWARE_ITEMS_BY_LOCALE,
+} from '~/app/(main)/about/tools-data'
 import { WritingHeatmap } from '~/app/(main)/about/WritingHeatmap'
 import {
   BriefcaseIcon,
+  DashboardIcon,
   GitHubIcon,
   Layers3Icon,
   MailIcon,
@@ -92,177 +99,6 @@ const CAREER_ITEMS_BY_LOCALE: Record<Locale, CareerItem[]> = {
       role: 'B.Eng.',
       period: '2014.09 — 2018.06',
       logo: '/uploads/resume/hrbust.png',
-    },
-  ],
-}
-
-type GearItem = {
-  name: string
-  category: string
-  model?: string
-  purpose: string
-  rating: number
-  status: string
-  since: string
-  note: string
-}
-
-const GEAR_ITEMS_BY_LOCALE: Record<Locale, GearItem[]> = {
-  zh: [
-    {
-      name: 'Studio Display',
-      category: '硬件设备',
-      purpose: '作为 Mac Studio 的主力显示器',
-      rating: 10,
-      status: '在用',
-      since: '2023-11-24',
-      note: '显示效果非常好，音响也很棒，有财力的话还想再入手一台',
-    },
-    {
-      name: '罗技MX Master 4',
-      category: '硬件设备',
-      model: 'MX Master 3、MX Master 3s',
-      purpose: '提高工作效率的无线鼠标',
-      rating: 9.5,
-      status: '在用',
-      since: '2021-11-15',
-      note: '左边和中间的滚轮都非常好用，3s 还更新成静音好评，公司一个，家里一个',
-    },
-    {
-      name: 'Mac Studio',
-      category: '硬件设备',
-      model: 'M1 Max 64 GB 1TB',
-      purpose: '在家日常使用',
-      rating: 9,
-      status: '在用',
-      since: '2024-12-10',
-      note: '性能很强，太爱了',
-    },
-    {
-      name: 'iPhone 18 Pro Max',
-      category: '硬件设备',
-      model: '网页版',
-      purpose: '必备',
-      rating: 8.5,
-      status: '在用',
-      since: '2024-11-19',
-      note: '同步速度有时较慢',
-    },
-    {
-      name: 'MacBook Pro',
-      category: '硬件设备',
-      model: '16‘’ M4 Pro-24 G-512 G',
-      purpose: '放在公司作为日常工作的辅助电脑',
-      rating: 8,
-      status: '在用',
-      since: '2024-11-24',
-      note: '稍微有点重，不过外出携带的场景不多，还可以，容量买小了，LLM 能跑起来的不多',
-    },
-    {
-      name: 'AirPods 4',
-      category: '硬件设备',
-      purpose: '日常通勤听博客、看视频使用',
-      rating: 8,
-      status: '在用',
-      since: '2024-12-24',
-      note: '还好，之前用的是 Pro，入耳式会让耳朵不舒服，换了这个好很多，但是相应的降噪能力就下降了，还能接受',
-    },
-    {
-      name: 'Apple Watch 12',
-      category: '硬件设备',
-      model: 'Series 7',
-      purpose: '日常接收消息、看时间、监测运动&睡眠',
-      rating: 7,
-      status: '在用',
-      since: '2021-11-25',
-      note: '日常一充不太好，夏天带有点闷',
-    },
-    {
-      name: 'ChatGPT Atlas',
-      category: '桌面软件',
-      purpose: '主力浏览器',
-      rating: 7,
-      status: '在用',
-      since: '2025-10-23',
-      note: '主要看中 Agent 和记忆功能',
-    },
-  ],
-  en: [
-    {
-      name: 'Apple Studio Display',
-      category: 'Hardware',
-      purpose: 'Primary display for Mac Studio',
-      rating: 10,
-      status: 'Active',
-      since: '2023-11-24',
-      note: 'Razor-sharp 5K panel and surprisingly great speakers — would gladly buy a second one.',
-    },
-    {
-      name: 'Logitech MX Master 4',
-      category: 'Hardware',
-      model: 'MX Master 3 / MX Master 3s',
-      purpose: 'Daily productivity wireless mouse',
-      rating: 9.5,
-      status: 'Active',
-      since: '2021-11-15',
-      note: 'Both thumb and main scroll wheels feel natural; silent clicks on 3s are great. One at home, one at the office.',
-    },
-    {
-      name: 'Mac Studio',
-      category: 'Hardware',
-      model: 'M1 Max · 64 GB · 1 TB',
-      purpose: 'Home daily driver & local model workstation',
-      rating: 9,
-      status: 'Active',
-      since: '2024-12-10',
-      note: 'Quiet, fast, and 64 GB unified memory runs plenty of local models smoothly.',
-    },
-    {
-      name: 'iPhone',
-      category: 'Hardware',
-      purpose: 'Daily mobile essential',
-      rating: 8.5,
-      status: 'Active',
-      since: '2024-11-19',
-      note: 'Reliable everyday carry; iCloud sync can occasionally lag.',
-    },
-    {
-      name: 'MacBook Pro',
-      category: 'Hardware',
-      model: '16" M4 Pro · 24 GB · 512 GB',
-      purpose: 'Office workstation laptop',
-      rating: 8,
-      status: 'Active',
-      since: '2024-11-24',
-      note: 'A bit heavy when traveling, and 24 GB RAM limits larger local LLMs, though portability needs are rare.',
-    },
-    {
-      name: 'AirPods 4',
-      category: 'Hardware',
-      purpose: 'Commute podcasts & videos',
-      rating: 8,
-      status: 'Active',
-      since: '2024-12-24',
-      note: 'Much more comfortable on my ears than in-ear Pros; less ANC isolation, which is a fair trade.',
-    },
-    {
-      name: 'Apple Watch',
-      category: 'Hardware',
-      model: 'Series 7',
-      purpose: 'Notifications, time, workouts & sleep tracking',
-      rating: 7,
-      status: 'Active',
-      since: '2021-11-25',
-      note: 'Daily charging is a chore and summer humidity makes the band feel warm.',
-    },
-    {
-      name: 'ChatGPT Atlas',
-      category: 'Desktop App',
-      purpose: 'Primary browser',
-      rating: 7,
-      status: 'Active',
-      since: '2025-10-23',
-      note: 'Picked primarily for its built-in Agent and Memory capabilities.',
     },
   ],
 }
@@ -402,7 +238,9 @@ export async function AboutPageView({ locale = 'zh' }: { locale?: Locale }) {
   const isEn = locale === 'en'
   const activity = await getWritingActivity(locale)
   const careerItems = CAREER_ITEMS_BY_LOCALE[locale]
-  const gearItems = GEAR_ITEMS_BY_LOCALE[locale]
+  const hardwareItems = HARDWARE_ITEMS_BY_LOCALE[locale]
+  const softwareGroups = SOFTWARE_GROUPS_BY_LOCALE[locale]
+  const softwareItems = SOFTWARE_ITEMS_BY_LOCALE[locale]
   const travelPhotos = TRAVEL_PHOTOS_BY_LOCALE[locale]
   const languages = LANGUAGES_BY_LOCALE[locale]
 
@@ -642,59 +480,91 @@ export async function AboutPageView({ locale = 'zh' }: { locale?: Locale }) {
       <section className="mt-20">
         <SectionHeading
           icon={<Layers3Icon className="h-5 w-5" />}
-          title={isEn ? 'Gear & Daily Tools' : '我的软硬件工具'}
+          title={isEn ? 'My Hardware Gear' : '我的硬件设备'}
           subtitle={
             isEn
-              ? 'Hardware and desktop software powering coding, local model runs, and daily life'
-              : '平时写代码、折腾模型和日常生活的吃饭家伙'
+              ? 'Everyday hardware powering coding, local model runs, and daily life'
+              : '平时写代码、跑本地模型和日常通勤的主力装备'
           }
         />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {gearItems.map((gear) => (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {hardwareItems.map((gear) => (
             <article
               key={gear.name}
-              className="flex flex-col justify-between rounded-2xl border border-zinc-100 bg-white/70 p-5 shadow-sm transition hover:border-lime-500/40 dark:border-zinc-700/40 dark:bg-zinc-900/60 dark:hover:border-lime-400/30"
+              className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-zinc-100 bg-white/70 shadow-sm transition hover:border-lime-500/40 hover:shadow-md dark:border-zinc-700/40 dark:bg-zinc-900/60 dark:hover:border-lime-400/30"
             >
-              <div>
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                      {gear.name}
-                    </h3>
-                    {gear.model && (
-                      <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
-                        {gear.model}
-                      </p>
-                    )}
+              <div className="flex flex-1 flex-col">
+                <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-zinc-100 bg-white dark:border-zinc-800/80">
+                  <div className="relative h-full w-full transition duration-500 group-hover:scale-105">
+                    <Image
+                      src={gear.image}
+                      alt={gear.name}
+                      fill
+                      sizes="(min-width: 1024px) 20rem, (min-width: 640px) 50vw, 100vw"
+                      className={`${
+                        gear.imageFit === 'cover'
+                          ? 'object-cover'
+                          : 'object-contain p-4'
+                      } ${gear.imageClassName ?? ''}`}
+                      unoptimized
+                    />
                   </div>
-                  <span className="shrink-0 rounded-full bg-lime-500/10 px-2.5 py-0.5 text-xs font-semibold text-lime-700 dark:bg-lime-400/10 dark:text-lime-400">
-                    {isEn ? `${gear.rating}/10` : `${gear.rating} 分`}
-                  </span>
                 </div>
 
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  <span className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-                    {gear.category}
-                  </span>
-                  <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-xs text-emerald-700 dark:bg-emerald-400/10 dark:text-emerald-400">
-                    {gear.status}
-                  </span>
-                </div>
+                <div className="p-5">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+                        {gear.name}
+                      </h3>
+                      {gear.model && (
+                        <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+                          {gear.model}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex shrink-0 items-center gap-1.5">
+                      <span className="rounded-md bg-emerald-500/10 px-2 py-0.5 text-xs text-emerald-700 dark:bg-emerald-400/10 dark:text-emerald-400">
+                        {gear.status}
+                      </span>
+                      <span className="rounded-full bg-lime-500/10 px-2.5 py-0.5 text-xs font-semibold text-lime-700 dark:bg-lime-400/10 dark:text-lime-400">
+                        {isEn ? `${gear.rating}/10` : `${gear.rating} 分`}
+                      </span>
+                    </div>
+                  </div>
 
-                <p className="mt-3 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  {gear.purpose}
-                </p>
-                <p className="mt-1.5 text-xs leading-5 text-zinc-500 dark:text-zinc-400">
-                  {gear.note}
-                </p>
+                  <p className="mt-3 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    {gear.purpose}
+                  </p>
+                  <p className="mt-1.5 text-xs leading-5 text-zinc-500 dark:text-zinc-400">
+                    {gear.note}
+                  </p>
+                </div>
               </div>
 
-              <p className="mt-4 border-t border-zinc-100 pt-3 text-[11px] text-zinc-400 dark:border-zinc-800 dark:text-zinc-500">
+              <p className="mx-5 border-t border-zinc-100 py-3 text-[11px] text-zinc-400 dark:border-zinc-800 dark:text-zinc-500">
                 {isEn ? `Since: ${gear.since}` : `开始使用：${gear.since}`}
               </p>
             </article>
           ))}
         </div>
+      </section>
+
+      <section className="mt-20">
+        <SectionHeading
+          icon={<DashboardIcon className="h-5 w-5" />}
+          title={isEn ? 'My Daily Software' : '我的常用软件'}
+          subtitle={
+            isEn
+              ? 'Everyday macOS apps and developer tools grouped by workflow'
+              : '日常主力 macOS 软件与开发效率工具，按使用场景分组整理'
+          }
+        />
+        <SoftwareShowcase
+          locale={locale}
+          groups={softwareGroups}
+          items={softwareItems}
+        />
       </section>
 
       <section className="mt-20">
