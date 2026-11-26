@@ -2,11 +2,13 @@ import { clsxm } from '@zolplay/utils'
 import Link from 'next/link'
 import Balancer from 'react-wrap-balancer'
 
+import { OnlineVisitors } from '~/app/(main)/OnlineVisitors'
 import { CalendarIcon, HourglassIcon, SparkleIcon } from '~/assets'
 import { AiMarkdown } from '~/components/AiMarkdown'
 import { Prose } from '~/components/Prose'
 import { Container } from '~/components/ui/Container'
 import { getMessages, type Locale, localizePath } from '~/lib/i18n'
+import { getOnlineVisitorCount } from '~/lib/visitor-stats'
 import {
   type AiDailyIssueDetail,
   type AiDailyIssueSummary,
@@ -14,7 +16,7 @@ import {
 
 import { AiDailyTableOfContents } from './AiDailyTableOfContents'
 
-export function AiDailyView({
+export async function AiDailyView({
   issues,
   activeIssue,
   isIndexPage: _isIndexPage = false,
@@ -35,6 +37,10 @@ export function AiDailyView({
       ? issues[activeIndex + 1]
       : undefined
   const isFallbackContent = locale === 'en' && Boolean(activeIssue?.isFallback)
+  const issueOnlineId = activeIssue ? `ai-daily-${activeIssue.slug}` : null
+  const onlineReaders = issueOnlineId
+    ? await getOnlineVisitorCount(issueOnlineId)
+    : null
 
   return (
     <Container className="mt-16 sm:mt-24">
@@ -220,6 +226,14 @@ export function AiDailyView({
                     />
                     <span>{t.readingTimeText(activeIssue.readingTime)}</span>
                   </span>
+                  {issueOnlineId && (
+                    <OnlineVisitors
+                      variant="post"
+                      postId={issueOnlineId}
+                      initialCount={onlineReaders ?? 1}
+                      locale={locale}
+                    />
+                  )}
                   {activeIssue.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1.5">
                       {activeIssue.tags.map((tag) => (
