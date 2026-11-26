@@ -34,6 +34,16 @@ function getContentRoot(): string {
   return process.env.BLOG_CONTENT_DIR || path.join(process.cwd(), 'content')
 }
 
+export function getSearchWatchDirectories(): string[] {
+  const root = getContentRoot()
+  return [
+    path.join(root, 'posts'),
+    path.join(root, 'posts', 'en'),
+    path.join(root, 'ai-daily'),
+    path.join(root, 'ai-daily', 'en'),
+  ]
+}
+
 function pickPalette(seed: string) {
   let hash = 0
   for (let i = 0; i < seed.length; i++) {
@@ -897,4 +907,248 @@ export async function getAiDailyIssue(
       issue.date === decoded
   )
   return target ? toAiDailyDetail(target) : undefined
+}
+
+export type SearchSourcePost = {
+  id: string
+  slug: string
+  title: string
+  altTitle?: string
+  description: string
+  categories: string[]
+  body: string
+  publishedAt: string
+  readingTime: number
+  isFallback?: boolean
+}
+
+export type SearchSourceAiDaily = {
+  slug: string
+  date: string
+  title: string
+  altTitle?: string
+  summary: string
+  tags: string[]
+  highlights: string[]
+  body: string
+  readingTime: number
+  isFallback?: boolean
+}
+
+function mergeLocalizedPostsForLocale(
+  zhPosts: StoredPost[],
+  enPosts: StoredPost[],
+  locale: Locale
+): StoredPost[] {
+  const enMap = new Map<string, StoredPost>()
+  for (const enPost of enPosts) {
+    if (!enPost.draft) {
+      enMap.set(enPost.slug, enPost)
+    }
+  }
+
+  if (locale === 'zh') {
+    return zhPosts.map((post) => ({
+      ...post,
+      locale: 'zh',
+      isFallback: false,
+      hasTranslation: enMap.has(post.slug),
+    }))
+  }
+
+  const zhSlugs = new Set<string>()
+  const merged: StoredPost[] = []
+
+  for (const zhPost of zhPosts) {
+    zhSlugs.add(zhPost.slug)
+    const enPost = enMap.get(zhPost.slug)
+    if (enPost) {
+      const useZhCover =
+        enPost.mainImage.asset.url === DEFAULT_COVER &&
+        zhPost.mainImage.asset.url !== DEFAULT_COVER
+      merged.push({
+        ...enPost,
+        _id: zhPost._id || enPost._id,
+        publishedAt: zhPost.publishedAt || enPost.publishedAt,
+        mainImage: useZhCover ? zhPost.mainImage : enPost.mainImage,
+        draft: zhPost.draft || enPost.draft,
+        locale: 'en',
+        isFallback: false,
+        hasTranslation: true,
+      })
+    } else {
+      merged.push({
+        ...zhPost,
+        locale: 'zh',
+        isFallback: true,
+        hasTranslation: false,
+      })
+    }
+  }
+
+  for (const enPost of enPosts) {
+    if (!zhSlugs.has(enPost.slug) && !enPost.draft) {
+      merged.push({
+        ...enPost,
+        locale: 'en',
+        isFallback: false,
+        hasTranslation: false,
+      })
+    }
+  }
+
+  return merged.sort(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  )
+}
+
+function mergeLocalizedAiDailyForLocale(
+  zhIssues: StoredAiDailyIssue[],
+  enIssues: StoredAiDailyIssue[],
+  locale: Locale
+): StoredAiDailyIssue[] {
+  const enMap = new Map<string, StoredAiDailyIssue>()
+  for (const enIssue of enIssues) {
+    if (!enIssue.draft) {
+      enMap.set(enIssue.slug, enIssue)
+      if (!enMap.has(enIssue.date)) {
+        enMap.set(enIssue.date, enIssue)
+      }
+    }
+  }
+
+  if (locale === 'zh') {
+    return zhIssues
+      .filter((issue) => !issue.draft)
+      .map((issue) => ({
+        ...issue,
+        isFallback: false,
+        hasTranslation: enMap.has(issue.slug) || enMap.has(issue.date),
+      }))
+  }
+
+  const seenSlugs = new Set<string>()
+  const merged: StoredAiDailyIssue[] = []
+
+  for (const zhIssue of zhIssues) {
+    if (zhIssue.draft) continue
+    seenSlugs.add(zhIssue.slug)
+    const enMatch = enMap.get(zhIssue.slug) ?? enMap.get(zhIssue.date)
+    if (enMatch) {
+      merged.push({
+        ...enMatch,
+        isFallback: false,
+        hasTranslation: true,
+      })
+    } else {
+      merged.push({
+        ...zhIssue,
+        isFallback: true,
+        hasTranslation: false,
+      })
+    }
+  }
+
+  for (const enIssue of enIssues) {
+    if (!enIssue.draft && !seenSlugs.has(enIssue.slug)) {
+      merged.push({
+        ...enIssue,
+        isFallback: false,
+        hasTranslation: false,
+      })
+    }
+  }
+
+  return merged.sort((a, b) => {
+    if (a.date !== b.date) {
+      return b.date.localeCompare(a.date)
+    }
+    return b.slug.localeCompare(a.slug)
+  })
+}
+
+export async function getPublishedSearchSources(
+  locale: Locale = 'zh'
+): Promise<{
+  posts: SearchSourcePost[]
+  aiDaily: SearchSourceAiDaily[]
+}> {
+  const root = getContentRoot()
+  const [zhRawPosts, enRawPosts, zhRawDaily, enRawDaily] = await Promise.all([
+    readPostsFromDirectory(path.join(root, 'posts')),
+    readPostsFromDirectory(path.join(root, 'posts', 'en')),
+    readAiDailyIssuesFromDir(path.join(root, 'ai-daily'), 'zh'),
+    readAiDailyIssuesFromDir(path.join(root, 'ai-daily', 'en'), 'en'),
+  ])
+
+  const now = getDate()
+  const otherLocale: Locale = locale === 'zh' ? 'en' : 'zh'
+
+  const primaryPosts = mergeLocalizedPostsForLocale(zhRawPosts, enRawPosts, locale).filter(
+    (post) => isPublished(post, now)
+  )
+  const altPosts = mergeLocalizedPostsForLocale(zhRawPosts, enRawPosts, otherLocale).filter(
+    (post) => isPublished(post, now)
+  )
+  const altPostTitleBySlug = new Map<string, string>(
+    altPosts.map((post) => [post.slug, post.title])
+  )
+
+  const primaryDaily = mergeLocalizedAiDailyForLocale(
+    zhRawDaily,
+    enRawDaily,
+    locale
+  )
+  const altDaily = mergeLocalizedAiDailyForLocale(
+    zhRawDaily,
+    enRawDaily,
+    otherLocale
+  )
+  const altDailyTitleByKey = new Map<string, string>()
+  for (const issue of altDaily) {
+    altDailyTitleByKey.set(issue.slug, issue.title)
+    if (!altDailyTitleByKey.has(issue.date)) {
+      altDailyTitleByKey.set(issue.date, issue.title)
+    }
+  }
+
+  const posts: SearchSourcePost[] = primaryPosts.map((post) => {
+    const candidateAlt = altPostTitleBySlug.get(post.slug)
+    return {
+      id: post._id,
+      slug: post.slug,
+      title: post.title,
+      ...(candidateAlt && candidateAlt !== post.title
+        ? { altTitle: candidateAlt }
+        : {}),
+      description: post.description,
+      categories: post.categories ?? [],
+      body: post.body,
+      publishedAt: post.publishedAt,
+      readingTime: post.readingTime,
+      isFallback: post.isFallback,
+    }
+  })
+
+  const aiDaily: SearchSourceAiDaily[] = primaryDaily.map((issue) => {
+    const candidateAlt =
+      altDailyTitleByKey.get(issue.slug) ?? altDailyTitleByKey.get(issue.date)
+    return {
+      slug: issue.slug,
+      date: issue.date,
+      title: issue.title,
+      ...(candidateAlt && candidateAlt !== issue.title
+        ? { altTitle: candidateAlt }
+        : {}),
+      summary: issue.summary,
+      tags: issue.tags,
+      highlights: issue.highlights,
+      body: issue.body,
+      readingTime: issue.readingTime,
+      isFallback: issue.isFallback,
+    }
+  })
+
+  return { posts, aiDaily }
 }

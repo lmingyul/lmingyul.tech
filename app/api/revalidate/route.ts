@@ -2,6 +2,7 @@ import { revalidatePath } from 'next/cache'
 import { type NextRequest, NextResponse } from 'next/server'
 
 import { env } from '~/env.mjs'
+import { invalidateSearchIndex } from '~/lib/search'
 
 function handleRevalidate(req: NextRequest) {
   const secret =
@@ -11,6 +12,8 @@ function handleRevalidate(req: NextRequest) {
   if (!env.CONTENT_WEBHOOK_SECRET || secret !== env.CONTENT_WEBHOOK_SECRET) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+
+  invalidateSearchIndex()
 
   revalidatePath('/', 'layout')
   revalidatePath('/en', 'layout')

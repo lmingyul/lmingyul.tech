@@ -14,6 +14,7 @@ import React from 'react'
 import { FloatingDock } from '~/app/(main)/FloatingDock'
 import { LanguageSwitcher } from '~/app/(main)/LanguageSwitcher'
 import { NavigationBar } from '~/app/(main)/NavigationBar'
+import { SiteSearch } from '~/app/(main)/SiteSearch'
 import { ThemeSwitcher } from '~/app/(main)/ThemeSwitcher'
 import {
   GitHubBrandIcon,
@@ -70,7 +71,7 @@ export function Header() {
       <header className="pointer-events-none relative z-40 flex flex-col">
         <div ref={headerBarRef} className="relative z-10 h-16 pt-6">
           <Container className="w-full">
-            <div className="relative flex gap-4">
+            <div className="relative flex gap-2 sm:gap-4">
               <motion.div
                 className="flex flex-1"
                 initial={{ opacity: 0, y: 15 }}
@@ -104,11 +105,14 @@ export function Header() {
                 <NavigationBar.Desktop className="pointer-events-auto relative z-50 hidden md:block" />
               </div>
               <motion.div
-                className="flex justify-end gap-2 sm:gap-3 md:flex-1"
+                className="flex items-center justify-end gap-1.5 sm:gap-3 md:flex-1"
                 initial={{ opacity: 0, y: -20, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
               >
                 <UserInfo signInLabel={t.signIn} />
+                <div className="pointer-events-auto">
+                  <SiteSearch />
+                </div>
                 <div className="pointer-events-auto">
                   <LanguageSwitcher />
                 </div>
