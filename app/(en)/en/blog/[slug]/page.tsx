@@ -10,6 +10,7 @@ import { url } from '~/lib'
 import { redis } from '~/lib/redis'
 import { buildBlogPostJsonLd } from '~/lib/structured-data'
 import { recordContentView } from '~/lib/trending'
+import { getOnlineVisitorCount } from '~/lib/visitor-stats'
 import { getBlogPost } from '~/sanity/queries'
 
 export const generateMetadata = async ({
@@ -123,12 +124,15 @@ export default async function EnBlogPostPage({
     }
   }
 
+  const onlineReaders = await getOnlineVisitorCount(post._id)
+
   return (
     <>
       {!post.isFallback && <JsonLd data={buildBlogPostJsonLd(post, 'en')} />}
       <BlogPostPage
         post={post}
         views={views}
+        onlineReaders={onlineReaders}
         relatedViews={relatedViews}
         reactions={reactions.length > 0 ? reactions : undefined}
         locale="en"

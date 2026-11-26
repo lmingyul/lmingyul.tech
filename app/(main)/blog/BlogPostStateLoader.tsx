@@ -12,8 +12,9 @@ export function BlogPostStateLoader({ post }: { post: Post }) {
     ['comments', post._id],
     async () => {
       const res = await fetch(`/api/comments/${post._id}`)
+      if (!res.ok) return []
       const data = await res.json()
-      return data as PostIDLessCommentDto[]
+      return Array.isArray(data) ? (data as PostIDLessCommentDto[]) : []
     },
     { initialData: [] }
   )
@@ -22,8 +23,9 @@ export function BlogPostStateLoader({ post }: { post: Post }) {
     blogPostState.postId = post._id
   }, [post._id])
   React.useEffect(() => {
+    if (!Array.isArray(comments)) return
     // only append new comments
-    comments?.forEach((comment) => {
+    comments.forEach((comment) => {
       if (blogPostState.comments.find((c) => c.id === comment.id)) return
       addComment(comment)
     })

@@ -60,6 +60,28 @@ function readMem(key: string): string | null {
   return entry.value
 }
 
+function pruneAndTouchMemZset(
+  key: string,
+  cutoff: number,
+  now: number,
+  member: string
+): number {
+  let bucket = zsetStore.get(key)
+  if (!bucket) {
+    bucket = new Map<string, number>()
+    zsetStore.set(key, bucket)
+  }
+  bucket.forEach((score, id) => {
+    if (score <= cutoff) {
+      bucket?.delete(id)
+    }
+  })
+  if (member) {
+    bucket.set(member, now)
+  }
+  return bucket.size
+}
+
 export const redis = {
   async get<T = unknown>(key: string): Promise<T | null> {
     const client = getClient()
@@ -137,20 +159,7 @@ export const redis = {
     const normalizedMember = member?.trim() ?? ''
     const client = getClient()
     if (!client) {
-      let bucket = zsetStore.get(key)
-      if (!bucket) {
-        bucket = new Map<string, number>()
-        zsetStore.set(key, bucket)
-      }
-      bucket.forEach((score, id) => {
-        if (score <= cutoff) {
-          bucket?.delete(id)
-        }
-      })
-      if (normalizedMember) {
-        bucket.set(normalizedMember, now)
-      }
-      return bucket.size
+      return pruneAndTouchMemZset(key, cutoff, now, normalizedMember)
     }
     try {
       const count = await client.eval(
@@ -384,7 +393,121 @@ export const redis = {
       return null
     }
   },
+
+  async touchOnlinePresence(opts: {
+    siteKey: string
+    postKey?: string | null
+    windowSeconds: number
+    member: string
+  }): Promise<{ site: number; post: number | null } | null> {
+    const now = Math.floor(Date.now() / 1000)
+    const cutoff = now - opts.windowSeconds
+    const normalizedMember = opts.member.trim()
+    const normalizedPostKey = opts.postKey?.trim() || null
+    const client = getClient()
+    if (!client) {
+      const site = pruneAndTouchMemZset(
+        opts.siteKey,
+        cutoff,
+        now,
+        normalizedMember
+      )
+      const post = normalizedPostKey
+        ? pruneAndTouchMemZset(normalizedPostKey, cutoff, now, normalizedMember)
+        : null
+      return { site, post }
+    }
+    try {
+      const keys = normalizedPostKey
+        ? [opts.siteKey, normalizedPostKey]
+        : [opts.siteKey]
+      const res = (await client.eval(
+        TOUCH_ONLINE_PRESENCE_LUA,
+        keys.length,
+        ...keys,
+        String(now),
+        String(opts.windowSeconds),
+        normalizedMember
+      )) as [unknown, unknown]
+      const site = Number(res?.[0] ?? 0)
+      const rawPost = Number(res?.[1] ?? -1)
+      return {
+        site: Number.isFinite(site) ? site : 0,
+        post:
+          normalizedPostKey && Number.isFinite(rawPost) && rawPost >= 0
+            ? rawPost
+            : null,
+      }
+    } catch (err) {
+      console.error('[Redis.touchOnlinePresence]', err)
+      return null
+    }
+  },
+
+  async leaveOnlinePresence(opts: {
+    siteKey?: string | null
+    postKey?: string | null
+    member: string
+  }): Promise<boolean> {
+    const normalizedMember = opts.member.trim()
+    if (!normalizedMember) return false
+    const keys = [opts.siteKey?.trim(), opts.postKey?.trim()].filter(
+      (key): key is string => Boolean(key)
+    )
+    if (keys.length === 0) return true
+
+    const client = getClient()
+    if (!client) {
+      for (const key of keys) {
+        zsetStore.get(key)?.delete(normalizedMember)
+      }
+      return true
+    }
+    try {
+      await client.eval(
+        LEAVE_ONLINE_PRESENCE_LUA,
+        keys.length,
+        ...keys,
+        normalizedMember
+      )
+      return true
+    } catch (err) {
+      console.error('[Redis.leaveOnlinePresence]', err)
+      return false
+    }
+  },
 }
+
+const TOUCH_ONLINE_PRESENCE_LUA = `
+local now = tonumber(ARGV[1])
+local window = tonumber(ARGV[2])
+local member = ARGV[3]
+local cutoff = now - window
+local function touch(key)
+  redis.call('ZREMRANGEBYSCORE', key, '-inf', cutoff)
+  if member ~= '' then
+    redis.call('ZADD', key, now, member)
+    redis.call('EXPIRE', key, window)
+  end
+  return redis.call('ZCARD', key)
+end
+local siteCount = touch(KEYS[1])
+local postCount = -1
+if #KEYS >= 2 then
+  postCount = touch(KEYS[2])
+end
+return { siteCount, postCount }
+`
+
+const LEAVE_ONLINE_PRESENCE_LUA = `
+local member = ARGV[1]
+if member ~= '' then
+  for i = 1, #KEYS do
+    redis.call('ZREM', KEYS[i], member)
+  end
+end
+return 1
+`
 
 const RECORD_VISITOR_LUA = `
 local now = tonumber(ARGV[1])

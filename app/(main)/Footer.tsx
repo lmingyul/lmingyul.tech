@@ -12,9 +12,11 @@ import { prettifyNumber } from '~/lib/math'
 import { redis } from '~/lib/redis'
 import {
   getMockFooterVisitorMetrics,
+  getOnlineVisitorCount,
   recordAndGetFooterVisitorMetrics,
 } from '~/lib/visitor-stats'
 
+import { OnlineVisitors } from './OnlineVisitors'
 import { VisitorTrendChart } from './VisitorTrendChart'
 
 const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build'
@@ -156,19 +158,21 @@ async function FooterBody({ locale }: { locale: Locale }) {
   const isProdRuntime = env.VERCEL_ENV === 'production' && !isBuildPhase
   const reqHeaders = isProdRuntime ? headers() : new Headers()
 
-  const [totalViews, visitorMetrics, lastVisitor] = await Promise.all([
-    isBuildPhase
-      ? Promise.resolve(null)
-      : isProdRuntime
-        ? redis.incr(kvKeys.totalPageViews)
-        : Promise.resolve(345678),
-    isBuildPhase
-      ? Promise.resolve({ weeklyVisitors: null, trend: null })
-      : isProdRuntime
-        ? recordAndGetFooterVisitorMetrics(reqHeaders)
-        : Promise.resolve(getMockFooterVisitorMetrics()),
-    resolveLastVisitor(reqHeaders),
-  ])
+  const [totalViews, visitorMetrics, onlineCount, lastVisitor] =
+    await Promise.all([
+      isBuildPhase
+        ? Promise.resolve(null)
+        : isProdRuntime
+          ? redis.incr(kvKeys.totalPageViews)
+          : Promise.resolve(345678),
+      isBuildPhase
+        ? Promise.resolve({ weeklyVisitors: null, trend: null })
+        : isProdRuntime
+          ? recordAndGetFooterVisitorMetrics(reqHeaders)
+          : Promise.resolve(getMockFooterVisitorMetrics()),
+      getOnlineVisitorCount(),
+      resolveLastVisitor(reqHeaders),
+    ])
 
   return (
     <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between md:gap-10">
@@ -178,6 +182,11 @@ async function FooterBody({ locale }: { locale: Locale }) {
           <TotalPageViews views={totalViews} locale={locale} />
           <WeeklyVisitors
             visitors={visitorMetrics.weeklyVisitors}
+            locale={locale}
+          />
+          <OnlineVisitors
+            variant="footer"
+            initialCount={onlineCount}
             locale={locale}
           />
           <LastVisitorInfo lastVisitor={lastVisitor} locale={locale} />

@@ -9,6 +9,7 @@ import Balancer from 'react-wrap-balancer'
 
 import { BlogPostStateLoader } from '~/app/(main)/blog/BlogPostStateLoader'
 import { BlogReactions } from '~/app/(main)/blog/BlogReactions'
+import { OnlineVisitors } from '~/app/(main)/OnlineVisitors'
 import {
   CalendarIcon,
   CursorClickIcon,
@@ -36,12 +37,14 @@ extendDateTime()
 export function BlogPostPage({
   post,
   views,
+  onlineReaders,
   reactions,
   relatedViews,
   locale = 'zh',
 }: {
   post: PostDetail
   views?: number
+  onlineReaders?: number | null
   reactions?: number[]
   relatedViews: number[]
   locale?: Locale
@@ -207,6 +210,13 @@ export function BlogPostPage({
                     {t.readingTimeSuffix}
                   </span>
                 </span>
+
+                <OnlineVisitors
+                  variant="post"
+                  postId={post._id}
+                  initialCount={onlineReaders ?? 1}
+                  locale={locale}
+                />
 
                 {post.hasTranslation && !post.isFallback && (
                   <Link

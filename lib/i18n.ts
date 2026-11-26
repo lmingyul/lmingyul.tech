@@ -204,6 +204,9 @@ const zhMessages = {
     weeklyVisitors: '近一周访客',
     weeklyVisitorsTitle: (formatted: string) =>
       `最近 7 天共 ${formatted} 位独立访客`,
+    onlineNow: '当前在线',
+    onlineNowTitle: (formatted: string) =>
+      `当前约有 ${formatted} 位访客正在浏览本站（实时更新）`,
     lastVisitorFrom: '最近访客来自',
     forkPrefix: '网站是 Fork 另一个项目：',
     visitorTrendTitle: (days: number) => `近 ${days} 天访客趋势`,
@@ -251,6 +254,9 @@ const zhMessages = {
     backToBlog: '返回博客页面',
     viewsSuffix: '次点击',
     readingTimeSuffix: '分钟阅读',
+    onlineReadingSuffix: '人正在看',
+    onlineReadingTitle: (formatted: string) =>
+      `当前有 ${formatted} 位访客正在阅读本文（实时更新）`,
     relatedHeading: '相关文章',
     aiSummaryTitle: 'AI 总结',
     aiSummaryBy: 'DeepSeek 生成',
@@ -458,6 +464,9 @@ const enMessages: typeof zhMessages = {
     weeklyVisitors: 'Weekly visitors',
     weeklyVisitorsTitle: (formatted: string) =>
       `${formatted} unique visitors in the past 7 days`,
+    onlineNow: 'online',
+    onlineNowTitle: (formatted: string) =>
+      `${formatted} ${formatted === '1' ? 'visitor' : 'visitors'} currently browsing this site (live)`,
     lastVisitorFrom: 'Recent visitor from',
     forkPrefix: 'Customized & forked from open-source: ',
     visitorTrendTitle: (days: number) => `${days}-day visitor trend`,
@@ -507,6 +516,9 @@ const enMessages: typeof zhMessages = {
     backToBlog: 'Back to blog',
     viewsSuffix: ' views',
     readingTimeSuffix: ' min read',
+    onlineReadingSuffix: ' reading',
+    onlineReadingTitle: (formatted: string) =>
+      `${formatted} ${formatted === '1' ? 'visitor' : 'visitors'} currently reading this article (live)`,
     relatedHeading: 'Related Posts',
     aiSummaryTitle: 'AI Summary',
     aiSummaryBy: 'By DeepSeek',

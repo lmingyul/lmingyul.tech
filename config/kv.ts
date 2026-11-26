@@ -1,6 +1,8 @@
 export const kvKeys = {
   totalPageViews: 'total_page_views',
   weeklyVisitors: 'weekly_visitors',
+  onlineVisitors: 'online_visitors',
+  postOnlineVisitors: (id: string) => `online_visitors:post:${id}`,
   dailyVisitors: (day: string) => `visitors:day:${day}`,
   dailyVisitorsSince: 'visitors:daily_since',
   trendingDay: (day: string) => `trending:day:${day}`,

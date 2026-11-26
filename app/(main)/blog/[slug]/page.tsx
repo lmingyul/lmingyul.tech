@@ -10,6 +10,7 @@ import { url } from '~/lib'
 import { redis } from '~/lib/redis'
 import { buildBlogPostJsonLd } from '~/lib/structured-data'
 import { recordContentView } from '~/lib/trending'
+import { getOnlineVisitorCount } from '~/lib/visitor-stats'
 import { getBlogPost } from '~/sanity/queries'
 
 export const generateMetadata = async ({
@@ -114,12 +115,15 @@ export default async function BlogPage({
     }
   }
 
+  const onlineReaders = await getOnlineVisitorCount(post._id)
+
   return (
     <>
       <JsonLd data={buildBlogPostJsonLd(post, 'zh')} />
       <BlogPostPage
         post={post}
         views={views}
+        onlineReaders={onlineReaders}
         relatedViews={relatedViews}
         reactions={reactions.length > 0 ? reactions : undefined}
       />

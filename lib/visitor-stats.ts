@@ -12,7 +12,9 @@ dayjs.extend(timezone)
 
 const SHANGHAI_TZ = 'Asia/Shanghai'
 const WEEKLY_WINDOW_SECONDS = 7 * 24 * 60 * 60
+export const ONLINE_WINDOW_SECONDS = 60
 const DAILY_RETENTION_SECONDS = 45 * 24 * 60 * 60
+const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build'
 const TREND_MAX_DAYS = 30
 const VISITOR_HASH_SALT = 'lmingyul-weekly-uv-v1'
 
@@ -65,6 +67,11 @@ function extractPublicIP(reqHeaders: HeaderReader): string | null {
   )
 }
 
+export function isBotUserAgent(userAgent: string | null | undefined): boolean {
+  const ua = userAgent?.trim() ?? ''
+  return ua.length < 12 || BOT_UA_PATTERN.test(ua)
+}
+
 function isLikelyHumanNavigation(reqHeaders: HeaderReader): boolean {
   if (
     reqHeaders.get('next-router-prefetch') ||
@@ -82,12 +89,7 @@ function isLikelyHumanNavigation(reqHeaders: HeaderReader): boolean {
     return false
   }
 
-  const ua = reqHeaders.get('user-agent')?.trim() ?? ''
-  if (ua.length < 12 || BOT_UA_PATTERN.test(ua)) {
-    return false
-  }
-
-  return true
+  return !isBotUserAgent(reqHeaders.get('user-agent'))
 }
 
 function computeVisitorDigest(ip: string, userAgent: string): string {
@@ -210,6 +212,19 @@ export async function recordAndGetFooterVisitorMetrics(
       total,
     },
   }
+}
+
+export async function getOnlineVisitorCount(
+  postId?: string
+): Promise<number | null> {
+  if (isBuildPhase) {
+    return null
+  }
+  const key = postId
+    ? kvKeys.postOnlineVisitors(postId)
+    : kvKeys.onlineVisitors
+  const count = await redis.rollingUniqueCount(key, ONLINE_WINDOW_SECONDS)
+  return count === null ? 1 : Math.max(1, count)
 }
 
 export function getMockFooterVisitorMetrics(): FooterVisitorMetrics {
