@@ -33,7 +33,7 @@ export function LanguageSwitcher() {
             lang={targetLocale === 'en' ? 'en' : 'zh-CN'}
             hrefLang={targetLocale === 'en' ? 'en' : 'zh-CN'}
             aria-label={t.switchToLanguageLabel}
-            className="inline-flex h-10 min-w-[2.5rem] items-center justify-center rounded-full bg-gradient-to-b from-zinc-50/50 to-white/90 px-3 text-xs font-semibold tracking-wide text-zinc-700 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition hover:text-lime-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600 dark:from-zinc-900/50 dark:to-zinc-800/90 dark:text-zinc-200 dark:ring-white/10 dark:hover:text-lime-400 dark:focus-visible:outline-lime-400"
+            className="flex h-10 min-w-[2.5rem] items-center justify-center rounded-full bg-gradient-to-b from-zinc-50/50 to-white/90 px-3 text-xs font-semibold tracking-wide text-zinc-700 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition hover:text-lime-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600 dark:from-zinc-900/50 dark:to-zinc-800/90 dark:text-zinc-200 dark:ring-white/10 dark:hover:text-lime-400 dark:focus-visible:outline-lime-400"
           >
             {t.switchToLanguageShort}
           </Link>
