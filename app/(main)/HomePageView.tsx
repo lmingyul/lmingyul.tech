@@ -8,6 +8,7 @@ import { Newsletter } from '~/app/(main)/Newsletter'
 import { Photos } from '~/app/(main)/Photos'
 import { Resume } from '~/app/(main)/Resume'
 import { TrendingSection } from '~/app/(main)/TrendingSection'
+import { VisitorWorldMapCard } from '~/app/(main)/VisitorWorldMapCard'
 import { PencilSwooshIcon } from '~/assets'
 import { Container } from '~/components/ui/Container'
 import { db } from '~/db'
@@ -46,7 +47,10 @@ export async function HomePageView({ locale = 'zh' }: { locale?: Locale }) {
   return (
     <>
       <Container className="mt-10">
-        <Headline locale={locale} />
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[minmax(0,1fr)_310px] xl:grid-cols-[minmax(0,1fr)_360px]">
+          <Headline locale={locale} />
+          <VisitorWorldMapCard locale={locale} />
+        </div>
       </Container>
 
       {settings?.heroPhotos && (

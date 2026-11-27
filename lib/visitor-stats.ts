@@ -59,7 +59,7 @@ function normalizeIP(raw: string | null | undefined): string | null {
   return stripped
 }
 
-function extractPublicIP(reqHeaders: HeaderReader): string | null {
+export function extractPublicIP(reqHeaders: HeaderReader): string | null {
   return (
     normalizeIP(reqHeaders.get('cf-connecting-ip')) ??
     normalizeIP(reqHeaders.get('x-real-ip')) ??

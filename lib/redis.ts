@@ -9,6 +9,7 @@ const globalForRedis = globalThis as unknown as {
   memStore?: Map<string, { value: string; expiresAt?: number }>
   zsetStore?: Map<string, Map<string, number>>
   setStore?: Map<string, { members: Set<string>; expiresAt?: number }>
+  hashStore?: Map<string, Map<string, string>>
 }
 
 const memStore =
@@ -19,10 +20,13 @@ const zsetStore =
 const setStore =
   globalForRedis.setStore ??
   new Map<string, { members: Set<string>; expiresAt?: number }>()
+const hashStore =
+  globalForRedis.hashStore ?? new Map<string, Map<string, string>>()
 if (process.env.NODE_ENV !== 'production') {
   globalForRedis.memStore = memStore
   globalForRedis.zsetStore = zsetStore
   globalForRedis.setStore = setStore
+  globalForRedis.hashStore = hashStore
 }
 
 function getClient(): Redis | null {
@@ -476,7 +480,174 @@ export const redis = {
       return false
     }
   },
+
+  async recordVisitorGeoVisit(opts: {
+    countsKey: string
+    metaKey: string
+    seenKey: string
+    bucketKey: string
+    metaJson: string
+    visitorDigest: string
+    seenTtlSeconds: number
+  }): Promise<{ added: boolean; count: number } | null> {
+    const bucketKey = opts.bucketKey.trim()
+    const digest = opts.visitorDigest.trim()
+    if (!bucketKey || !digest) return null
+
+    const client = getClient()
+    if (!client) {
+      const nowMs = Date.now()
+      let seen = setStore.get(opts.seenKey)
+      if (!seen || (seen.expiresAt && nowMs > seen.expiresAt)) {
+        seen = {
+          members: new Set<string>(),
+          expiresAt: nowMs + opts.seenTtlSeconds * 1000,
+        }
+        setStore.set(opts.seenKey, seen)
+      } else {
+        seen.expiresAt = nowMs + opts.seenTtlSeconds * 1000
+      }
+
+      const added = !seen.members.has(digest)
+      if (added) {
+        seen.members.add(digest)
+      }
+
+      let metaMap = hashStore.get(opts.metaKey)
+      if (!metaMap) {
+        metaMap = new Map<string, string>()
+        hashStore.set(opts.metaKey, metaMap)
+      }
+      metaMap.set(bucketKey, opts.metaJson)
+
+      let counts = zsetStore.get(opts.countsKey)
+      if (!counts) {
+        counts = new Map<string, number>()
+        zsetStore.set(opts.countsKey, counts)
+      }
+      const prev = counts.get(bucketKey) ?? 0
+      const next = added || prev === 0 ? prev + 1 : prev
+      counts.set(bucketKey, next)
+      return { added, count: next }
+    }
+
+    try {
+      const res = (await client.eval(
+        RECORD_VISITOR_GEO_LUA,
+        3,
+        opts.countsKey,
+        opts.metaKey,
+        opts.seenKey,
+        bucketKey,
+        opts.metaJson,
+        digest,
+        String(opts.seenTtlSeconds)
+      )) as [unknown, unknown]
+      const added = Number(res?.[0] ?? 0) === 1
+      const count = Number(res?.[1] ?? 1)
+      return {
+        added,
+        count: Number.isFinite(count) && count > 0 ? count : 1,
+      }
+    } catch (err) {
+      console.error('[Redis.recordVisitorGeoVisit]', err)
+      return null
+    }
+  },
+
+  async getTopVisitorGeoLocations(opts: {
+    countsKey: string
+    metaKey: string
+    limit: number
+  }): Promise<{
+    totalLocations: number
+    items: Array<{ key: string; count: number; metaJson: string | null }>
+  } | null> {
+    const limit = Math.max(1, opts.limit)
+    const client = getClient()
+    if (!client) {
+      const counts = zsetStore.get(opts.countsKey)
+      if (!counts || counts.size === 0) {
+        return { totalLocations: 0, items: [] }
+      }
+      const metaMap = hashStore.get(opts.metaKey)
+      const sorted = Array.from(counts.entries())
+        .filter(([, count]) => count > 0)
+        .sort((a, b) => b[1] - a[1])
+      return {
+        totalLocations: sorted.length,
+        items: sorted.slice(0, limit).map(([key, count]) => ({
+          key,
+          count,
+          metaJson: metaMap?.get(key) ?? null,
+        })),
+      }
+    }
+
+    try {
+      const pipeline = client.pipeline()
+      pipeline.zcard(opts.countsKey)
+      pipeline.zrevrange(opts.countsKey, 0, limit - 1, 'WITHSCORES')
+      const results = await pipeline.exec()
+      if (!results) return null
+
+      const totalLocationsRaw = Number(results[0]?.[1] ?? 0)
+      const totalLocations =
+        Number.isFinite(totalLocationsRaw) && totalLocationsRaw > 0
+          ? totalLocationsRaw
+          : 0
+      const rawRange = results[1]?.[1]
+      if (!Array.isArray(rawRange) || rawRange.length === 0) {
+        return { totalLocations, items: [] }
+      }
+
+      const pairs: Array<[string, number]> = []
+      for (let i = 0; i + 1 < rawRange.length; i += 2) {
+        const member = rawRange[i] == null ? '' : String(rawRange[i])
+        const score = Number(rawRange[i + 1])
+        if (member && Number.isFinite(score) && score > 0) {
+          pairs.push([member, score])
+        }
+      }
+      if (pairs.length === 0) {
+        return { totalLocations, items: [] }
+      }
+
+      const metaValues = await client.hmget(
+        opts.metaKey,
+        ...pairs.map(([key]) => key)
+      )
+      return {
+        totalLocations,
+        items: pairs.map(([key, count], idx) => ({
+          key,
+          count,
+          metaJson:
+            typeof metaValues[idx] === 'string' ? metaValues[idx] : null,
+        })),
+      }
+    } catch (err) {
+      console.error('[Redis.getTopVisitorGeoLocations]', err)
+      return null
+    }
+  },
 }
+
+const RECORD_VISITOR_GEO_LUA = `
+local added = redis.call('SADD', KEYS[3], ARGV[3])
+redis.call('EXPIRE', KEYS[3], tonumber(ARGV[4]))
+redis.call('HSET', KEYS[2], ARGV[1], ARGV[2])
+local score
+if added == 1 then
+  score = redis.call('ZINCRBY', KEYS[1], 1, ARGV[1])
+else
+  score = redis.call('ZSCORE', KEYS[1], ARGV[1])
+  if not score then
+    score = redis.call('ZINCRBY', KEYS[1], 1, ARGV[1])
+  end
+end
+return { added, tostring(score) }
+`
 
 const TOUCH_ONLINE_PRESENCE_LUA = `
 local now = tonumber(ARGV[1])

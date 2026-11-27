@@ -63,9 +63,9 @@ export function Headline({ locale: localeProp }: { locale?: Locale }) {
   const sep = locale === 'en' ? ', ' : '，'
 
   return (
-    <div className="max-w-3xl">
+    <div className="min-w-0 max-w-2xl">
       <motion.h1
-        className="text-3xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-4xl lg:text-5xl"
+        className="text-3xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-4xl xl:text-[2.75rem] xl:leading-[1.15]"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{

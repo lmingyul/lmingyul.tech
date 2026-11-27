@@ -10,6 +10,10 @@ export const kvKeys = {
     `trending:seen:${day}:${target}`,
   lastVisitor: 'last_visitor',
   currentVisitor: 'current_visitor',
+  visitorGeoCounts: 'visitors:geo:counts',
+  visitorGeoMeta: 'visitors:geo:meta',
+  visitorGeoSeen: (day: string) => `visitors:geo:seen:${day}`,
+  visitorGeoIpCache: (ipHash: string) => `geo:ip:${ipHash}`,
   postViews: (id: string) => `post:views:${id}`,
   postReactions: (id: string) => `post:reactions:${id}`,
 } as const
